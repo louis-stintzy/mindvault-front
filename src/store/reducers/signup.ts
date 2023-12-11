@@ -4,7 +4,6 @@ import {
   createAction,
 } from '@reduxjs/toolkit';
 
-import { AxiosInstance } from 'axios';
 import { axiosInstance } from '../../utils/axios';
 
 interface SignupState {

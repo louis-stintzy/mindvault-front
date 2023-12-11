@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from './components/App/App';
+import SignUp from './components/SignUp/SignUp';
 
 export const routerConfig = [
   {
@@ -12,7 +13,7 @@ export const routerConfig = [
       },
       {
         path: '/signup',
-        element: <div>Signup</div>,
+        element: <SignUp />,
       },
       {
         path: '/about',
