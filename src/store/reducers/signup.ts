@@ -4,11 +4,19 @@ import {
   createAction,
 } from '@reduxjs/toolkit';
 
+import { AxiosError } from 'axios';
 import { axiosInstance } from '../../utils/axios';
+import analyseError from './errorHandling';
+
+interface ErrorResponse {
+  errCode: number;
+  errMessage: string;
+}
 
 interface SignupState {
   isLoading: boolean;
-  error: { errCode: number; errMessage: string } | null;
+  error: ErrorResponse[] | null;
+  success: string;
   isRegistered: boolean;
   credentials: {
     username: string;
@@ -21,6 +29,7 @@ interface SignupState {
 export const initialState: SignupState = {
   isLoading: false,
   error: null,
+  success: '',
   isRegistered: false,
   credentials: {
     username: '',
@@ -39,9 +48,17 @@ export const changeCredentialsField = createAction<{
 
 export const register = createAsyncThunk(
   'signup/REGISTER',
-  async (credentials: SignupState['credentials']) => {
-    const data = await axiosInstance.post('/user/register', credentials);
-    return data;
+  async (credentials: SignupState['credentials'], { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/user/register', credentials);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
   }
 );
 
@@ -64,13 +81,14 @@ const signupReducer = createReducer(initialState, (builder) => {
     .addCase(register.rejected, (state, action) => {
       state.isLoading = false;
       if (action.payload) {
-        const { errCode, errMessage } = action.payload as {
-          errCode: number;
-          errMessage: string;
-        };
-        state.error = { errCode, errMessage };
+        // const { errCode, errMessage } = action.payload as {
+        //   errCode: number;
+        //   errMessage: string;
+        // };
+        // state.error = { errCode, errMessage };
+        state.error = action.payload as ErrorResponse[];
       } else {
-        state.error = { errCode: -1, errMessage: 'Unknown error' };
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
       }
     });
 });

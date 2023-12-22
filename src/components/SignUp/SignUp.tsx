@@ -1,11 +1,21 @@
-import { Box, Button, TextField } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
+import './SignUp.scss';
 
 function SignUp() {
   const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.signUp);
+  const { isLoading, error, isRegistered } = useAppSelector(
+    (state) => state.signUp
+  );
   const { username, email, password, confirmPassword } = useAppSelector(
     (state) => state.signUp.credentials
   );
@@ -23,68 +33,89 @@ function SignUp() {
     };
 
   return (
-    <div>
-      {/* <Box
-        component="form"
+    <Container component="main" maxWidth="xs" className="signup-container">
+      <Box
         sx={{
-          '& .MuiTextField-root': { m: 1, width: '25ch' },
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
-        noValidate
-        autoComplete="off"
       >
-        <div>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Create an account
+        </Typography>
+
+        {/* Affichage des erreurs */}
+        {error &&
+          error.map((err) => (
+            <Alert key={err.errCode} severity="error">
+              {err.errMessage}
+            </Alert>
+          ))}
+
+        {/* Message de succès en cas d'inscription réussie */}
+        {isRegistered && (
+          <Alert severity="success">
+            Inscription réussie, vous pouvez vous connecter !
+          </Alert>
+        )}
+
+        <form onSubmit={handleSubmit}>
           <TextField
             required
-            id="outlined-required"
-            label="Username"
-            value={username}
-            onChange={(e) =>
-              dispatch(changeCredentialsField({ username: e.target.value }))
-            }
-          />
-          <TextField
-            required
-            id="outlined-required"
+            id="email"
             label="Email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            type="email"
             value={email}
-            onChange={(e) =>
-              dispatch(changeCredentialsField({ email: e.target.value }))
-            }
+            onChange={(e) => handleChange('email')(e.target.value)}
           />
           <TextField
             required
-            id="outlined-password-input"
+            id="username"
+            label="Username"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={username}
+            onChange={(e) => handleChange('username')(e.target.value)}
+          />
+          <TextField
+            required
+            id="password"
             label="Password"
-            type="password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            // type="password"
             value={password}
-            onChange={(e) =>
-              dispatch(changeCredentialsField({ password: e.target.value }))
-            }
+            onChange={(e) => handleChange('password')(e.target.value)}
           />
           <TextField
             required
-            id="outlined-password-input"
+            id="confirm-password"
             label="Confirm Password"
-            type="password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            // type="password"
             value={confirmPassword}
-            onChange={(e) =>
-              dispatch(
-                changeCredentialsField({ confirmPassword: e.target.value })
-              )
-            }
+            onChange={(e) => handleChange('confirmPassword')(e.target.value)}
           />
-        </div>
-        <Button
-          variant="contained"
-          onClick={() => dispatch(register())}
-          disabled={isLoading}
-          sx={{ mt: 2 }}
-        >
-          Sign Up
-        </Button>
-        {error && <div>{error}</div>}
-      </Box> */}
-    </div>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={isLoading}
+            sx={{ mt: 3, mb: 2 }}
+          >
+            {isLoading ? 'Loading...' : 'Sign Up'}
+          </Button>
+        </form>
+      </Box>
+    </Container>
   );
 }
 
