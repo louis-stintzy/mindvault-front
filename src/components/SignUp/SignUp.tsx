@@ -9,6 +9,7 @@ import {
 import { FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
+import PasswordValidator from '../PasswordValidator/PasswordValidator';
 import './SignUp.scss';
 
 function SignUp() {
@@ -94,6 +95,7 @@ function SignUp() {
             value={password}
             onChange={(e) => handleChange('password')(e.target.value)}
           />
+          <PasswordValidator password={password} />
           <TextField
             required
             id="confirm-password"
