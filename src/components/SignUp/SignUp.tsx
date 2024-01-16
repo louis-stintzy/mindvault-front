@@ -10,7 +10,7 @@ import { FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
 import PasswordValidator from '../PasswordValidator/PasswordValidator';
-import './SignUp.scss';
+// import './SignUp.scss';
 
 function SignUp() {
   const dispatch = useAppDispatch();
@@ -95,7 +95,6 @@ function SignUp() {
             value={password}
             onChange={(e) => handleChange('password')(e.target.value)}
           />
-          <PasswordValidator password={password} />
           <TextField
             required
             id="confirm-password"
@@ -106,6 +105,11 @@ function SignUp() {
             // type="password"
             value={confirmPassword}
             onChange={(e) => handleChange('confirmPassword')(e.target.value)}
+          />
+          <PasswordValidator
+            username={username}
+            password={password}
+            confirmPassword={confirmPassword}
           />
           <Button
             variant="contained"

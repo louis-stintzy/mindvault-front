@@ -24,6 +24,7 @@ interface SignupState {
     password: string;
     confirmPassword: string;
   };
+  passwordIsValid: boolean;
 }
 
 export const initialState: SignupState = {
@@ -37,6 +38,7 @@ export const initialState: SignupState = {
     password: '',
     confirmPassword: '',
   },
+  passwordIsValid: false,
 };
 
 type KeysOfCredentials = keyof SignupState['credentials'];
@@ -45,6 +47,10 @@ export const changeCredentialsField = createAction<{
   field: KeysOfCredentials;
   value: string;
 }>('signup/CHANGE_CREDENTIALS_FIELD');
+
+export const updatePasswordValidity = createAction<boolean>(
+  'signup/UPDATE_PASSWORD_VALIDITY'
+);
 
 export const register = createAsyncThunk(
   'signup/REGISTER',
@@ -68,6 +74,10 @@ const signupReducer = createReducer(initialState, (builder) => {
       const { field, value } = action.payload;
       state.credentials[field] = value;
     })
+    .addCase(updatePasswordValidity, (state, action) => {
+      state.passwordIsValid = action.payload;
+      // console.log(`tous les critères de MDP sont remplis : ${action.payload}`);
+    })
     .addCase(register.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -76,6 +86,7 @@ const signupReducer = createReducer(initialState, (builder) => {
       state.isLoading = false;
       state.error = null;
       state.credentials = initialState.credentials;
+      state.passwordIsValid = initialState.passwordIsValid;
       state.isRegistered = true;
     })
     .addCase(register.rejected, (state, action) => {
