@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
 import PasswordValidator from '../PasswordValidator/PasswordValidator';
@@ -20,6 +20,25 @@ function SignUp() {
   const { username, email, password, confirmPassword } = useAppSelector(
     (state) => state.signUp.credentials
   );
+  const isPasswordValid = useAppSelector(
+    (state) => state.signUp.isPasswordValid
+  );
+  const [isFormValid, setIsFormValid] = useState(false);
+  const validateEmail = (emailToTest: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(emailToTest);
+  };
+  const validateUsername = (usernameToTest: string) => {
+    const minLength = usernameToTest.length >= 3;
+    const maxLength = usernameToTest.length <= 50;
+    return minLength && maxLength;
+  };
+
+  useEffect(() => {
+    const isEmailValid = validateEmail(email);
+    const isUsernameValid = validateUsername(username);
+    setIsFormValid(isEmailValid && isUsernameValid && isPasswordValid);
+  }, [email, username, isPasswordValid]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,7 +96,7 @@ function SignUp() {
           <TextField
             required
             id="username"
-            label="Username"
+            label="Username (at least 3 characters)"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -114,7 +133,7 @@ function SignUp() {
           <Button
             variant="contained"
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !isFormValid}
             sx={{ mt: 3, mb: 2 }}
           >
             {isLoading ? 'Loading...' : 'Sign Up'}
