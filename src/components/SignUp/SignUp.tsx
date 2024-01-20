@@ -3,13 +3,26 @@ import {
   Box,
   Button,
   Container,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
 } from '@mui/material';
+
+// import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+import EmailIcon from '@mui/icons-material/Email';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LockIcon from '@mui/icons-material/Lock';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+
 import { FormEvent, useEffect, useState } from 'react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
 import PasswordValidator from '../PasswordValidator/PasswordValidator';
+import ToggleColorMode from '../ToggleColorMode/ToggleColorMode';
 // import './SignUp.scss';
 
 function SignUp() {
@@ -40,6 +53,12 @@ function SignUp() {
     setIsFormValid(isEmailValid && isUsernameValid && isPasswordValid);
   }, [email, username, isPasswordValid]);
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO: add validation
@@ -63,7 +82,7 @@ function SignUp() {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
-          Create an account
+          Sign Up
         </Typography>
 
         {/* Affichage des erreurs */}
@@ -86,6 +105,13 @@ function SignUp() {
             required
             id="email"
             label="Email"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon />
+                </InputAdornment>
+              ),
+            }}
             variant="outlined"
             fullWidth
             margin="normal"
@@ -97,6 +123,13 @@ function SignUp() {
             required
             id="username"
             label="Username (at least 3 characters)"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircleIcon />
+                </InputAdornment>
+              ),
+            }}
             variant="outlined"
             fullWidth
             margin="normal"
@@ -107,10 +140,27 @@ function SignUp() {
             required
             id="password"
             label="Password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             variant="outlined"
             fullWidth
             margin="normal"
-            // type="password"
+            type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => handleChange('password')(e.target.value)}
           />
@@ -118,10 +168,27 @@ function SignUp() {
             required
             id="confirm-password"
             label="Confirm Password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <VerifiedUserIcon />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             variant="outlined"
             fullWidth
             margin="normal"
-            // type="password"
+            type={showPassword ? 'text' : 'password'}
             value={confirmPassword}
             onChange={(e) => handleChange('confirmPassword')(e.target.value)}
           />
@@ -138,6 +205,7 @@ function SignUp() {
           >
             {isLoading ? 'Loading...' : 'Sign Up'}
           </Button>
+          <ToggleColorMode />
         </form>
       </Box>
     </Container>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
-import { green, red } from '@mui/material/colors';
+import { useTheme } from '@mui/material/styles';
 import { useAppDispatch } from '../../hook/redux';
 import { updatePasswordValidity } from '../../store/reducers/signup';
 // import './PasswordValidator.scss';
@@ -21,6 +21,9 @@ function PasswordValidator({
   password,
   confirmPassword,
 }: PasswordValidatorProps) {
+  const theme = useTheme();
+  const succesColor = theme.palette.success.main;
+  const errorColor = theme.palette.error.main;
   const dispatch = useAppDispatch();
   // Tous les critères sont initialisés à false
   const [passwordCriteria, setPasswordCriteria] = useState({
@@ -70,11 +73,11 @@ function PasswordValidator({
   const renderCriteriaIcon = (isValid: boolean) => {
     return isValid ? (
       <ListItemIcon>
-        <CheckCircleIcon sx={{ color: green[500] }} />
+        <CheckCircleIcon sx={{ color: succesColor }} />
       </ListItemIcon>
     ) : (
       <ListItemIcon>
-        <ErrorIcon sx={{ color: red[500] }} />
+        <ErrorIcon sx={{ color: errorColor }} />
       </ListItemIcon>
     );
   };
