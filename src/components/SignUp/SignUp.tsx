@@ -61,7 +61,6 @@ function SignUp() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: add validation
     dispatch(register({ username, email, password, confirmPassword }));
   };
 
