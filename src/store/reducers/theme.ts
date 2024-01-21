@@ -5,7 +5,9 @@ interface ThemeState {
 }
 
 export const initialState: ThemeState = {
+  // Si localStorage.getItem('themeMode') renvoie 'dark', alors { mode: 'dark' } est ajouté à initialState, sinon, initialState reste inchangé
   mode: 'light',
+  ...(localStorage.getItem('themeMode') === 'dark' && { mode: 'dark' }),
 };
 
 export const toggleTheme =
@@ -14,6 +16,7 @@ export const toggleTheme =
 const themeReducer = createReducer(initialState, (builder) => {
   builder.addCase(toggleTheme, (state, action) => {
     state.mode = action.payload;
+    localStorage.setItem('themeMode', action.payload);
   });
 });
 
