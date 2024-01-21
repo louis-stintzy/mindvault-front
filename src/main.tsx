@@ -1,12 +1,12 @@
-import React from 'react';
+import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom/client';
-
-import App from './components/App/App';
+import store from './store';
+import RootComponent from './components/RootComponent/RootComponent';
 
 import './styles/index.scss';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <Provider store={store}>
+    <RootComponent />
+  </Provider>
 );
