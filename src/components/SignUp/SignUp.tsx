@@ -204,7 +204,6 @@ function SignUp() {
           >
             {isLoading ? 'Loading...' : 'Sign Up'}
           </Button>
-          <ToggleColorMode />
         </form>
       </Box>
     </Container>
