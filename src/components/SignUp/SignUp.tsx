@@ -22,7 +22,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
 import PasswordValidator from '../PasswordValidator/PasswordValidator';
-import ToggleColorMode from '../ToggleColorMode/ToggleColorMode';
 // import './SignUp.scss';
 
 function SignUp() {
