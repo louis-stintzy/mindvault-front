@@ -18,6 +18,7 @@
   },
   "include": [
     "vite.config.ts",
+    "jest.config.js",
     ".eslintrc.cjs",
     "src"
   ],
