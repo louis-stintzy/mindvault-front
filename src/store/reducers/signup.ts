@@ -71,6 +71,9 @@ export const register = createAsyncThunk(
 const signupReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(changeCredentialsField, (state, action) => {
+      // console.log(
+      //   `reducer // field : ${action.payload.field} - value : ${action.payload.value}`
+      // );
       const { field, value } = action.payload;
       state.credentials[field] = value;
     })

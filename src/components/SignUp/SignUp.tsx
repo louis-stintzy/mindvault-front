@@ -138,6 +138,7 @@ function SignUp() {
             required
             id="password"
             label="Password"
+            data-testid="password"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -148,6 +149,7 @@ function SignUp() {
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
+                    data-testid="toggle-password-visibility"
                     onClick={handleClickShowPassword}
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -160,12 +162,16 @@ function SignUp() {
             margin="normal"
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => handleChange('password')(e.target.value)}
+            onChange={(e) => {
+              console.log('e.target.value', e.target.value);
+              handleChange('password')(e.target.value);
+            }}
           />
           <TextField
             required
             id="confirm-password"
             label="Confirm Password"
+            data-testid="confirm-password"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
