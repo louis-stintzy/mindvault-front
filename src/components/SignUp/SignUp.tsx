@@ -22,7 +22,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
 import PasswordValidator from '../PasswordValidator/PasswordValidator';
-import ToggleColorMode from '../ToggleColorMode/ToggleColorMode';
 // import './SignUp.scss';
 
 function SignUp() {
@@ -139,6 +138,7 @@ function SignUp() {
             required
             id="password"
             label="Password"
+            data-testid="password"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -149,6 +149,7 @@ function SignUp() {
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
+                    data-testid="toggle-password-visibility"
                     onClick={handleClickShowPassword}
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -167,6 +168,7 @@ function SignUp() {
             required
             id="confirm-password"
             label="Confirm Password"
+            data-testid="confirm-password"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -204,7 +206,6 @@ function SignUp() {
           >
             {isLoading ? 'Loading...' : 'Sign Up'}
           </Button>
-          <ToggleColorMode />
         </form>
       </Box>
     </Container>
