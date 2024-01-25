@@ -43,6 +43,8 @@ export const initialState: SignupState = {
 
 type KeysOfCredentials = keyof SignupState['credentials'];
 
+export const resetSignupState = createAction('signup/RESET_SIGNUP_STATE');
+
 export const changeCredentialsField = createAction<{
   field: KeysOfCredentials;
   value: string;
@@ -70,10 +72,15 @@ export const register = createAsyncThunk(
 
 const signupReducer = createReducer(initialState, (builder) => {
   builder
+    .addCase(resetSignupState, (state) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = '';
+      state.isRegistered = false;
+      state.credentials = initialState.credentials;
+      state.isPasswordValid = initialState.isPasswordValid;
+    })
     .addCase(changeCredentialsField, (state, action) => {
-      // console.log(
-      //   `reducer // field : ${action.payload.field} - value : ${action.payload.value}`
-      // );
       const { field, value } = action.payload;
       state.credentials[field] = value;
     })

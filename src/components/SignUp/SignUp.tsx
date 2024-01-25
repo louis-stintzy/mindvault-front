@@ -162,10 +162,7 @@ function SignUp() {
             margin="normal"
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => {
-              console.log('e.target.value', e.target.value);
-              handleChange('password')(e.target.value);
-            }}
+            onChange={(e) => handleChange('password')(e.target.value)}
           />
           <TextField
             required
