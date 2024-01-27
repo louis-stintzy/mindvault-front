@@ -26,7 +26,7 @@ import PasswordValidator from '../PasswordValidator/PasswordValidator';
 
 function SignUp() {
   const dispatch = useAppDispatch();
-  const { isLoading, error, isRegistered } = useAppSelector(
+  const { isLoading, error, isRegistered, success } = useAppSelector(
     (state) => state.signUp
   );
   const { username, email, password, confirmPassword } = useAppSelector(
@@ -92,11 +92,7 @@ function SignUp() {
           ))}
 
         {/* Message de succès en cas d'inscription réussie */}
-        {isRegistered && (
-          <Alert severity="success">
-            Inscription réussie, vous pouvez vous connecter !
-          </Alert>
-        )}
+        {isRegistered && <Alert severity="success">{success}</Alert>}
 
         <form onSubmit={handleSubmit}>
           <TextField
