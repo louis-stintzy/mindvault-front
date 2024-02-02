@@ -12,11 +12,13 @@ import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { FormEvent, useEffect, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, login } from '../../store/reducers/signin';
 
 function SignIn() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { isLoading, error, isLoggedIn } = useAppSelector(
     (state) => state.signIn
   );
@@ -31,6 +33,12 @@ function SignIn() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(emailToTest);
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/home', { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   useEffect(() => {
     const isEmailValid = validateEmail(email);

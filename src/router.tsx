@@ -1,8 +1,20 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { ReactNode } from 'react';
 import App from './components/App/App';
 import SignUp from './components/SignUp/SignUp';
 import SignIn from './components/SignIn/SignIn';
+import LandingPage from './components/LandingPage/LandingPage';
 import Home from './components/Home/Home';
+import { useAppSelector } from './hook/redux';
+
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
+
+function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const { isLoggedIn } = useAppSelector((state) => state.signIn);
+  return isLoggedIn ? children : <Navigate to="/signin" replace />;
+}
 
 export const routerConfig = [
   {
@@ -11,7 +23,7 @@ export const routerConfig = [
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <LandingPage />,
       },
       {
         path: '/signup',
@@ -24,6 +36,14 @@ export const routerConfig = [
       {
         path: '/about',
         element: <div>About</div>,
+      },
+      {
+        path: '/home',
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
