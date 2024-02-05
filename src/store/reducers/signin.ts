@@ -7,6 +7,7 @@ import {
 import { AxiosError } from 'axios';
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
+import { removeUserDataFromLocalStorage } from '../../utils/user';
 
 interface ErrorResponse {
   errCode: number;
@@ -84,8 +85,10 @@ const signinReducer = createReducer(initialState, (builder) => {
     .addCase(resetSigninState, (state) => {
       state.isLoading = false;
       state.error = null;
-      state.isLoggedIn = false; // garder false ? ou mettre à true si token présent ?
       state.credentials = initialState.credentials;
+      // mettre false pour isLOggedIn ? -> oui et supprimer le token dans le localStorage
+      state.isLoggedIn = false;
+      removeUserDataFromLocalStorage();
     })
     // --------------- CHANGE CREDENTIALS FIELD ----------------
     .addCase(changeCredentialsField, (state, action) => {
