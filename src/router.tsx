@@ -5,12 +5,14 @@ import SignUp from './components/SignUp/SignUp';
 import SignIn from './components/SignIn/SignIn';
 import LandingPage from './components/LandingPage/LandingPage';
 import Home from './components/Home/Home';
+
+// import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+
 import { useAppSelector } from './hook/redux';
 
 interface ProtectedRouteProps {
   children: ReactNode;
 }
-
 function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isLoggedIn } = useAppSelector((state) => state.signIn);
   return isLoggedIn ? children : <Navigate to="/signin" replace />;

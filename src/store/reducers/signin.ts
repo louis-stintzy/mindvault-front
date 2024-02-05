@@ -28,7 +28,8 @@ export const initialState: SigninState = {
   isLoading: false,
   error: null,
   success: '',
-  isLoggedIn: false,
+  // Si présence du tokken, initialisation à true, puis validation du token via requête au back
+  isLoggedIn: Boolean(localStorage.getItem('user')?.includes('token')),
   credentials: {
     email: '',
     password: '',
@@ -61,6 +62,22 @@ export const login = createAsyncThunk(
   }
 );
 
+export const validateToken = createAsyncThunk(
+  'signin/VALIDATE_TOKEN',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/user/validateToken');
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
 const signinReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(resetSigninState, (state) => {
@@ -82,11 +99,34 @@ const signinReducer = createReducer(initialState, (builder) => {
       state.error = null;
       state.isLoggedIn = true;
       state.credentials = initialState.credentials;
-      localStorage.setItem('token', action.payload.token);
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ token: action.payload.token })
+      );
     })
     .addCase(login.rejected, (state, action) => {
       state.isLoading = false;
       state.isLoggedIn = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
+    })
+    .addCase(validateToken.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      // state.isLoggedIn = false;
+    })
+    .addCase(validateToken.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+      state.isLoggedIn = true;
+    })
+    .addCase(validateToken.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isLoggedIn = false;
+      localStorage.removeItem('user');
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];
       } else {
