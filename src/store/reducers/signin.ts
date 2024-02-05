@@ -28,7 +28,7 @@ export const initialState: SigninState = {
   isLoading: false,
   error: null,
   success: '',
-  // Si présence du tokken, initialisation à true, puis validation du token via requête au back
+  // Si présence du tokken, initialisation à true, puis validation du token via requête au back (voir RootComponent)
   isLoggedIn: Boolean(localStorage.getItem('user')?.includes('token')),
   credentials: {
     email: '',
@@ -80,15 +80,18 @@ export const validateToken = createAsyncThunk(
 
 const signinReducer = createReducer(initialState, (builder) => {
   builder
+    // --------------------- RESET STATE ----------------------
     .addCase(resetSigninState, (state) => {
       state.isLoading = false;
       state.error = null;
-      state.isLoggedIn = false;
+      state.isLoggedIn = false; // garder false ? ou mettre à true si token présent ?
       state.credentials = initialState.credentials;
     })
+    // --------------- CHANGE CREDENTIALS FIELD ----------------
     .addCase(changeCredentialsField, (state, action) => {
       state.credentials[action.payload.field] = action.payload.value;
     })
+    // ------------------------ LOGIN --------------------------
     .addCase(login.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -113,10 +116,10 @@ const signinReducer = createReducer(initialState, (builder) => {
         state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
       }
     })
+    // -------------------- VALIDATE TOKEN ---------------------
     .addCase(validateToken.pending, (state) => {
       state.isLoading = true;
       state.error = null;
-      // state.isLoggedIn = false;
     })
     .addCase(validateToken.fulfilled, (state) => {
       state.isLoading = false;
