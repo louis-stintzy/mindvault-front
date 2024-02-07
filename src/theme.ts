@@ -22,6 +22,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           text: {
             primary: '#102A43', // Un bleu très foncé pour le texte principal
             secondary: '#627D98', // Un bleu-gris pour le texte secondaire
+            onDark: '#D3E4F3', // Blanc pur pour le texte sur les éléments foncés
           },
           error: {
             main: '#D32F2F', // Un rouge vif pour les erreurs
@@ -48,6 +49,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           text: {
             primary: '#E3F2FD', // Un bleu très clair presque blanc pour le texte principal
             secondary: '#AEB6BF', // Un gris bleuté pour le texte secondaire et les légendes
+            onDark: '#F4F7FA', // Blanc pur pour le texte sur les éléments foncés
           },
           error: {
             main: '#EF5350', // Un rouge vif, mais pas trop éclatant pour les erreurs

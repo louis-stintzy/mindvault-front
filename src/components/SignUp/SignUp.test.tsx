@@ -3,6 +3,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import SignUp from './SignUp';
 import store from '../../store';
 import signupReducer, {
@@ -16,7 +17,9 @@ describe('SignUp Component', () => {
     store.dispatch({ type: 'signup/RESET_SIGNUP_STATE' });
     render(
       <Provider store={store}>
-        <SignUp />
+        <MemoryRouter>
+          <SignUp />
+        </MemoryRouter>
       </Provider>
     );
   });

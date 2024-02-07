@@ -19,6 +19,7 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
 import { FormEvent, useEffect, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCredentialsField, register } from '../../store/reducers/signup';
 import PasswordValidator from '../PasswordValidator/PasswordValidator';
@@ -26,7 +27,9 @@ import PasswordValidator from '../PasswordValidator/PasswordValidator';
 
 function SignUp() {
   const dispatch = useAppDispatch();
-  const { isLoading, error, isRegistered } = useAppSelector(
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAppSelector((state) => state.signIn);
+  const { isLoading, error, isRegistered, success } = useAppSelector(
     (state) => state.signUp
   );
   const { username, email, password, confirmPassword } = useAppSelector(
@@ -53,6 +56,12 @@ function SignUp() {
   }, [email, username, isPasswordValid]);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/home', { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -92,11 +101,7 @@ function SignUp() {
           ))}
 
         {/* Message de succès en cas d'inscription réussie */}
-        {isRegistered && (
-          <Alert severity="success">
-            Inscription réussie, vous pouvez vous connecter !
-          </Alert>
-        )}
+        {isRegistered && <Alert severity="success">{success}</Alert>}
 
         <form onSubmit={handleSubmit}>
           <TextField

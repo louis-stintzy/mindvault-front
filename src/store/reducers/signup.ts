@@ -54,17 +54,25 @@ export const updatePasswordValidity = createAction<boolean>(
   'signup/UPDATE_PASSWORD_VALIDITY'
 );
 
+// Création d'une action asynchrone avec Redux Toolkit
 export const register = createAsyncThunk(
+  // Nom de l'action, utilisé dans le reducer pour gérer cette action
   'signup/REGISTER',
+  // Fonction asynchrone qui sera exécutée lors du dispatch de cette action
   async (credentials: SignupState['credentials'], { rejectWithValue }) => {
     try {
+      // Tentative d'envoi des données d'inscription (credentials) à l'API
       const response = await axiosInstance.post('/user/register', credentials);
+      // Si l'appel API réussit, la réponse est retournée (utilisée dans le reducer)
       return response.data;
     } catch (error) {
+      // Gestion des erreurs si l'appel API échoue
       if (error instanceof AxiosError) {
+        // Si l'erreur est une instance de AxiosError, analyse de l'erreur pour obtenir un objet utilisable dans le reducer
         const errorAnalyzed = analyseError(error);
         return rejectWithValue(errorAnalyzed);
       }
+      // Si l'erreur n'est pas une instance de AxiosError, renvoie une erreur générique
       return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
     }
   }
@@ -91,13 +99,16 @@ const signupReducer = createReducer(initialState, (builder) => {
     .addCase(register.pending, (state) => {
       state.isLoading = true;
       state.error = null;
+      state.isRegistered = false;
+      state.success = '';
     })
-    .addCase(register.fulfilled, (state) => {
+    .addCase(register.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
       state.credentials = initialState.credentials;
       state.isPasswordValid = initialState.isPasswordValid;
       state.isRegistered = true;
+      state.success = action.payload.message;
     })
     .addCase(register.rejected, (state, action) => {
       state.isLoading = false;
@@ -108,6 +119,7 @@ const signupReducer = createReducer(initialState, (builder) => {
         // };
         // state.error = { errCode, errMessage };
         state.error = action.payload as ErrorResponse[];
+        state.success = '';
       } else {
         state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
       }
