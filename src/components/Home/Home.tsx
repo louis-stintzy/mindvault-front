@@ -1,6 +1,4 @@
 import {
-  BottomNavigation,
-  BottomNavigationAction,
   Box,
   Button,
   Card,
@@ -8,27 +6,21 @@ import {
   CardContent,
   Container,
   Typography,
-  darken,
   lighten,
   useTheme,
 } from '@mui/material';
 
-import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
-
+import { Link } from 'react-router-dom';
 import { resetSigninState } from '../../store/reducers/signin';
 import { useAppDispatch } from '../../hook/redux';
 import ToggleColorMode from '../ToggleColorMode/ToggleColorMode';
 import menuItems from '../../constants/menuConfig';
+import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 
 function Home() {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === 'dark';
-
-  const handleClick = (name: string) => {
-    console.log(name);
-  };
 
   const handleLogout = () => {
     // TODO: +recupérer le token pour le blacklister côté back
@@ -71,12 +63,16 @@ function Home() {
                   } 75%)`,
               }}
             >
-              <CardActionArea onClick={() => handleClick(item.name)}>
+              <CardActionArea component={Link} to={item.path}>
                 <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
                   <Box>
                     <item.icon />
                   </Box>
-                  <Typography variant="h6" color="text.primary">
+                  <Typography
+                    variant="h6"
+                    color="text.primary"
+                    fontSize="1.45rem"
+                  >
                     {item.name}
                   </Typography>
                 </CardContent>
@@ -108,29 +104,7 @@ function Home() {
       </Box>
 
       {/* ----------------------- Bottom Navigation ----------------------- */}
-      <BottomNavigation
-        showLabels
-        sx={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000, // ensure it's above other items
-        }}
-      >
-        {/* il y a un handle change et une value */}
-        <BottomNavigationAction label="Home" value="home" icon={<HomeIcon />} />
-        <BottomNavigationAction
-          label="Multibox Test"
-          value="multibox"
-          icon={<SettingsIcon />}
-        />
-        <BottomNavigationAction
-          label="Settings"
-          value="settings"
-          icon={<SettingsIcon />}
-        />
-      </BottomNavigation>
+      <BottomNavigationMUI />
     </Container>
   );
 }

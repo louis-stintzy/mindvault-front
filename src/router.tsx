@@ -7,6 +7,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import Home from './components/Home/Home';
 
 import { useAppSelector } from './hook/redux';
+import Boxes from './components/Boxes/Boxes';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -48,6 +49,42 @@ export const routerConfig = [
             <Home />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: '/boxes',
+        element: (
+          <ProtectedRoute>
+            <Boxes />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/stats',
+        element: (
+          <ProtectedRoute>
+            <div>Stats</div>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/parameters',
+        element: (
+          <ProtectedRoute>
+            <div>Parameters</div>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/contact',
+        element: (
+          <ProtectedRoute>
+            <div>Contact</div>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '*',
+        element: <Navigate to="/" />,
       },
     ],
   },
