@@ -1,4 +1,4 @@
-import { SvgIcon } from '@mui/material';
+import { SvgIcon, useTheme } from '@mui/material';
 import type { SVGProps } from 'react';
 
 function BarChartIcon(props: SVGProps<SVGSVGElement>) {

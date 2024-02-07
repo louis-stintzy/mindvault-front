@@ -7,22 +7,24 @@ import {
   CardActionArea,
   CardContent,
   Container,
-  SvgIcon,
   Typography,
+  darken,
+  lighten,
+  useTheme,
 } from '@mui/material';
+
 import HomeIcon from '@mui/icons-material/Home';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 import { resetSigninState } from '../../store/reducers/signin';
 import { useAppDispatch } from '../../hook/redux';
 import ToggleColorMode from '../ToggleColorMode/ToggleColorMode';
-
 import menuItems from '../../constants/menuConfig';
-import BoxIcon from '../../icons/BoxIcon';
 
 function Home() {
   const dispatch = useAppDispatch();
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
 
   const handleClick = (name: string) => {
     console.log(name);
@@ -38,21 +40,35 @@ function Home() {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          padding: '20px',
-          paddingBottom: '56px',
+          padding: { xs: '20px', md: '40px' },
+          paddingBottom: { xs: '20px', md: '40px' },
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom>
+        {/* ------------------------- Title ------------------------- */}
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ marginBottom: { xs: '20px', md: '40px' } }}
+        >
           Hello John
         </Typography>
 
+        {/* ----------------------- Menu Items ----------------------- */}
         <Box>
           {menuItems.map((item) => (
             <Card
               key={item.i}
               sx={{
                 marginBottom: '20px',
-                backgroundColor: 'primary.light',
+
+                backgroundImage: `linear-gradient(135deg,
+                  ${isDarkMode ? item.colorDark : item.colorLight} 0%,
+                  ${
+                    theme.palette.mode === 'dark'
+                      ? lighten(item.colorDark, 0.2)
+                      : lighten(item.colorLight, 0.2)
+                  } 75%)`,
               }}
             >
               <CardActionArea onClick={() => handleClick(item.name)}>
@@ -60,7 +76,9 @@ function Home() {
                   <Box>
                     <item.icon />
                   </Box>
-                  <Typography variant="h6">{item.name}</Typography>
+                  <Typography variant="h6" color="text.primary">
+                    {item.name}
+                  </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
@@ -68,6 +86,7 @@ function Home() {
         </Box>
       </Box>
 
+      {/* ----------------------- Logout et Toggle----------------------- */}
       <Box
         sx={{
           display: 'flex',
@@ -87,6 +106,8 @@ function Home() {
           <ToggleColorMode />
         </Box>
       </Box>
+
+      {/* ----------------------- Bottom Navigation ----------------------- */}
       <BottomNavigation
         showLabels
         sx={{
