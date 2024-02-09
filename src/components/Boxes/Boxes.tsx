@@ -1,4 +1,6 @@
-import { Container } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { Link } from 'react-router-dom';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import BoxCard from '../BoxCard/BoxCard';
 
@@ -104,6 +106,24 @@ function Boxes() {
 
   return (
     <Container component="main" maxWidth="xs">
+      <Box>
+        <Typography variant="h4" component="h1">
+          Boxes
+        </Typography>
+        <Link
+          to="/box/create"
+          style={{
+            textDecoration: 'none',
+            position: 'relative',
+            right: -150,
+            top: -40,
+          }}
+        >
+          <Button variant="contained">
+            <AddIcon />
+          </Button>
+        </Link>
+      </Box>
       {userBoxList.map((box) => (
         // on aurait pu utiliser <BoxCard key={box.id} box={box} /> si... (voir BoxCard.tsx)
         // on aurait pu utiliser <BoxCard key={box.id} {...box} /> si... (voir BoxCard.tsx)

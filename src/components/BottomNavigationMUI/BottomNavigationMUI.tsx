@@ -8,6 +8,7 @@ function BottomNavigationMUI() {
     <BottomNavigation
       showLabels
       sx={{
+        width: '100vw',
         position: 'fixed',
         bottom: 0,
         left: 0,
