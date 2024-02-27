@@ -19,9 +19,13 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 
 import { BoxData } from '../../@types/box';
 
+import boxDefaultPicture from '../../assets/boxDefaultPicture.png';
+
 interface BoxCardProps {
   box: BoxData;
 }
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // (suite Boxes) ...si dans BoxCard  on utilisait une interface BoxCardProps { box: BoxData; }
 // et que l'on passait cette interface à la function BoxCard({ box }: BoxCardProps) {
@@ -61,7 +65,11 @@ function BoxCard({ box }: BoxCardProps) {
         <CardMedia
           component="img"
           sx={{ width: 151 }}
-          image={box.box_picture}
+          image={
+            box.box_picture
+              ? `${apiUrl}/media/${box.box_picture}`
+              : boxDefaultPicture
+          }
           alt={`Image for the box : ${box.name}`}
         />
         {/* -------------- Reste de la card -------------- */}

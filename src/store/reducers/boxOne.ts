@@ -32,7 +32,7 @@ export const initialState: BoxOneState = {
   box: {
     name: '',
     description: '',
-    boxPicture: 'https://ibb.co/Nyc400S',
+    boxPicture: '',
     color: '',
     label: '',
     level: '',
@@ -75,8 +75,7 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.box = initialState.box;
-      // en commentaire car on veut garder l'info de la box créée (pour l'instant)
-      // state.boxCreated = null;
+      state.boxCreated = null;
     })
     .addCase(changeBoxField, (state, action) => {
       const { field, value } = action.payload;

@@ -6,6 +6,7 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
+  Alert,
 } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -36,6 +37,7 @@ function CreateBox() {
 
   const handleChangeField =
     (field: 'name' | 'description' | 'label') => (value: string) => {
+      // TODO: checker que les values respectent les contraintes comme name<255 caractères
       dispatch(changeBoxField({ field, value }));
     };
 
@@ -61,6 +63,14 @@ function CreateBox() {
         <Typography variant="h4" component="h1" gutterBottom>
           Create a Box
         </Typography>
+
+        {/* Affichage des erreurs */}
+        {error &&
+          error.map((err) => (
+            <Alert key={err.errCode} severity="error">
+              {err.errMessage}
+            </Alert>
+          ))}
 
         <form onSubmit={handleSubmit}>
           <TextField
