@@ -21,3 +21,14 @@ export interface BoxData {
   created_at: string;
   updated_at: string | null;
 }
+
+export interface BoxDataLight {
+  name: string;
+  description: string;
+  boxPicture: string;
+  color: string;
+  label: string;
+  level: string;
+  learnIt: boolean;
+  type: number;
+}
