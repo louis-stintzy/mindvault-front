@@ -11,9 +11,9 @@ import { resetBoxOneState } from '../../store/reducers/boxOne';
 function Boxes() {
   const dispatch = useAppDispatch();
 
-  const userBoxList = useAppSelector((state) => state.boxMultiple.boxes);
+  const userBoxesList = useAppSelector((state) => state.boxMultiple.boxes);
 
-  // const userBoxList = [
+  // const userBoxesList = [
   //   {
   //     id: 9,
   //     owner_id: 27,
@@ -137,7 +137,7 @@ function Boxes() {
           </Button>
         </Link>
       </Box>
-      {userBoxList.map((box) => (
+      {userBoxesList.map((box) => (
         // on aurait pu utiliser <BoxCard key={box.id} box={box} /> si... (voir BoxCard.tsx)
         // on aurait pu utiliser <BoxCard key={box.id} {...box} /> si... (voir BoxCard.tsx)
         <BoxCard key={box.id} box={box} />

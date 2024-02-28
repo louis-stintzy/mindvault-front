@@ -77,6 +77,14 @@ export const routerConfig = [
         ),
       },
       {
+        path: '/box/:id/items/create',
+        element: (
+          <ProtectedRoute>
+            <div>Create a new card</div>
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: '/stats',
         element: (
           <ProtectedRoute>
