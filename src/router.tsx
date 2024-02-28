@@ -9,6 +9,7 @@ import Home from './components/Home/Home';
 import { useAppSelector } from './hook/redux';
 import Boxes from './components/Boxes/Boxes';
 import CreateBox from './components/CreateBox/CreateBox';
+import BoxItems from './components/BoxItems/BoxItems';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -64,6 +65,14 @@ export const routerConfig = [
         element: (
           <ProtectedRoute>
             <CreateBox />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/box/:id/items',
+        element: (
+          <ProtectedRoute>
+            <BoxItems />
           </ProtectedRoute>
         ),
       },

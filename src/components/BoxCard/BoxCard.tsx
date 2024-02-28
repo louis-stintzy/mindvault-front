@@ -16,6 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
+import { Link } from 'react-router-dom';
 
 import { BoxData } from '../../@types/box';
 
@@ -87,7 +88,12 @@ function BoxCard({ box }: BoxCardProps) {
               component="div"
               sx={{ textAlign: 'left' }}
             >
-              {box.name}
+              <Link
+                to={`/box/${box.id}/items`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                {box.name}
+              </Link>
             </Typography>
             <Box
               sx={{
