@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import { AxiosError } from 'axios';
-import { BoxData } from '../../@types/box';
+import { CardData } from '../../@types/card';
 
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
@@ -15,29 +15,29 @@ interface ErrorResponse {
   errMessage: string;
 }
 
-interface BoxMultipleState {
+interface CardMultipleState {
   isLoading: boolean;
   error: ErrorResponse[] | null;
   success: string;
-  boxes: BoxData[];
+  cards: CardData[];
 }
 
-export const initialState: BoxMultipleState = {
+export const initialState: CardMultipleState = {
   isLoading: false,
   error: null,
   success: '',
-  boxes: [],
+  cards: [],
 };
 
-export const resetBoxMultipleState = createAction(
-  'boxMultiple/RESET_BOX_MULTIPLE_STATE'
+export const resetCardMultipleState = createAction(
+  'cardMultiple/RESET_CARD_MULTIPLE_STATE'
 );
 
-export const getUserBoxes = createAsyncThunk(
-  'boxMultiple/GET_USER_BOXES',
-  async (_, { rejectWithValue }) => {
+export const getBoxCards = createAsyncThunk(
+  'cardMultiple/GET_BOX_CARDS',
+  async (boxId: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/box/getBoxes');
+      const response = await axiosInstance.get(`/box/${boxId}/getCards`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -49,27 +49,27 @@ export const getUserBoxes = createAsyncThunk(
   }
 );
 
-const boxMultipleReducer = createReducer(initialState, (builder) => {
+const cardMultipleReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(resetBoxMultipleState, (state) => {
+    .addCase(resetCardMultipleState, (state) => {
       state.isLoading = false;
       state.error = null;
       state.success = '';
-      state.boxes = [];
+      state.cards = [];
     })
-    .addCase(getUserBoxes.pending, (state) => {
+    .addCase(getBoxCards.pending, (state) => {
       state.isLoading = true;
       state.error = null;
       state.success = '';
-      state.boxes = [];
+      state.cards = [];
     })
-    .addCase(getUserBoxes.fulfilled, (state, action) => {
+    .addCase(getBoxCards.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
-      state.success = 'Boxes retrieved';
-      state.boxes = action.payload;
+      state.success = 'Cards retrieved';
+      state.cards = action.payload;
     })
-    .addCase(getUserBoxes.rejected, (state, action) => {
+    .addCase(getBoxCards.rejected, (state, action) => {
       state.isLoading = false;
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];
@@ -78,8 +78,8 @@ const boxMultipleReducer = createReducer(initialState, (builder) => {
         state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
       }
       state.success = '';
-      state.boxes = [];
+      state.cards = [];
     });
 });
 
-export default boxMultipleReducer;
+export default cardMultipleReducer;

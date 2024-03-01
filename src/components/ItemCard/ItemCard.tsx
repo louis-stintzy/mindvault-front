@@ -5,7 +5,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Checkbox,
   IconButton,
 } from '@mui/material';
 
@@ -13,10 +12,13 @@ import { Link, useParams } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import RedoIcon from '@mui/icons-material/Redo';
-import { CardData } from '../../@types/card';
+import { useState } from 'react';
 
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
+import { CardData } from '../../@types/card';
 import cardDefaultPicture from '../../assets/cardDefaultPicture.webp';
-import { useAppDispatch } from '../../hook/redux';
 
 import CompartmentIcon from '../../icons/CompartmentIcon';
 
@@ -27,8 +29,8 @@ interface ItemCardProps {
 }
 
 function ItemCard({ card }: ItemCardProps) {
-  const dispatch = useAppDispatch();
   const { id } = useParams();
+  const [showAnswer, setShowAnswer] = useState(false);
 
   const handleEdit = () => {
     console.log('edit');
@@ -115,8 +117,13 @@ function ItemCard({ card }: ItemCardProps) {
               color="text.secondary"
               sx={{ textAlign: 'left' }}
             >
-              {/* // TODO Cacher la réponse par défaut */}
-              {card.answer}
+              <IconButton
+                onClick={() => setShowAnswer(!showAnswer)}
+                aria-label="toggle answer visibility"
+              >
+                {showAnswer ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </IconButton>
+              {showAnswer ? card.answer : '••••••••••••••••'}
             </Typography>
           </CardContent>
           {/* Edit, Delete */}
