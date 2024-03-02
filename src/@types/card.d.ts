@@ -11,3 +11,9 @@ export interface CardData {
   createdAt: string;
   updatedAt: string | null;
 }
+
+export interface CardDataLight {
+  question: string;
+  answer: string;
+  attachment: string;
+}

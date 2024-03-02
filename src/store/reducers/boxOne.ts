@@ -74,7 +74,16 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.error = null;
       state.success = '';
       state.isRegistered = false;
-      state.box = initialState.box;
+      state.box = {
+        name: '',
+        description: '',
+        boxPicture: '',
+        color: '',
+        label: '',
+        level: '',
+        learnIt: true,
+        type: 2,
+      };
       state.boxCreated = null;
     })
     .addCase(changeBoxField, (state, action) => {
@@ -93,13 +102,23 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.error = null;
       state.success = '';
       state.isRegistered = false;
+      state.boxCreated = null;
     })
     .addCase(create.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
       state.success = 'Successfully created box';
       state.isRegistered = true;
-      state.box = initialState.box;
+      state.box = {
+        name: '',
+        description: '',
+        boxPicture: '',
+        color: '',
+        label: '',
+        level: '',
+        learnIt: true,
+        type: 2,
+      };
       state.boxCreated = action.payload;
     })
     .addCase(create.rejected, (state, action) => {
@@ -111,6 +130,9 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       } else {
         state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
       }
+      state.success = '';
+      state.isRegistered = false;
+      state.boxCreated = null;
     });
 });
 
