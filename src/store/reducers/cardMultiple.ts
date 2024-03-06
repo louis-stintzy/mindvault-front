@@ -5,6 +5,9 @@ import {
 } from '@reduxjs/toolkit';
 
 import { AxiosError } from 'axios';
+
+import { deleteCard } from './cardOne';
+
 import { CardData } from '../../@types/card';
 
 import { axiosInstance } from '../../utils/axios';
@@ -37,7 +40,7 @@ export const getBoxCards = createAsyncThunk(
   'cardMultiple/GET_BOX_CARDS',
   async (boxId: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/box/${boxId}/getCards`);
+      const response = await axiosInstance.get(`/box/${boxId}/cards`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -57,6 +60,7 @@ const cardMultipleReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.cards = [];
     })
+    // ----------- GET BOX CARDS -----------
     .addCase(getBoxCards.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -79,6 +83,13 @@ const cardMultipleReducer = createReducer(initialState, (builder) => {
       }
       state.success = '';
       state.cards = [];
+    })
+    // ----------- DELETE CARD -----------
+    .addCase(deleteCard.fulfilled, (state, action) => {
+      // récupère cardId par destructuration de action.meta.arg (metadonnées de l'action)
+      const { cardId } = action.meta.arg;
+      state.cards = state.cards.filter((card) => card.id !== cardId);
+      state.success = 'Card deleted';
     });
 });
 

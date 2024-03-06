@@ -13,7 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import { changeCardField, create } from '../../store/reducers/cardOne';
+import { changeCardField, createCard } from '../../store/reducers/cardOne';
 
 function CreateCard() {
   const dispatch = useAppDispatch();
@@ -30,7 +30,7 @@ function CreateCard() {
 
   useEffect(() => {
     if (isRegistered) {
-      navigate(`/box/${id}/getCards`, { replace: true });
+      navigate(`/box/${id}/items`, { replace: true });
     }
   }, [isRegistered, id, navigate]);
 
@@ -41,7 +41,7 @@ function CreateCard() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(create({ boxId, card }));
+    dispatch(createCard({ boxId, card }));
   };
 
   return (

@@ -21,6 +21,8 @@ import { CardData } from '../../@types/card';
 import cardDefaultPicture from '../../assets/cardDefaultPicture.webp';
 
 import CompartmentIcon from '../../icons/CompartmentIcon';
+import { useAppDispatch } from '../../hook/redux';
+import { deleteCard } from '../../store/reducers/cardOne';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -29,7 +31,9 @@ interface ItemCardProps {
 }
 
 function ItemCard({ card }: ItemCardProps) {
+  const dispatch = useAppDispatch();
   const { id } = useParams();
+  const boxId = Number(id);
   const [showAnswer, setShowAnswer] = useState(false);
 
   const handleEdit = () => {
@@ -37,7 +41,8 @@ function ItemCard({ card }: ItemCardProps) {
   };
 
   const handleDelete = () => {
-    console.log('delete');
+    console.log(`delete de la box : ${boxId} la card: ${card.id}`);
+    dispatch(deleteCard({ boxId, cardId: card.id }));
   };
 
   return (

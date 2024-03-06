@@ -6,6 +6,7 @@ import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import ItemCard from '../ItemCard/ItemCard';
 import { getBoxCards } from '../../store/reducers/cardMultiple';
+import { resetCardOneState } from '../../store/reducers/cardOne';
 
 function BoxItems() {
   const dispatch = useAppDispatch();
@@ -15,52 +16,10 @@ function BoxItems() {
   // recuperer le nom de la current box
   // const { name } = useAppSelector((state) => state.boxOne.box);
 
-  // const boxItemsList = [
-  //   {
-  //     id: 1,
-  //     boxId: 1,
-  //     creatorId: 1,
-  //     question: 'What is the capital of France?',
-  //     answer: 'Paris',
-  //     attachment: '',
-  //     position: 1,
-  //     compartment: 1,
-  //     dateToAsk: '2021 - 10 - 10',
-  //     createdAt: '2021 - 10 - 10',
-  //     updatedAt: '2021 - 10 - 10',
-  //   },
-  //   {
-  //     id: 2,
-  //     boxId: 1,
-  //     creatorId: 1,
-  //     question: 'What is the capital of Spain?',
-  //     answer: 'Madrid',
-  //     attachment: '',
-  //     position: 2,
-  //     compartment: 1,
-  //     dateToAsk: '2021 - 10 - 10',
-  //     createdAt: '2021 - 10 - 10',
-  //     updatedAt: '2021 - 10 - 10',
-  //   },
-  //   {
-  //     id: 3,
-  //     boxId: 1,
-  //     creatorId: 1,
-  //     question: 'What is the capital of Germany?',
-  //     answer: 'Berlin',
-  //     attachment: '',
-  //     position: 3,
-  //     compartment: 1,
-  //     dateToAsk: '2021 - 10 - 10',
-  //     createdAt: '2021 - 10 - 10',
-  //     updatedAt: '2021 - 10 - 10',
-  //   },
-  // ];
-
   useEffect(() => {
     // dispatch(getCurrentBox(id));
     dispatch(getBoxCards(boxId));
-    // dispatch(resetCardOneState());
+    dispatch(resetCardOneState());
   }, [boxId, dispatch]);
 
   return (

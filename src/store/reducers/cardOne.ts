@@ -46,16 +46,34 @@ export const changeCardField = createAction<{
   value: string;
 }>('cardOne/CHANGE_CARD_FIELD');
 
-export const create = createAsyncThunk(
+export const createCard = createAsyncThunk(
   'cardOne/CREATE',
   async (
     { boxId, card }: { boxId: number; card: CardDataLight },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.post(
-        `/box/${boxId}/createCard`,
-        card
+      const response = await axiosInstance.post(`/box/${boxId}/cards`, card);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
+export const deleteCard = createAsyncThunk(
+  'cardOne/DELETE_CARD',
+  async (
+    { boxId, cardId }: { boxId: number; cardId: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/box/${boxId}/card/${cardId}`
       );
       return response.data;
     } catch (error) {
@@ -85,14 +103,15 @@ const cardOneReducer = createReducer(initialState, (builder) => {
     .addCase(changeCardField, (state, action) => {
       state.card[action.payload.field] = action.payload.value;
     })
-    .addCase(create.pending, (state) => {
+    // ----------- CREATE CARD -----------
+    .addCase(createCard.pending, (state) => {
       state.isLoading = true;
       state.error = null;
       state.success = '';
       state.isRegistered = false;
       state.cardCreated = null;
     })
-    .addCase(create.fulfilled, (state, action) => {
+    .addCase(createCard.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
       state.success = 'Successfully created card';
@@ -104,7 +123,7 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       };
       state.cardCreated = action.payload;
     })
-    .addCase(create.rejected, (state, action) => {
+    .addCase(createCard.rejected, (state, action) => {
       state.isLoading = false;
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];
@@ -116,6 +135,27 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.cardCreated = null;
+    })
+    // ----------- DELETE CARD -----------
+    .addCase(deleteCard.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+    })
+    .addCase(deleteCard.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = 'Successfully deleted card';
+    })
+    .addCase(deleteCard.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+        state.success = '';
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
+      state.success = '';
     });
 });
 

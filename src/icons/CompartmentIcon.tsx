@@ -1,12 +1,20 @@
-import { SvgIcon } from '@mui/material';
+import { SvgIcon, useTheme } from '@mui/material';
 import type { SVGProps } from 'react';
+import { grey } from '@mui/material/colors';
+// import theme from '../theme';
 
 function CompartmentIcon(props: SVGProps<SVGSVGElement>) {
+  const colorLight = '#627D98';
+  const colorDark = '#AEB6BF';
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
+
   return (
     <SvgIcon
       sx={{
-        fontSize: '50px',
-        marginRight: '25px',
+        fontSize: '24px',
+        marginRight: '10px',
+        // color: 'grey[500]',
       }}
     >
       <svg
@@ -19,7 +27,7 @@ function CompartmentIcon(props: SVGProps<SVGSVGElement>) {
       >
         <g
           transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-          fill="#000000"
+          fill={isDarkMode ? colorDark : colorLight}
           stroke="none"
           {...props}
         >

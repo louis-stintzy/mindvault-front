@@ -1,7 +1,7 @@
 export interface CardData {
   id: number;
   boxId: number;
-  creatorId;
+  creatorId: number;
   question: string;
   answer: string;
   attachment: string;
