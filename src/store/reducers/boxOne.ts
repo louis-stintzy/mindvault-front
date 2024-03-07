@@ -95,6 +95,12 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.boxCreated = null;
       state.currentBox = null;
     })
+    .addCase(setCurrentBox, (state, action) => {
+      state.currentBox = action.payload;
+    })
+    .addCase(initializeBoxFields, (state, action) => {
+      state.box = action.payload;
+    })
     .addCase(changeBoxField, (state, action) => {
       const { field, value } = action.payload;
       // pour gérer la problématique de typage
@@ -142,9 +148,6 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.boxCreated = null;
-    })
-    .addCase(setCurrentBox, (state, action) => {
-      state.currentBox = action.payload;
     });
 });
 

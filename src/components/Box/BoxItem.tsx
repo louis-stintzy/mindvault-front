@@ -22,7 +22,10 @@ import { BoxData } from '../../@types/box';
 
 import boxDefaultPicture from '../../assets/boxDefaultPicture.png';
 import { useAppDispatch } from '../../hook/redux';
-import { setCurrentBox } from '../../store/reducers/boxOne';
+import {
+  initializeBoxFields,
+  setCurrentBox,
+} from '../../store/reducers/boxOne';
 
 interface BoxCardProps {
   box: BoxData;
@@ -42,6 +45,18 @@ function BoxItem({ box }: BoxCardProps) {
   };
 
   const handleEdit = () => {
+    dispatch(
+      initializeBoxFields({
+        name: box.name,
+        description: box.description,
+        boxPicture: box.box_picture,
+        color: box.color,
+        label: box.label,
+        level: box.level,
+        learnIt: box.learn_it,
+        type: box.type,
+      })
+    );
     dispatch(setCurrentBox(box));
     navigate(`/box/${box.id}/edit`);
   };
