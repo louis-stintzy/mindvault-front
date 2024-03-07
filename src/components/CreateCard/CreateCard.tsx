@@ -70,6 +70,7 @@ function CreateCard() {
           <TextField
             required
             id="question"
+            name="question"
             label="Question"
             variant="outlined"
             fullWidth
@@ -79,6 +80,7 @@ function CreateCard() {
           />
           <TextField
             id="answer"
+            name="answer"
             label="Answer to the question"
             multiline
             rows={4}
