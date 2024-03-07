@@ -7,10 +7,10 @@ import LandingPage from './components/LandingPage/LandingPage';
 import Home from './components/Home/Home';
 
 import { useAppSelector } from './hook/redux';
-import Boxes from './components/Box/Boxes';
-import CreateBox from './components/Box/CreateBox';
-import BoxItems from './components/Card/BoxItems';
-import CreateCard from './components/Card/CreateCard';
+import BoxItemsList from './components/Box/BoxItemsList';
+import BoxCreateEdit from './components/Box/BoxCreateEdit';
+import CardItemsList from './components/Card/CardItemsList';
+import CardCreateEdit from './components/Card/CardCreateEdit';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -57,7 +57,7 @@ export const routerConfig = [
         path: '/boxes',
         element: (
           <ProtectedRoute>
-            <Boxes />
+            <BoxItemsList />
           </ProtectedRoute>
         ),
       },
@@ -65,7 +65,7 @@ export const routerConfig = [
         path: '/box/create',
         element: (
           <ProtectedRoute>
-            <CreateBox />
+            <BoxCreateEdit />
           </ProtectedRoute>
         ),
       },
@@ -73,7 +73,7 @@ export const routerConfig = [
         path: '/box/:id/items',
         element: (
           <ProtectedRoute>
-            <BoxItems />
+            <CardItemsList />
           </ProtectedRoute>
         ),
       },
@@ -81,7 +81,7 @@ export const routerConfig = [
         path: '/box/:id/items/create',
         element: (
           <ProtectedRoute>
-            <CreateCard />
+            <CardCreateEdit />
           </ProtectedRoute>
         ),
       },

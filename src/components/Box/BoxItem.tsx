@@ -28,10 +28,10 @@ interface BoxCardProps {
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-// (suite Boxes) ...si dans BoxCard  on utilisait une interface BoxCardProps { box: BoxData; }
+// (suite BoxItemsList) ...si dans BoxCard  on utilisait une interface BoxCardProps { box: BoxData; }
 // et que l'on passait cette interface à la function BoxCard({ box }: BoxCardProps) {
 
-function BoxCard({ box }: BoxCardProps) {
+function BoxItem({ box }: BoxCardProps) {
   const handlePlay = () => {
     console.log('play');
   };
@@ -151,4 +151,4 @@ function BoxCard({ box }: BoxCardProps) {
   );
 }
 
-export default BoxCard;
+export default BoxItem;

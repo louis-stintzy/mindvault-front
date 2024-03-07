@@ -4,18 +4,18 @@ import { Container, Box, Typography, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import ItemCard from './ItemCard';
+import CardItem from './CardItem';
 import { getBoxCards } from '../../store/reducers/cardMultiple';
 import { resetCardOneState } from '../../store/reducers/cardOne';
 
-function BoxItems() {
+function CardItemsList() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const boxNameFromBoxItemsList = location.state?.boxName;
   const { id } = useParams();
   const boxId = Number(id);
   const boxItemsList = useAppSelector((state) => state.cardMultiple.cards);
-  const boxNameFromCreateEditBox = useAppSelector(
+  const boxNameFromBoxCreateEdit = useAppSelector(
     (state) => state.boxOne.boxCreated?.name
   );
 
@@ -40,7 +40,7 @@ function BoxItems() {
           sx={{ marginBottom: { xs: '20px', md: '40px' } }}
         >
           Cards for the box :{' '}
-          {boxNameFromBoxItemsList || boxNameFromCreateEditBox}
+          {boxNameFromBoxItemsList || boxNameFromBoxCreateEdit}
         </Typography>
         <Link
           to={`/box/${id}/items/create`}
@@ -57,7 +57,7 @@ function BoxItems() {
             // on aurait pu utiliser <BoxCard key={box.id} box={box} /> si... (voir BoxCard.tsx)
             // on aurait pu utiliser <BoxCard key={box.id} {...box} /> si... (voir BoxCard.tsx)
             // composant CardCard
-            <ItemCard key={item.id} card={item} />
+            <CardItem key={item.id} card={item} />
           ))}
         </Box>
         {/* --------------------- Bottom Navigation --------------------- */}
@@ -67,4 +67,4 @@ function BoxItems() {
   );
 }
 
-export default BoxItems;
+export default CardItemsList;

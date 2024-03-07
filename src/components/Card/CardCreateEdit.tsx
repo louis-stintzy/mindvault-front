@@ -15,7 +15,7 @@ import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCardField, createCard } from '../../store/reducers/cardOne';
 
-function CreateCard() {
+function CardCreateEdit() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -117,4 +117,4 @@ function CreateCard() {
   );
 }
 
-export default CreateCard;
+export default CardCreateEdit;

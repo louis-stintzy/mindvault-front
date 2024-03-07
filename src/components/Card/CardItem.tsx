@@ -36,7 +36,7 @@ interface ItemCardProps {
   card: CardData;
 }
 
-function ItemCard({ card }: ItemCardProps) {
+function CardItem({ card }: ItemCardProps) {
   const dispatch = useAppDispatch();
   const { id } = useParams();
   const boxId = Number(id);
@@ -181,4 +181,4 @@ function ItemCard({ card }: ItemCardProps) {
   );
 }
 
-export default ItemCard;
+export default CardItem;

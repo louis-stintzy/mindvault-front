@@ -16,7 +16,7 @@ import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeBoxField, create } from '../../store/reducers/boxOne';
 
-function CreateBox() {
+function BoxCreateEdit() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -148,4 +148,4 @@ function CreateBox() {
   );
 }
 
-export default CreateBox;
+export default BoxCreateEdit;
