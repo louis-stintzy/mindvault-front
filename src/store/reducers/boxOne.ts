@@ -22,6 +22,7 @@ interface BoxOneState {
   isRegistered: boolean;
   box: BoxDataLight;
   boxCreated: BoxData | null;
+  currentBox: BoxData | null;
 }
 
 export const initialState: BoxOneState = {
@@ -40,18 +41,25 @@ export const initialState: BoxOneState = {
     type: 2,
   },
   boxCreated: null,
+  currentBox: null,
 };
 
 type KeysOfBox = keyof BoxOneState['box'];
 
 export const resetBoxOneState = createAction('boxOne/RESET_BOX_ONE_STATE');
 
+export const setCurrentBox = createAction<BoxData>('boxOne/SET_CURRENT_BOX');
+
+export const initializeBoxFields = createAction<BoxDataLight>(
+  'boxOne/INITIALIZE_BOX_FIELDS'
+);
+
 export const changeBoxField = createAction<{
   field: KeysOfBox;
   value: string | boolean | number;
 }>('boxOne/CHANGE_BOX_FIELD');
 
-export const create = createAsyncThunk(
+export const createBox = createAsyncThunk(
   'boxOne/CREATE',
   async (box: BoxDataLight, { rejectWithValue }) => {
     try {
@@ -85,6 +93,7 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         type: 2,
       };
       state.boxCreated = null;
+      state.currentBox = null;
     })
     .addCase(changeBoxField, (state, action) => {
       const { field, value } = action.payload;
@@ -97,14 +106,14 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         state.box[field] = value as string;
       }
     })
-    .addCase(create.pending, (state) => {
+    .addCase(createBox.pending, (state) => {
       state.isLoading = true;
       state.error = null;
       state.success = '';
       state.isRegistered = false;
       state.boxCreated = null;
     })
-    .addCase(create.fulfilled, (state, action) => {
+    .addCase(createBox.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
       state.success = 'Successfully created box';
@@ -121,7 +130,7 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       };
       state.boxCreated = action.payload;
     })
-    .addCase(create.rejected, (state, action) => {
+    .addCase(createBox.rejected, (state, action) => {
       state.isLoading = false;
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];
@@ -133,6 +142,9 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.boxCreated = null;
+    })
+    .addCase(setCurrentBox, (state, action) => {
+      state.currentBox = action.payload;
     });
 });
 

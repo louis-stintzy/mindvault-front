@@ -16,11 +16,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { BoxData } from '../../@types/box';
 
 import boxDefaultPicture from '../../assets/boxDefaultPicture.png';
+import { useAppDispatch } from '../../hook/redux';
+import { setCurrentBox } from '../../store/reducers/boxOne';
 
 interface BoxCardProps {
   box: BoxData;
@@ -32,12 +34,16 @@ const apiUrl = import.meta.env.VITE_API_URL;
 // et que l'on passait cette interface à la function BoxCard({ box }: BoxCardProps) {
 
 function BoxItem({ box }: BoxCardProps) {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const handlePlay = () => {
     console.log('play');
   };
 
   const handleEdit = () => {
-    console.log('edit');
+    dispatch(setCurrentBox(box));
+    navigate(`/box/${box.id}/edit`);
   };
 
   const handleStats = () => {

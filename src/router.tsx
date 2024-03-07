@@ -65,7 +65,15 @@ export const routerConfig = [
         path: '/box/create',
         element: (
           <ProtectedRoute>
-            <BoxCreateEdit />
+            <BoxCreateEdit mode="create" />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/box/:id/edit',
+        element: (
+          <ProtectedRoute>
+            <BoxCreateEdit mode="edit" />
           </ProtectedRoute>
         ),
       },
