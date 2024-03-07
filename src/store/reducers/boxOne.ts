@@ -55,7 +55,7 @@ export const create = createAsyncThunk(
   'boxOne/CREATE',
   async (box: BoxDataLight, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/box/createBox', box);
+      const response = await axiosInstance.post('/boxes', box);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {

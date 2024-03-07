@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Container, Box, Typography, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -10,14 +10,16 @@ import { resetCardOneState } from '../../store/reducers/cardOne';
 
 function BoxItems() {
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const boxNameFromBoxItemsList = location.state?.boxName;
   const { id } = useParams();
   const boxId = Number(id);
   const boxItemsList = useAppSelector((state) => state.cardMultiple.cards);
-  // recuperer le nom de la current box
-  // const { name } = useAppSelector((state) => state.boxOne.box);
+  const boxNameFromCreateEditBox = useAppSelector(
+    (state) => state.boxOne.boxCreated?.name
+  );
 
   useEffect(() => {
-    // dispatch(getCurrentBox(id));
     dispatch(getBoxCards(boxId));
     dispatch(resetCardOneState());
   }, [boxId, dispatch]);
@@ -37,7 +39,8 @@ function BoxItems() {
           gutterBottom
           sx={{ marginBottom: { xs: '20px', md: '40px' } }}
         >
-          Box Cards
+          Cards for the box :{' '}
+          {boxNameFromBoxItemsList || boxNameFromCreateEditBox}
         </Typography>
         <Link
           to={`/box/${id}/items/create`}

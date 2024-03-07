@@ -37,7 +37,7 @@ export const getUserBoxes = createAsyncThunk(
   'boxMultiple/GET_USER_BOXES',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/box/getBoxes');
+      const response = await axiosInstance.get('/boxes');
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {

@@ -90,6 +90,7 @@ function BoxCard({ box }: BoxCardProps) {
             >
               <Link
                 to={`/box/${box.id}/items`}
+                state={{ boxName: box.name }}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 {box.name}

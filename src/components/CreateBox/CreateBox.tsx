@@ -20,9 +20,8 @@ function CreateBox() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, error, isRegistered, success, box } = useAppSelector(
-    (state) => state.boxOne
-  );
+  const { isLoading, error, isRegistered, success, box, boxCreated } =
+    useAppSelector((state) => state.boxOne);
 
   // dans un premier temps isFormValid, c'est juste avoir un nom de box,
   // utiliser useState par la suite pour checker comme dans SignUp
@@ -30,10 +29,13 @@ function CreateBox() {
 
   useEffect(() => {
     if (isRegistered) {
-      // TODO: à rediriger vers la page de la box créée
-      navigate('/boxes', { replace: true });
+      if (boxCreated) {
+        navigate(`/box/${boxCreated.id}/items`, { replace: true });
+      } else {
+        navigate('/boxes', { replace: true });
+      }
     }
-  }, [isRegistered, navigate]);
+  }, [boxCreated, isRegistered, navigate]);
 
   const handleChangeField =
     (field: 'name' | 'description' | 'label') => (value: string) => {
