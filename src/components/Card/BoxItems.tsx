@@ -4,7 +4,7 @@ import { Container, Box, Typography, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import ItemCard from '../ItemCard/ItemCard';
+import ItemCard from './ItemCard';
 import { getBoxCards } from '../../store/reducers/cardMultiple';
 import { resetCardOneState } from '../../store/reducers/cardOne';
 

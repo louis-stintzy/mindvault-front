@@ -7,10 +7,10 @@ import LandingPage from './components/LandingPage/LandingPage';
 import Home from './components/Home/Home';
 
 import { useAppSelector } from './hook/redux';
-import Boxes from './components/Boxes/Boxes';
-import CreateBox from './components/CreateBox/CreateBox';
-import BoxItems from './components/BoxItems/BoxItems';
-import CreateCard from './components/CreateCard/CreateCard';
+import Boxes from './components/Box/Boxes';
+import CreateBox from './components/Box/CreateBox';
+import BoxItems from './components/Card/BoxItems';
+import CreateCard from './components/Card/CreateCard';
 
 interface ProtectedRouteProps {
   children: ReactNode;

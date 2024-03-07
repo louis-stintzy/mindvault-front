@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
-import BoxCard from '../BoxCard/BoxCard';
+import BoxCard from './BoxCard';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { getUserBoxes } from '../../store/reducers/boxMultiple';
 import { resetBoxOneState } from '../../store/reducers/boxOne';
