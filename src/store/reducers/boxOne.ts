@@ -60,10 +60,26 @@ export const changeBoxField = createAction<{
 }>('boxOne/CHANGE_BOX_FIELD');
 
 export const createBox = createAsyncThunk(
-  'boxOne/CREATE',
+  'boxOne/CREATE_BOX',
   async (box: BoxDataLight, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('/boxes', box);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
+export const deleteBox = createAsyncThunk(
+  'boxOne/DELETE_BOX',
+  async (boxId: number, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(`/box/${boxId}`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -112,6 +128,7 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         state.box[field] = value as string;
       }
     })
+    // ----------- CREATE BOX -----------
     .addCase(createBox.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -148,6 +165,29 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.boxCreated = null;
+    })
+    // ----------- DELETE BOX -----------
+    .addCase(deleteBox.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+      state.isRegistered = false;
+      state.boxCreated = null;
+    })
+    .addCase(deleteBox.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = 'Successfully deleted box';
+    })
+    .addCase(deleteBox.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+        state.success = '';
+        state.isRegistered = false;
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
     });
 });
 

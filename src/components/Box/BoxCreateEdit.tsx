@@ -19,7 +19,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import { changeBoxField, createBox } from '../../store/reducers/boxOne';
+import {
+  changeBoxField,
+  createBox,
+  deleteBox,
+} from '../../store/reducers/boxOne';
 
 interface BoxCreateEditProps {
   mode: 'create' | 'edit';
@@ -95,7 +99,12 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     setOpenDialog(true);
   };
   const handleConfirmDelete = () => {
-    console.log('Delete the box');
+    if (currentBox) {
+      dispatch(deleteBox(currentBox.id));
+    } else {
+      alert('currentBox is null');
+    }
+    navigate(`/boxes`);
   };
 
   let buttonText;
