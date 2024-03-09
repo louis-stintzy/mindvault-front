@@ -10,6 +10,8 @@ import { BoxData } from '../../@types/box';
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
 
+import { updateBoxLearnItValue } from './boxOne';
+
 interface ErrorResponse {
   errCode: number;
   errMessage: string;
@@ -79,6 +81,16 @@ const boxMultipleReducer = createReducer(initialState, (builder) => {
       }
       state.success = '';
       state.boxes = [];
+    })
+    // ----------- UPDATE BOX LEARNIT VALUE -----------
+    .addCase(updateBoxLearnItValue.fulfilled, (state, action) => {
+      const { boxId } = action.meta.arg;
+      const boxIndex = state.boxes.findIndex((box) => box.id === boxId);
+      if (boxIndex !== -1) {
+        state.boxes[boxIndex].learn_it = action.payload.learn_it;
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Box not found' }];
+      }
     });
 });
 

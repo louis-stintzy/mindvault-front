@@ -75,6 +75,27 @@ export const createBox = createAsyncThunk(
   }
 );
 
+export const updateBoxLearnItValue = createAsyncThunk(
+  'boxOne/UPDATE_BOX_LEARN_IT_VALUE',
+  async (
+    { boxId, learnIt }: { boxId: number; learnIt: boolean },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.patch(`/box/${boxId}/learnit`, {
+        learnIt,
+      });
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
 export const deleteBox = createAsyncThunk(
   'boxOne/DELETE_BOX',
   async (boxId: number, { rejectWithValue }) => {
@@ -165,6 +186,26 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.boxCreated = null;
+    })
+    // ---- UPDATE BOX LEARN IT VALUE ----
+    .addCase(updateBoxLearnItValue.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+    })
+    .addCase(updateBoxLearnItValue.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = 'Learn it value updated';
+    })
+    .addCase(updateBoxLearnItValue.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+        state.success = '';
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
     })
     // ----------- DELETE BOX -----------
     .addCase(deleteBox.pending, (state) => {

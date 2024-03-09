@@ -25,6 +25,7 @@ import { useAppDispatch } from '../../hook/redux';
 import {
   initializeBoxFields,
   setCurrentBox,
+  updateBoxLearnItValue,
 } from '../../store/reducers/boxOne';
 
 interface BoxCardProps {
@@ -66,7 +67,7 @@ function BoxItem({ box }: BoxCardProps) {
   };
 
   const handleLearnIt = () => {
-    console.log('learn it');
+    dispatch(updateBoxLearnItValue({ boxId: box.id, learnIt: !box.learn_it }));
   };
 
   return (
