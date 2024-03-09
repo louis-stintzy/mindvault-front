@@ -1,12 +1,14 @@
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Link } from 'react-router-dom';
 
 function BottomNavigationMUI() {
   return (
     <BottomNavigation
       showLabels
       sx={{
+        width: '100vw',
         position: 'fixed',
         bottom: 0,
         left: 0,
@@ -15,7 +17,13 @@ function BottomNavigationMUI() {
       }}
     >
       {/* il y a un handle change et une value */}
-      <BottomNavigationAction label="Home" value="home" icon={<HomeIcon />} />
+      <BottomNavigationAction
+        label="Home"
+        value="home"
+        icon={<HomeIcon />}
+        component={Link}
+        to="/home"
+      />
       <BottomNavigationAction
         label="Multibox Test"
         value="multibox"
