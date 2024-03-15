@@ -31,7 +31,10 @@ function CardCreateEdit() {
 
   useEffect(() => {
     if (isRegistered) {
-      navigate(`/box/${id}/items`, { replace: true });
+      navigate(`/box/${id}/items`, {
+        replace: true,
+        state: { navigateFromCardCreateEdit: true },
+      });
     }
   }, [isRegistered, id, navigate]);
 
@@ -45,7 +48,7 @@ function CardCreateEdit() {
     dispatch(createCard({ boxId, card }));
   };
 
-  if (isLoading) {
+  if (isLoading || isRegistered) {
     return (
       <Box
         sx={{

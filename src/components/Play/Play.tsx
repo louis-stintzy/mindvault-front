@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import { resetCardMultipleState } from '../../store/reducers/cardMultiple';
+import { resetCardsToReviewState } from '../../store/reducers/cardMultiple';
 
 function Play() {
   const dispatch = useAppDispatch();
-  const cards = useAppSelector((state) => state.cardMultiple.cards);
+  const cards = useAppSelector((state) => state.cardMultiple.cardsToReview);
 
   useEffect(() => {
     return () => {
-      dispatch(resetCardMultipleState());
+      dispatch(resetCardsToReviewState());
     };
   }, [dispatch]);
 

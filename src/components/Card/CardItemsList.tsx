@@ -11,30 +11,29 @@ import AddIcon from '@mui/icons-material/Add';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import CardItem from './CardItem';
-import {
-  getBoxCards,
-  resetCardMultipleState,
-} from '../../store/reducers/cardMultiple';
+import { getBoxCards } from '../../store/reducers/cardMultiple';
 import { resetCardOneState } from '../../store/reducers/cardOne';
 
 function CardItemsList() {
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const navigateFromCardCreateEdit =
+    location.state?.navigateFromCardCreateEdit || false;
   const boxNameFromBoxItemsList = location.state?.boxName;
   const { id } = useParams();
   const boxId = Number(id);
-  const { cards, isLoading } = useAppSelector((state) => state.cardMultiple);
+  const { cardsAll, isLoading } = useAppSelector((state) => state.cardMultiple);
   const boxNameFromBoxCreateEdit = useAppSelector(
     (state) => state.boxOne.boxCreated?.name
   );
 
   useEffect(() => {
-    dispatch(getBoxCards(boxId));
-    return () => {
-      dispatch(resetCardMultipleState());
-      dispatch(resetCardOneState());
-    };
-  }, [boxId, dispatch]);
+    if (!navigateFromCardCreateEdit) {
+      dispatch(getBoxCards(boxId));
+    }
+    // dispatch(getBoxCards(boxId));
+    dispatch(resetCardOneState());
+  }, [navigateFromCardCreateEdit, boxId, dispatch]);
 
   if (isLoading) {
     return (
@@ -87,9 +86,9 @@ function CardItemsList() {
         {/* --------------------------- Items --------------------------- */}
         <Box>
           <Typography variant="h6" component="h2" gutterBottom>
-            Number of cards : {cards.length}
+            Number of cards : {cardsAll.length}
           </Typography>
-          {cards.map((item) => (
+          {cardsAll.map((item) => (
             // on aurait pu utiliser <BoxCard key={box.id} box={box} /> si... (voir BoxCard.tsx)
             // on aurait pu utiliser <BoxCard key={box.id} {...box} /> si... (voir BoxCard.tsx)
             // composant CardCard
