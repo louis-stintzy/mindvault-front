@@ -1,11 +1,20 @@
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Container, Box, Typography, Button } from '@mui/material';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import CardItem from './CardItem';
-import { getBoxCards } from '../../store/reducers/cardMultiple';
+import {
+  getBoxCards,
+  resetCardMultipleState,
+} from '../../store/reducers/cardMultiple';
 import { resetCardOneState } from '../../store/reducers/cardOne';
 
 function CardItemsList() {
@@ -14,15 +23,33 @@ function CardItemsList() {
   const boxNameFromBoxItemsList = location.state?.boxName;
   const { id } = useParams();
   const boxId = Number(id);
-  const boxItemsList = useAppSelector((state) => state.cardMultiple.cards);
+  const { cards, isLoading } = useAppSelector((state) => state.cardMultiple);
   const boxNameFromBoxCreateEdit = useAppSelector(
     (state) => state.boxOne.boxCreated?.name
   );
 
   useEffect(() => {
     dispatch(getBoxCards(boxId));
-    dispatch(resetCardOneState());
+    return () => {
+      dispatch(resetCardMultipleState());
+      dispatch(resetCardOneState());
+    };
   }, [boxId, dispatch]);
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -46,14 +73,23 @@ function CardItemsList() {
           to={`/box/${id}/items/create`}
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
-          <Button variant="outlined" startIcon={<AddIcon />}>
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
+            sx={{
+              marginBottom: { xs: '20px', md: '40px' },
+            }}
+          >
             Add a new card
           </Button>
         </Link>
 
         {/* --------------------------- Items --------------------------- */}
         <Box>
-          {boxItemsList.map((item) => (
+          <Typography variant="h6" component="h2" gutterBottom>
+            Number of cards : {cards.length}
+          </Typography>
+          {cards.map((item) => (
             // on aurait pu utiliser <BoxCard key={box.id} box={box} /> si... (voir BoxCard.tsx)
             // on aurait pu utiliser <BoxCard key={box.id} {...box} /> si... (voir BoxCard.tsx)
             // composant CardCard

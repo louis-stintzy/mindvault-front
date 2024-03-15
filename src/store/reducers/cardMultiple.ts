@@ -52,8 +52,25 @@ export const getBoxCards = createAsyncThunk(
   }
 );
 
+export const getRandomCards = createAsyncThunk(
+  'cardMultiple/GET_RANDOM_CARDS',
+  async (boxId: number, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/play/box/${boxId}`);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
 const cardMultipleReducer = createReducer(initialState, (builder) => {
   builder
+    // ----------- RESET CARDMULTIPLESTATE -----------
     .addCase(resetCardMultipleState, (state) => {
       state.isLoading = false;
       state.error = null;
@@ -84,12 +101,36 @@ const cardMultipleReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.cards = [];
     })
-    // ----------- DELETE CARD -----------
+    // -------------- DELETE CARD --------------
     .addCase(deleteCard.fulfilled, (state, action) => {
       // récupère cardId par destructuration de action.meta.arg (metadonnées de l'action)
       const { cardId } = action.meta.arg;
       state.cards = state.cards.filter((card) => card.id !== cardId);
       state.success = 'Card deleted';
+    })
+    // ----------- GET RANDOM CARDS -----------
+    .addCase(getRandomCards.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+      state.cards = [];
+    })
+    .addCase(getRandomCards.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = 'Cards retrieved';
+      state.cards = action.payload;
+    })
+    .addCase(getRandomCards.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+        state.success = '';
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
+      state.success = '';
+      state.cards = [];
     });
 });
 

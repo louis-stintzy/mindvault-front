@@ -5,6 +5,7 @@ import {
   Button,
   TextField,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -43,6 +44,21 @@ function CardCreateEdit() {
     event.preventDefault();
     dispatch(createCard({ boxId, card }));
   };
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs" className="create-box-container">
