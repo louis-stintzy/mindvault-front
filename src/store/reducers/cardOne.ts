@@ -86,8 +86,35 @@ export const deleteCard = createAsyncThunk(
   }
 );
 
+export const updateCardAttributesAfterAnswer = createAsyncThunk(
+  'cardOne/UPDATE_CARD_ATTRIBUTES_AFTER_ANSWER',
+  async (
+    {
+      cardId,
+      nextCompartment,
+      nextDateToAsk,
+    }: { cardId: number; nextCompartment: number; nextDateToAsk: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.patch(`/play/card/${cardId}`, {
+        nextCompartment,
+        nextDateToAsk,
+      });
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
 const cardOneReducer = createReducer(initialState, (builder) => {
   builder
+    // ----------- RESET STATE -----------
     .addCase(resetCardOneState, (state) => {
       state.isLoading = false;
       state.error = null;
@@ -100,6 +127,7 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       };
       state.cardCreated = null;
     })
+    // ----------- CHANGE FIELD -----------
     .addCase(changeCardField, (state, action) => {
       state.card[action.payload.field] = action.payload.value;
     })
@@ -148,6 +176,27 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.success = 'Successfully deleted card';
     })
     .addCase(deleteCard.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+        state.success = '';
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
+      state.success = '';
+    })
+    // ----------- UPDATE CARD ATTRIBUTES AFTER ANSWER -----------
+    .addCase(updateCardAttributesAfterAnswer.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+    })
+    .addCase(updateCardAttributesAfterAnswer.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = 'Successfully updated card attributes';
+    })
+    .addCase(updateCardAttributesAfterAnswer.rejected, (state, action) => {
       state.isLoading = false;
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];

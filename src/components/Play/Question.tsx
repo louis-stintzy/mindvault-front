@@ -9,17 +9,48 @@ import {
 import { useState } from 'react';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { CardData } from '../../@types/card';
+import { useAppDispatch } from '../../hook/redux';
+import { updateCardAttributesAfterAnswer } from '../../store/reducers/cardOne';
 
 interface QuestionProps {
   card: CardData;
 }
 
 function Question({ card }: QuestionProps) {
+  const dispatch = useAppDispatch();
   const [userAnswer, setUserAnswer] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(card);
+    const cardId = card.id;
+    const isCorrect =
+      userAnswer.trim().toLowerCase() === card.answer.trim().toLowerCase();
+    console.log('isCorrect', isCorrect);
+    const nextCompartment = isCorrect ? card.compartment + 1 : 1;
+    const nextDateToAskBeforeFormatting = new Date();
+
+    // Compartiment 1 : tous les jours
+    // Compartiment 2 : tous les trois jours
+    // Compartiment 3 : toutes les semaines
+    // Compartiment 4 : toutes les deux semaines
+    // Compartiment 5 : tous les mois
+    // Compartiment 6 : tous les trois mois
+    // Compartiment 7 : tous les six mois
+
+    const timeToAdd = [0, 1, 3, 7, 15, 30, 90, 180];
+    nextDateToAskBeforeFormatting.setDate(
+      nextDateToAskBeforeFormatting.getDate() + timeToAdd[nextCompartment]
+    );
+    const nextDateToAsk = nextDateToAskBeforeFormatting.toISOString();
+
+    dispatch(
+      updateCardAttributesAfterAnswer({
+        cardId,
+        nextCompartment,
+        nextDateToAsk,
+      })
+    );
+    setUserAnswer('');
   };
 
   return (
