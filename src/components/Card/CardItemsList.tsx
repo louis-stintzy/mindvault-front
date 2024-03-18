@@ -27,11 +27,13 @@ function CardItemsList() {
     (state) => state.boxOne.boxCreated?.name
   );
 
+  // On peut accéder à CardItemList soit depuis BoxItemList soit depuis CardCreateEdit
+  // Si on vient de CardCreateEdit, on a déjà les cards dans le store, pas besoin de les recharger depuis la BDD
+  // TODO : charger les cards par lots (avec un bouton "Voir plus" et mis en place d'une pagination côté serveur)
   useEffect(() => {
     if (!navigateFromCardCreateEdit) {
       dispatch(getBoxCards(boxId));
     }
-    // dispatch(getBoxCards(boxId));
     dispatch(resetCardOneState());
   }, [navigateFromCardCreateEdit, boxId, dispatch]);
 

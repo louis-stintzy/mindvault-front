@@ -64,7 +64,7 @@ function CardCreateEdit() {
   }
 
   return (
-    <Container component="main" maxWidth="xs" className="create-box-container">
+    <Container component="main" maxWidth="xs" className="create-card-container">
       <Box
         sx={{
           marginTop: 8,
