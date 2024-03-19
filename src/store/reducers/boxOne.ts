@@ -54,6 +54,22 @@ export const initializeBoxFields = createAction<BoxDataLight>(
   'boxOne/INITIALIZE_BOX_FIELDS'
 );
 
+export const getBoxById = createAsyncThunk(
+  'boxOne/GET_BOX_BY_ID',
+  async (boxId: number, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/box/${boxId}`);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
 export const changeBoxField = createAction<{
   field: KeysOfBox;
   value: string | boolean | number;
@@ -138,6 +154,27 @@ const boxOneReducer = createReducer(initialState, (builder) => {
     .addCase(initializeBoxFields, (state, action) => {
       state.box = action.payload;
     })
+    // -------------- GET BOX BY ID --------------
+    .addCase(getBoxById.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+    })
+    .addCase(getBoxById.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = '';
+      state.currentBox = action.payload;
+    })
+    .addCase(getBoxById.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
+    })
+    // ------------- CHANGE BOX FIELD -------------
     .addCase(changeBoxField, (state, action) => {
       const { field, value } = action.payload;
       // pour gérer la problématique de typage
@@ -149,7 +186,7 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         state.box[field] = value as string;
       }
     })
-    // ----------- CREATE BOX -----------
+    // --------------- CREATE BOX ----------------
     .addCase(createBox.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -187,7 +224,7 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.isRegistered = false;
       state.boxCreated = null;
     })
-    // ---- UPDATE BOX LEARN IT VALUE ----
+    // ---------- UPDATE BOX LEARN IT VALUE ----------
     .addCase(updateBoxLearnItValue.pending, (state) => {
       state.isLoading = true;
       state.error = null;
