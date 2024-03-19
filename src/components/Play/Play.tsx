@@ -19,6 +19,7 @@ function Play() {
 
   const [cardIndex, setCardIndex] = useState(0);
   const [askToPlayMore, setAskToPlayMore] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   const handleCardIndex = () => {
     // Si on n'est pas à la dernière carte, on passe à la suivante
@@ -28,11 +29,11 @@ function Play() {
     } else if (cardIndex === 9) {
       setAskToPlayMore(true);
       dispatch(resetCardsToReviewState());
-      // Si il n'y avait pas 10 cartes, c'est qu'il n'y en a plus, on redirige
+      // Si il n'y avait pas 10 cartes, c'est qu'il n'y en a plus, on a fini
     } else {
       setAskToPlayMore(false);
       dispatch(resetCardsToReviewState());
-      navigate(`/boxes`);
+      setCompleted(true);
     }
   };
 
@@ -126,10 +127,11 @@ function Play() {
     );
   }
   // ----------------------- NO CARDS TO REVIEW -----------------------
-  if (cardsToReview.length === 0) {
+  if (cardsToReview.length === 0 || completed) {
     return (
       <div>
-        <p>No cards to review.</p>
+        <p>No cards to review,</p>
+        <p>it&apos;s time for a break</p>
         <Box
           sx={{
             marginTop: 8,
@@ -143,7 +145,7 @@ function Play() {
             sx={{ mt: 3, mb: 2 }}
             onClick={() => navigate(`/boxes`)}
           >
-            Back
+            Back To Boxes
           </Button>
         </Box>
         <BottomNavigationMUI />
