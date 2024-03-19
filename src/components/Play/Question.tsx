@@ -39,8 +39,9 @@ function Question({ card, goToNextCard }: QuestionProps) {
     // Compartiment 5 : tous les mois
     // Compartiment 6 : tous les trois mois
     // Compartiment 7 : tous les six mois
+    // Compartiment 8 : connaissance acquise
 
-    const timeToAdd = [0, 1, 3, 7, 15, 30, 90, 180];
+    const timeToAdd = [0, 1, 3, 7, 15, 30, 90, 180, 10000];
     nextDateToAskBeforeFormatting.setDate(
       nextDateToAskBeforeFormatting.getDate() + timeToAdd[nextCompartment]
     );
