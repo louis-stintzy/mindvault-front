@@ -43,7 +43,7 @@ function BoxItem({ box }: BoxCardProps) {
   const navigate = useNavigate();
 
   const handlePlay = () => {
-    dispatch(getRandomCards(box.id));
+    // dispatch(getRandomCards(box.id));
     navigate(`/box/${box.id}/play`);
   };
 

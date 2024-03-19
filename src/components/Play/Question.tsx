@@ -14,19 +14,22 @@ import { updateCardAttributesAfterAnswer } from '../../store/reducers/cardOne';
 
 interface QuestionProps {
   card: CardData;
+  goToNextCard: () => void;
 }
 
-function Question({ card }: QuestionProps) {
+function Question({ card, goToNextCard }: QuestionProps) {
   const dispatch = useAppDispatch();
+  const [isFlipped, setIsFlipped] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
+  const [isCorrect, setIsCorrect] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const cardId = card.id;
-    const isCorrect =
+    const answerIsCorrect =
       userAnswer.trim().toLowerCase() === card.answer.trim().toLowerCase();
-    console.log('isCorrect', isCorrect);
-    const nextCompartment = isCorrect ? card.compartment + 1 : 1;
+    console.log('answerIsCorrect', answerIsCorrect);
+    const nextCompartment = answerIsCorrect ? card.compartment + 1 : 1;
     const nextDateToAskBeforeFormatting = new Date();
 
     // Compartiment 1 : tous les jours
@@ -50,7 +53,16 @@ function Question({ card }: QuestionProps) {
         nextDateToAsk,
       })
     );
+
+    setIsCorrect(answerIsCorrect);
     setUserAnswer('');
+    setIsFlipped(true);
+  };
+
+  const handleNextButton = () => {
+    setIsFlipped(false);
+    setIsCorrect(false);
+    goToNextCard();
   };
 
   return (
@@ -67,38 +79,71 @@ function Question({ card }: QuestionProps) {
         <Typography variant="h4" component="h1" gutterBottom>
           Question
         </Typography>
-        {/* ------------ Question & Media & Field to Answer ------------ */}
-        <Paper elevation={3} sx={{ padding: 2 }}>
-          <Typography variant="h6" component="h2" gutterBottom>
-            {card.question ? card.question : 'Card without question...'}
-          </Typography>
-          {card.attachment ? (
-            <img src={card.attachment} alt="media" />
-          ) : (
-            <img
-              src="https://source.unsplash.com/random"
-              alt="media"
-              width="150px"
-            />
-          )}
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="answer"
-              name="answer"
-              label="Your answer"
-              multiline
-              rows={2}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-            />
-            <Button variant="contained" type="submit" sx={{ mt: 3, mb: 2 }}>
-              Submit
+
+        {/* ------ !isFlipped : Question & Media & Field to Answer ------ */}
+        {!isFlipped && (
+          <Paper elevation={3} sx={{ padding: 2 }}>
+            <Typography variant="h6" component="h2" gutterBottom>
+              {card.question ? card.question : 'Card without question...'}
+            </Typography>
+            {card.attachment ? (
+              <img src={card.attachment} alt="media" />
+            ) : (
+              <img
+                src="https://source.unsplash.com/random"
+                alt="media"
+                width="150px"
+              />
+            )}
+            <form onSubmit={handleSubmit}>
+              <TextField
+                id="answer"
+                name="answer"
+                label="Your answer"
+                multiline
+                rows={2}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={userAnswer}
+                onChange={(e) => setUserAnswer(e.target.value)}
+              />
+              <Button variant="contained" type="submit" sx={{ mt: 3, mb: 2 }}>
+                Submit
+              </Button>
+            </form>
+          </Paper>
+        )}
+        {/* ------------------ isFlipped : Answer ----------------- */}
+        {isFlipped && (
+          <Paper elevation={3} sx={{ padding: 2 }}>
+            <Typography variant="h6" component="h2" gutterBottom>
+              {isCorrect ? 'Correct !' : 'Wrong...'}
+            </Typography>
+            <Typography variant="h6" component="h2" gutterBottom>
+              {card.question ? card.question : 'Card without question...'}
+            </Typography>
+            {card.attachment ? (
+              <img src={card.attachment} alt="media" />
+            ) : (
+              <img
+                src="https://source.unsplash.com/random"
+                alt="media"
+                width="150px"
+              />
+            )}
+            <Typography variant="h6" component="h2" gutterBottom>
+              {card.answer ? card.answer : 'Card without answer...'}
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={handleNextButton}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Next
             </Button>
-          </form>
-        </Paper>
+          </Paper>
+        )}
       </Box>
 
       {/* --------------------- Bottom Navigation --------------------- */}

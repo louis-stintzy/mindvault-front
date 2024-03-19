@@ -1,24 +1,71 @@
 import { useEffect, useState } from 'react';
 import { Box, Button, CircularProgress } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import { resetCardsToReviewState } from '../../store/reducers/cardMultiple';
+import {
+  getRandomCards,
+  resetCardsToReviewState,
+} from '../../store/reducers/cardMultiple';
 import Question from './Question';
 
 function Play() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
   const { cardsToReview, isLoading } = useAppSelector(
     (state) => state.cardMultiple
   );
+
   const [cardIndex, setCardIndex] = useState(0);
+  const [askToPlayMore, setAskToPlayMore] = useState(false);
+
+  const handleCardIndex = () => {
+    // Si on n'est pas à la dernière carte, on passe à la suivante
+    if (cardIndex < cardsToReview.length - 1) {
+      setCardIndex(cardIndex + 1);
+      // Si on est à la 10ème carte (index 9), on demande si on veut rejouer
+    } else if (cardIndex === 9) {
+      setAskToPlayMore(true);
+      dispatch(resetCardsToReviewState());
+      // Si il n'y avait pas 10 cartes, c'est qu'il n'y en a plus, on redirige
+    } else {
+      setAskToPlayMore(false);
+      dispatch(resetCardsToReviewState());
+      navigate(`/boxes`);
+    }
+  };
+
+  const handlePlayMore = () => {
+    // on recharge des cartes à réviser
+    if (id) {
+      const boxId = parseInt(id, 10);
+      if (Number.isNaN(boxId)) {
+        navigate(`/boxes`);
+      } else {
+        dispatch(getRandomCards(boxId));
+      }
+    }
+    // on enlève la demande de rejouer et remet l'index à 0
+    setAskToPlayMore(false);
+    setCardIndex(0);
+  };
 
   useEffect(() => {
+    // On charge les cartes à réviser grâce à l'id dans l'URL
+    if (id) {
+      const boxId = parseInt(id, 10);
+      if (Number.isNaN(boxId)) {
+        navigate(`/boxes`);
+      } else {
+        dispatch(getRandomCards(boxId));
+      }
+    }
+    // On remet le state à zéro si on quitte la page
     return () => {
       dispatch(resetCardsToReviewState());
     };
-  }, [dispatch]);
+  }, [id, dispatch, navigate]);
 
   // ----------------------- IS LOADING -----------------------
   if (isLoading) {
@@ -36,23 +83,95 @@ function Play() {
     );
   }
 
+  // ----------------------- ASK TO PLAY MORE ? -----------------------
+  if (askToPlayMore) {
+    return (
+      <div>
+        <p>Do you want to play again ?</p>
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '10px',
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => navigate(`/boxes`)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={handlePlayMore}
+          >
+            Yes
+          </Button>
+        </Box>
+        <BottomNavigationMUI />
+      </div>
+    );
+  }
+
   // ----------------------- DISPLAY THE QUESTION -----------------------
   if (cardsToReview.length !== 0) {
-    return <Question card={cardsToReview[cardIndex]} />;
+    return (
+      <Question
+        card={cardsToReview[cardIndex]}
+        goToNextCard={handleCardIndex}
+      />
+    );
+  }
+  // ----------------------- NO CARDS TO REVIEW -----------------------
+  if (cardsToReview.length === 0) {
+    return (
+      <div>
+        <p>No cards to review.</p>
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '10px',
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => navigate(`/boxes`)}
+          >
+            Back
+          </Button>
+        </Box>
+        <BottomNavigationMUI />
+      </div>
+    );
   }
 
   // ----------------------- NO CARDS TO REVIEW -----------------------
-  // TODO : gérer le cas ou cards est vide (soit pas de cards à réviser, soit cards pas encore chargées)
+  // TODO : gérer le cas où cardsToReview est vide (soit pas de cards à réviser, soit cards pas encore chargées)
   return (
     <div>
-      <p>No cards to review</p>
-      <Button
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-        onClick={() => navigate(`/boxes`)}
+      <p>No cards to review.</p>
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '10px',
+        }}
       >
-        Cancel
-      </Button>
+        <Button
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={() => navigate(`/boxes`)}
+        >
+          Cancel
+        </Button>
+      </Box>
       <BottomNavigationMUI />
     </div>
   );
