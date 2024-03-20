@@ -27,6 +27,7 @@ import {
   setCurrentBox,
   updateBoxLearnItValue,
 } from '../../store/reducers/boxOne';
+import { getBoxCards, getRandomCards } from '../../store/reducers/cardMultiple';
 
 interface BoxCardProps {
   box: BoxData;
@@ -42,7 +43,8 @@ function BoxItem({ box }: BoxCardProps) {
   const navigate = useNavigate();
 
   const handlePlay = () => {
-    console.log('play');
+    // dispatch(getRandomCards(box.id));
+    navigate(`/box/${box.id}/play`);
   };
 
   const handleEdit = () => {
@@ -68,6 +70,11 @@ function BoxItem({ box }: BoxCardProps) {
 
   const handleLearnIt = () => {
     dispatch(updateBoxLearnItValue({ boxId: box.id, learnIt: !box.learn_it }));
+  };
+
+  const handleBoxNameClick = () => {
+    // dispatch(getBoxCards(box.id));
+    navigate(`/box/${box.id}/items`, { state: { boxName: box.name } });
   };
 
   return (
@@ -108,15 +115,27 @@ function BoxItem({ box }: BoxCardProps) {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ textAlign: 'left' }}
+              sx={{ textAlign: 'left', cursor: 'pointer' }}
+              onClick={handleBoxNameClick}
             >
-              <Link
+              {box.name}
+              {/* <Link
                 to={`/box/${box.id}/items`}
                 state={{ boxName: box.name }}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 {box.name}
-              </Link>
+              </Link> */}
+              {/* <span
+                onClick={handleBoxNameClick}
+                style={{
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                  color: 'inherit',
+                }}
+              >
+                {box.name}
+              </span> */}
             </Typography>
             <Box
               sx={{

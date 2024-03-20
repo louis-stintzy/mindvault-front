@@ -11,6 +11,7 @@ import BoxItemsList from './components/Box/BoxItemsList';
 import BoxCreateEdit from './components/Box/BoxCreateEdit';
 import CardItemsList from './components/Card/CardItemsList';
 import CardCreateEdit from './components/Card/CardCreateEdit';
+import Play from './components/Play/Play';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -90,6 +91,14 @@ export const routerConfig = [
         element: (
           <ProtectedRoute>
             <CardCreateEdit />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/box/:id/play',
+        element: (
+          <ProtectedRoute>
+            <Play />
           </ProtectedRoute>
         ),
       },

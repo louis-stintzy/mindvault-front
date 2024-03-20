@@ -5,6 +5,7 @@ import {
   Button,
   TextField,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -30,7 +31,10 @@ function CardCreateEdit() {
 
   useEffect(() => {
     if (isRegistered) {
-      navigate(`/box/${id}/items`, { replace: true });
+      navigate(`/box/${id}/items`, {
+        replace: true,
+        state: { navigateFromCardCreateEdit: true },
+      });
     }
   }, [isRegistered, id, navigate]);
 
@@ -44,8 +48,23 @@ function CardCreateEdit() {
     dispatch(createCard({ boxId, card }));
   };
 
+  if (isLoading || isRegistered) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <Container component="main" maxWidth="xs" className="create-box-container">
+    <Container component="main" maxWidth="xs" className="create-card-container">
       <Box
         sx={{
           marginTop: 8,

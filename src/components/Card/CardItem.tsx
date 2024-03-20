@@ -43,6 +43,8 @@ function CardItem({ card }: ItemCardProps) {
   const [showAnswer, setShowAnswer] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
+  const adaptedDate = card.dateToAsk.split('T')[0];
+
   const handleEdit = () => {
     console.log('edit');
   };
@@ -94,13 +96,14 @@ function CardItem({ card }: ItemCardProps) {
                 component="div"
                 sx={{ textAlign: 'left' }}
               >
-                <Link
+                {/* // TODO si la question fait plus que 50 caractères, on coupe et on met ... */}
+                {card.question}
+                {/* <Link
                   to={`/box/${id}/items`}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  {/* // TODO si la question fait plus que 50 caractères, on coupe et on met ... */}
                   {card.question}
-                </Link>
+                </Link> */}
               </Typography>
               <Box
                 sx={{
@@ -124,7 +127,7 @@ function CardItem({ card }: ItemCardProps) {
                   component="div"
                 >
                   <RedoIcon />
-                  {card.dateToAsk}
+                  {adaptedDate}
                 </Typography>
               </Box>
               <Typography
