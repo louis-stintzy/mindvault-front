@@ -97,6 +97,11 @@ function CardItemsList() {
           Cards for the box :{' '}
           {boxNameFromBoxItemsList || boxName || 'Loading...'}
         </Typography>
+
+        {/* // TODO : Enlever le Link, mettre le lien dans le bouton ou le bouton
+        dans le bottomNavigation avec un bouton retour et si retour pas besoin
+        de nouvel appel API pour recharger les box */}
+
         <Link
           to={`/box/${id}/items/create`}
           style={{ textDecoration: 'none', color: 'inherit' }}
@@ -111,7 +116,6 @@ function CardItemsList() {
             Add a new card
           </Button>
         </Link>
-
         {/* --------------------------- Items --------------------------- */}
         <Box>
           <Typography variant="h6" component="h2" gutterBottom>
