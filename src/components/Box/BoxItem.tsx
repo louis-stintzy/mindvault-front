@@ -65,7 +65,7 @@ function BoxItem({ box }: BoxCardProps) {
   };
 
   const handleStats = () => {
-    console.log('stats');
+    navigate(`/box/${box.id}/stats`, { state: { boxName: box.name } });
   };
 
   const handleLearnIt = () => {

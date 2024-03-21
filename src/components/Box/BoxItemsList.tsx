@@ -1,6 +1,6 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import BoxItem from './BoxItem';
@@ -10,13 +10,20 @@ import { resetBoxOneState } from '../../store/reducers/boxOne';
 
 function BoxItemsList() {
   const dispatch = useAppDispatch();
+  const location = useLocation();
 
+  const navigateFromBoxStats = location.state?.navigateFromBoxStats || false;
   const userBoxesList = useAppSelector((state) => state.boxMultiple.boxes);
 
   useEffect(() => {
-    dispatch(getUserBoxes());
+    // si l'utilisateur revient de BoxStats, on ne recharge pas la liste des boxes
+    // rien a changé, sinon on charge bien la liste des box
+    if (!navigateFromBoxStats) {
+      dispatch(getUserBoxes());
+    }
+    // a voir si on utilise BoxOne sinon on peu le mettre au dessus avec getUserBoxes
     dispatch(resetBoxOneState());
-  }, [dispatch]);
+  }, [dispatch, navigateFromBoxStats]);
 
   return (
     <Container component="main" maxWidth="xs">
