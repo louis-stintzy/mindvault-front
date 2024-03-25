@@ -19,7 +19,9 @@ function BoxStats() {
   const location = useLocation();
   const { id } = useParams();
 
-  const { isLoading, instantStats } = useAppSelector((state) => state.stats);
+  const { isLoadingInstantStats, instantStats } = useAppSelector(
+    (state) => state.stats
+  );
 
   const [showHistoricalStats, setShowHistoricalStats] = useState(false);
 
@@ -46,7 +48,7 @@ function BoxStats() {
   // TODO: si on switch entre stat instantanée et historique, pas besoin d'un nouvel appel API, stats déjà présent dans le store, si on revient à la liste des box, BoxItemsList reset le state des stats (déjà fait)
 
   // ----------------------- IS LOADING -----------------------
-  if (isLoading) {
+  if (isLoadingInstantStats) {
     return (
       <Box
         sx={{

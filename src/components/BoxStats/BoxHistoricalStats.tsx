@@ -7,13 +7,10 @@ import { getHistoricalStats } from '../../store/reducers/stats';
 
 function BoxHistoricalStats({ boxId }: { boxId: number }) {
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((state) => state.stats);
+  const { isLoadingHistoricalStats } = useAppSelector((state) => state.stats);
   const boxStats = useAppSelector((state) => state.stats.historicalStats);
 
   useEffect(() => {
-    let counter = 0;
-    counter += 1;
-    console.log('counter', counter);
     dispatch(getHistoricalStats(boxId));
   }, [dispatch, boxId]);
 
@@ -37,7 +34,7 @@ function BoxHistoricalStats({ boxId }: { boxId: number }) {
   } as CardsByCompartmentPerWeek;
 
   // ----------------------- IS LOADING -----------------------
-  if (isLoading) {
+  if (isLoadingHistoricalStats) {
     return (
       <Box
         sx={{
