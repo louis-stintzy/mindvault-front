@@ -19,14 +19,14 @@ interface StatsState {
   isLoading: boolean;
   error: ErrorResponse[] | null;
   success: string;
-  boxStats: StatsData;
+  instantStats: StatsData;
 }
 
 export const initialState: StatsState = {
   isLoading: false,
   error: null,
   success: '',
-  boxStats: {
+  instantStats: {
     totalCards: 0,
     cardsByCompartment: {
       compartment1: 0,
@@ -63,7 +63,7 @@ const statsReducer = createReducer(initialState, (builder) => {
       state.isLoading = false;
       state.error = null;
       state.success = '';
-      state.boxStats = {
+      state.instantStats = {
         totalCards: 0,
         cardsByCompartment: {
           compartment1: 0,
@@ -87,7 +87,7 @@ const statsReducer = createReducer(initialState, (builder) => {
       state.isLoading = false;
       state.error = null;
       state.success = 'Stats retrieved';
-      state.boxStats = action.payload;
+      state.instantStats = action.payload;
     })
     .addCase(getInstantStats.rejected, (state, action) => {
       state.isLoading = false;

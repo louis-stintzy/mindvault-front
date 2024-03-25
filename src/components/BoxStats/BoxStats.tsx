@@ -6,11 +6,12 @@ import {
   Typography,
 } from '@mui/material';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { getInstantStats } from '../../store/reducers/stats';
 import BoxInstantStats from './BoxInstantStats';
+import BoxHistoricalStats from './BoxHistoricalStats';
 
 function BoxStats() {
   const dispatch = useAppDispatch();
@@ -18,7 +19,9 @@ function BoxStats() {
   const location = useLocation();
   const { id } = useParams();
 
-  const { isLoading, boxStats } = useAppSelector((state) => state.stats);
+  const { isLoading, instantStats } = useAppSelector((state) => state.stats);
+
+  const [showHistoricalStats, setShowHistoricalStats] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -67,17 +70,37 @@ function BoxStats() {
         >
           Stats for the box : {boxNameFromBoxItemsList || 'Loading...'}
         </Typography>
-        <Button
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={() =>
-            navigate(`/boxes`, { state: { navigateFromBoxStats: true } })
-          }
+        {/* ---------------------- Buttons ----------------------------- */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '10px',
+          }}
         >
-          Back to Boxes
-        </Button>
-        {/* ---------------------- Box Instant Stats  ---------------------- */}
-        <BoxInstantStats boxStats={boxStats} />
+          <Button
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() =>
+              navigate(`/boxes`, { state: { navigateFromBoxStats: true } })
+            }
+          >
+            Back to Boxes
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => setShowHistoricalStats(!showHistoricalStats)}
+          >
+            {showHistoricalStats ? 'Instant Stats' : 'Historical Stats'}
+          </Button>
+        </Box>
+        {/* ---------------------- Chart  ---------------------- */}
+        {showHistoricalStats ? (
+          <BoxHistoricalStats />
+        ) : (
+          <BoxInstantStats boxStats={instantStats} />
+        )}
       </Box>
 
       {/* --------------------- Bottom Navigation --------------------- */}
