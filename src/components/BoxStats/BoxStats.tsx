@@ -37,6 +37,14 @@ function BoxStats() {
 
   const boxNameFromBoxItemsList = location.state?.boxName;
 
+  const boxId = id ? parseInt(id, 10) : null;
+  if (boxId === null || Number.isNaN(boxId)) {
+    navigate(`/boxes`);
+    return null;
+  }
+
+  // TODO: si on switch entre stat instantanée et historique, pas besoin d'un nouvel appel API, stats déjà présent dans le store, si on revient à la liste des box, BoxItemsList reset le state des stats (déjà fait)
+
   // ----------------------- IS LOADING -----------------------
   if (isLoading) {
     return (
@@ -97,7 +105,7 @@ function BoxStats() {
         </Box>
         {/* ---------------------- Chart  ---------------------- */}
         {showHistoricalStats ? (
-          <BoxHistoricalStats />
+          <BoxHistoricalStats boxId={boxId} />
         ) : (
           <BoxInstantStats boxStats={instantStats} />
         )}

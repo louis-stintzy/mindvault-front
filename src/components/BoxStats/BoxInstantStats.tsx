@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
-import { StatsData } from '../../@types/stats';
+import { InstantStatsData } from '../../@types/stats';
 import BarChart from './BarChart';
 
 interface BoxStats {
-  boxStats: StatsData;
+  boxStats: InstantStatsData;
 }
 
 function BoxInstantStats({ boxStats }: BoxStats) {

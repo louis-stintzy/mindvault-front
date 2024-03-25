@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { CardsByCompartment } from '../../@types/stats';
 
 ChartJS.register(
   CategoryScale,
@@ -19,20 +20,24 @@ ChartJS.register(
   Legend
 );
 
-interface CardsByCompartment {
-  cardsByCompartment: {
-    compartment1: number;
-    compartment2: number;
-    compartment3: number;
-    compartment4: number;
-    compartment5: number;
-    compartment6: number;
-    compartment7: number;
-    compartment8: number;
-  };
-}
+// interface CardsByCompartment {
+//   cardsByCompartment: {
+//     compartment1: number;
+//     compartment2: number;
+//     compartment3: number;
+//     compartment4: number;
+//     compartment5: number;
+//     compartment6: number;
+//     compartment7: number;
+//     compartment8: number;
+//   };
+// }
 
-function BarChart({ cardsByCompartment }: CardsByCompartment) {
+function BarChart({
+  cardsByCompartment,
+}: {
+  cardsByCompartment: CardsByCompartment;
+}) {
   const data = {
     labels: [
       'Compartment 1',
