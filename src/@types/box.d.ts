@@ -20,6 +20,7 @@ export interface BoxData {
   on_store: number;
   created_at: string;
   updated_at: string | null;
+  cards_to_review: number;
 }
 
 export interface BoxDataLight {

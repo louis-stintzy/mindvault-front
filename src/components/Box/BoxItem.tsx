@@ -65,7 +65,7 @@ function BoxItem({ box }: BoxCardProps) {
   };
 
   const handleStats = () => {
-    console.log('stats');
+    navigate(`/box/${box.id}/stats`, { state: { boxName: box.name } });
   };
 
   const handleLearnIt = () => {
@@ -162,6 +162,9 @@ function BoxItem({ box }: BoxCardProps) {
               sx={{ textAlign: 'left' }}
             >
               {box.description}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Number of cards to review: {box.cards_to_review}
             </Typography>
           </CardContent>
           {/* Learn it, Stats, Edit, Play */}

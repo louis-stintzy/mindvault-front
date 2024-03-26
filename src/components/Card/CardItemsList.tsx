@@ -1,5 +1,5 @@
-import { Link, useLocation, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
   Container,
   Box,
@@ -17,10 +17,10 @@ import { getBoxById } from '../../store/reducers/boxOne';
 
 function CardItemsList() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
 
-  const boxId = Number(id);
   const navigateFromCardCreateEdit =
     location.state?.navigateFromCardCreateEdit || false;
   const boxNameFromBoxItemsList = location.state?.boxName;
@@ -35,16 +35,31 @@ function CardItemsList() {
   // On peut également accéder à CardItemsList en saisissant l'url directement dans le navigateur
   // Pour afficher le nom de la box, soit BoxItem transmet quand on clique sur le nom de la box
   // Sinon dans les autres cas (création/édition de card et saisi de l'url), on charge le nom de la box depuis la BDD
+  // (si pas d'id ou si id n'est pas un nombre, on redirige vers la liste des boxes)
 
   useEffect(() => {
-    if (!boxNameFromBoxItemsList) {
-      dispatch(getBoxById(boxId));
+    if (id) {
+      const boxId = parseInt(id, 10);
+      if (Number.isNaN(boxId)) {
+        navigate(`/boxes`);
+      }
+      if (!boxNameFromBoxItemsList) {
+        dispatch(getBoxById(boxId));
+      }
+      if (!navigateFromCardCreateEdit) {
+        dispatch(getBoxCards(boxId));
+      }
+      dispatch(resetCardOneState());
+    } else {
+      navigate(`/boxes`);
     }
-    if (!navigateFromCardCreateEdit) {
-      dispatch(getBoxCards(boxId));
-    }
-    dispatch(resetCardOneState());
-  }, [navigateFromCardCreateEdit, boxId, dispatch, boxNameFromBoxItemsList]);
+  }, [
+    id,
+    navigate,
+    dispatch,
+    navigateFromCardCreateEdit,
+    boxNameFromBoxItemsList,
+  ]);
 
   // Si chargement des cards ou du nom de la box, on affiche un loader
   // ou si on a pas encore le nom de la box à afficher
@@ -82,6 +97,11 @@ function CardItemsList() {
           Cards for the box :{' '}
           {boxNameFromBoxItemsList || boxName || 'Loading...'}
         </Typography>
+
+        {/* // TODO : Enlever le Link, mettre le lien dans le bouton ou le bouton
+        dans le bottomNavigation avec un bouton retour et si retour pas besoin
+        de nouvel appel API pour recharger les box */}
+
         <Link
           to={`/box/${id}/items/create`}
           style={{ textDecoration: 'none', color: 'inherit' }}
@@ -96,7 +116,6 @@ function CardItemsList() {
             Add a new card
           </Button>
         </Link>
-
         {/* --------------------------- Items --------------------------- */}
         <Box>
           <Typography variant="h6" component="h2" gutterBottom>

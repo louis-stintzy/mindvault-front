@@ -5,6 +5,7 @@ import boxOneReducer from './boxOne';
 import boxMultipleReducer from './boxMultiple';
 import cardMultipleReducer from './cardMultiple';
 import cardOneReducer from './cardOne';
+import statsReducer from './stats';
 
 const reducer = {
   signUp: signupReducer,
@@ -14,6 +15,7 @@ const reducer = {
   boxMultiple: boxMultipleReducer,
   cardMultiple: cardMultipleReducer,
   cardOne: cardOneReducer,
+  stats: statsReducer,
 };
 
 export default reducer;

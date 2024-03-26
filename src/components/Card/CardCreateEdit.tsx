@@ -21,6 +21,7 @@ function CardCreateEdit() {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  // TODO : à corriger, voir BoxStats.tsx
   const boxId = Number(id);
 
   const { isLoading, error, isRegistered, success, card } = useAppSelector(
