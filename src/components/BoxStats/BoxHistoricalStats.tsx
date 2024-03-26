@@ -1,19 +1,15 @@
-import { Box, CircularProgress } from '@mui/material';
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hook/redux';
+import { Box } from '@mui/material';
 import AreaChart from './AreaChart';
-import { CardsByCompartmentPerWeek } from '../../@types/stats';
-import { getHistoricalStats } from '../../store/reducers/stats';
+import {
+  CardsByCompartmentPerWeek,
+  HistoricalStatsData,
+} from '../../@types/stats';
 
-function BoxHistoricalStats({ boxId }: { boxId: number }) {
-  const dispatch = useAppDispatch();
-  const { isLoadingHistoricalStats } = useAppSelector((state) => state.stats);
-  const boxStats = useAppSelector((state) => state.stats.historicalStats);
+interface BoxStats {
+  boxStats: HistoricalStatsData;
+}
 
-  useEffect(() => {
-    dispatch(getHistoricalStats(boxId));
-  }, [dispatch, boxId]);
-
+function BoxHistoricalStats({ boxStats }: BoxStats) {
   const weekLabels = boxStats.map(
     (week) => `${week.statsDate.weekNumber} - ${week.statsDate.year}`
   ) as string[];
@@ -32,22 +28,6 @@ function BoxHistoricalStats({ boxId }: { boxId: number }) {
     compartment7: boxStats.map((week) => week.cardsByCompartment.compartment7),
     compartment8: boxStats.map((week) => week.cardsByCompartment.compartment8),
   } as CardsByCompartmentPerWeek;
-
-  // ----------------------- IS LOADING -----------------------
-  if (isLoadingHistoricalStats) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   return (
     <Box>

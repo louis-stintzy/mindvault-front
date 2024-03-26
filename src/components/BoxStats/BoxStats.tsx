@@ -9,7 +9,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
-import { getInstantStats } from '../../store/reducers/stats';
+import {
+  getHistoricalStats,
+  getInstantStats,
+} from '../../store/reducers/stats';
 import BoxInstantStats from './BoxInstantStats';
 import BoxHistoricalStats from './BoxHistoricalStats';
 
@@ -19,7 +22,7 @@ function BoxStats() {
   const location = useLocation();
   const { id } = useParams();
 
-  const { isLoadingInstantStats, instantStats } = useAppSelector(
+  const { isLoading, instantStats, historicalStats } = useAppSelector(
     (state) => state.stats
   );
 
@@ -32,6 +35,7 @@ function BoxStats() {
         navigate(`/boxes`);
       }
       dispatch(getInstantStats(boxId));
+      dispatch(getHistoricalStats(boxId));
     } else {
       navigate(`/boxes`);
     }
@@ -45,10 +49,8 @@ function BoxStats() {
     return null;
   }
 
-  // TODO: si on switch entre stat instantanée et historique, pas besoin d'un nouvel appel API, stats déjà présent dans le store, si on revient à la liste des box, BoxItemsList reset le state des stats (déjà fait)
-
   // ----------------------- IS LOADING -----------------------
-  if (isLoadingInstantStats) {
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -107,7 +109,7 @@ function BoxStats() {
         </Box>
         {/* ---------------------- Chart  ---------------------- */}
         {showHistoricalStats ? (
-          <BoxHistoricalStats boxId={boxId} />
+          <BoxHistoricalStats boxStats={historicalStats} />
         ) : (
           <BoxInstantStats boxStats={instantStats} />
         )}

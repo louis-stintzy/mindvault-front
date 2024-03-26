@@ -16,8 +16,7 @@ interface ErrorResponse {
 }
 
 interface StatsState {
-  isLoadingInstantStats: boolean;
-  isLoadingHistoricalStats: boolean;
+  isLoading: boolean;
   error: ErrorResponse[] | null;
   success: string;
   instantStats: InstantStatsData;
@@ -25,8 +24,7 @@ interface StatsState {
 }
 
 export const initialState: StatsState = {
-  isLoadingInstantStats: false,
-  isLoadingHistoricalStats: false,
+  isLoading: false,
   error: null,
   success: '',
   instantStats: {
@@ -85,8 +83,7 @@ const statsReducer = createReducer(initialState, (builder) => {
   builder
     // ----------- RESET STATS STATE -----------
     .addCase(resetStatsState, (state) => {
-      state.isLoadingInstantStats = false;
-      state.isLoadingHistoricalStats = false;
+      state.isLoading = false;
       state.error = null;
       state.success = '';
       state.instantStats = {
@@ -106,18 +103,18 @@ const statsReducer = createReducer(initialState, (builder) => {
     })
     // ----------- GET INSTANT STATS -----------
     .addCase(getInstantStats.pending, (state) => {
-      state.isLoadingInstantStats = true;
+      state.isLoading = true;
       state.error = null;
       state.success = '';
     })
     .addCase(getInstantStats.fulfilled, (state, action) => {
-      state.isLoadingInstantStats = false;
+      state.isLoading = false;
       state.error = null;
       state.success = 'Stats retrieved';
       state.instantStats = action.payload;
     })
     .addCase(getInstantStats.rejected, (state, action) => {
-      state.isLoadingInstantStats = false;
+      state.isLoading = false;
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];
       } else {
@@ -126,18 +123,18 @@ const statsReducer = createReducer(initialState, (builder) => {
     })
     // ----------- GET HISTORICAL STATS -----------
     .addCase(getHistoricalStats.pending, (state) => {
-      state.isLoadingHistoricalStats = true;
+      state.isLoading = true;
       state.error = null;
       state.success = '';
     })
     .addCase(getHistoricalStats.fulfilled, (state, action) => {
-      state.isLoadingHistoricalStats = false;
+      state.isLoading = false;
       state.error = null;
       state.success = 'Stats retrieved';
       state.historicalStats = action.payload;
     })
     .addCase(getHistoricalStats.rejected, (state, action) => {
-      state.isLoadingHistoricalStats = false;
+      state.isLoading = false;
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];
       } else {
