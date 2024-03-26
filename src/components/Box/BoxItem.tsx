@@ -163,6 +163,9 @@ function BoxItem({ box }: BoxCardProps) {
             >
               {box.description}
             </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Number of cards to review: {box.cards_to_review}
+            </Typography>
           </CardContent>
           {/* Learn it, Stats, Edit, Play */}
           <CardActions
