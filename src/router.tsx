@@ -13,6 +13,7 @@ import CardItemsList from './components/Card/CardItemsList';
 import CardCreateEdit from './components/Card/CardCreateEdit';
 import Play from './components/Play/Play';
 import BoxStats from './components/BoxStats/BoxStats';
+import TestSTT from './components/TestSTT/TestSTT';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -46,6 +47,10 @@ export const routerConfig = [
       {
         path: '/about',
         element: <div>About</div>,
+      },
+      {
+        path: '/test-stt',
+        element: <TestSTT />,
       },
       {
         path: '/home',
