@@ -15,6 +15,7 @@ function TestSTT() {
     stopListening: stopListeningQuestion,
   } = useSpeechToText({});
 
+  // si on arrête d'écouter, on ajoute la transcription au texte existant dans l'input
   const stopVoicieInput = () => {
     setTextInput(
       (prevVal) =>
@@ -57,12 +58,16 @@ function TestSTT() {
       }}
       disabled={isListeningQuestion}
       value={
+        // si en train d'écouter, on ajoute la transcription à la question
         isListeningQuestion
           ? textInput +
+            // si la transcription n'est pas vide, on ajoute un espace si la question n'est pas vide
             (transcriptQuestion.length
               ? (textInput.length ? ' ' : '') + transcriptQuestion
-              : '')
-          : textInput
+              : // si pas de transcription, on n'ajoute rien
+                '')
+          : // si pas en train d'écouter, on affiche la question
+            textInput
       }
       onChange={(e) => setTextInput(e.target.value)}
     />

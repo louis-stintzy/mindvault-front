@@ -26,6 +26,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
     recognitionRef.current = new SpeechRecognition();
     const recognition = recognitionRef.current;
 
+    // Si l'API de reconnaissance vocale n'est pas disponible, on ne fait rien (evite problème de typage)
     if (!recognition) {
       return;
     }
@@ -53,13 +54,15 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // "let i = event.resultIndex" : index du dernier résultat retourné / boucle commence à l'index du nouveau résultat
     // évite de traiter à nouveau des résultats déjà obtenus vs "let i = 0"
     recognition.onresult = (event) => {
-      let text = '';
+      let newTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; i += 1) {
         if (event.results[i].isFinal) {
-          text += event.results[i][0].transcript;
+          newTranscript += event.results[i][0].transcript;
         }
       }
-      setTranscript(text);
+      // on ajoute la nouvelle transcription à la transcription existante (transcription en cours)
+      // conserve et accumule toute la transcription reçue pendant la session d'écoute.
+      setTranscript((prevTranscript) => prevTranscript + newTranscript);
     };
 
     recognition.onerror = (event) => {
