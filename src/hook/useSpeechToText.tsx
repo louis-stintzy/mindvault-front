@@ -57,6 +57,9 @@ function useSpeechToText(options: SpeechToTextOptions) {
       let newTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; i += 1) {
         if (event.results[i].isFinal) {
+          // si le résultat est final, on ajoute (récupère) la transcription
+          // le += au lieu du simple = est apparemment par sécurité si plusieurs isFinal
+          // newTranscript = morceau de la transcription finale
           newTranscript += event.results[i][0].transcript;
         }
       }

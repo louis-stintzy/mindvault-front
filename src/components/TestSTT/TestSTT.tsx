@@ -12,9 +12,12 @@ import {
 
 function TestSTT() {
   const dispatch = useAppDispatch();
+  // le store est mis à jour que lorsque l'écoute est arrêtée ou lors de la frappe au clavier
   const { question } = useAppSelector((state) => state.testSTT.testField);
-  const [textInput, setTextInput] = useState('');
+  // const [textInput, setTextInput] = useState('');
 
+  // transcriptQuestion est déjà une transcription qui se complète au fur et à mesur de la reconnaissance vocale
+  // on ajoute transcriptQuestion à la question lorsqu'on arrête d'écouter
   const {
     isListening: isListeningQuestion,
     transcript: transcriptQuestion,
@@ -37,7 +40,7 @@ function TestSTT() {
         ? (question.length ? ' ' : '') + transcriptQuestion
         : '');
     handleChangeField('question')(newValue);
-    setTextInput(newValue);
+    // setTextInput(newValue);
     // setTextInput(
     //   (prevVal) =>
     //     prevVal +
@@ -83,24 +86,26 @@ function TestSTT() {
         value={
           // si en train d'écouter, on ajoute la transcription à la question
           isListeningQuestion
-            ? textInput +
+            ? question +
               // si la transcription n'est pas vide, on ajoute un espace si la question n'est pas vide
               (transcriptQuestion.length
-                ? (textInput.length ? ' ' : '') + transcriptQuestion
+                ? (question.length ? ' ' : '') + transcriptQuestion
                 : // si pas de transcription, on n'ajoute rien
                   '')
             : // si pas en train d'écouter, on affiche la question
-              textInput
+              question
         }
         onChange={(e) => {
+          // uniquement pour la frappe au clavier
+          // value est modifiée par la transcription vocale mais ne déclenchera pas le onChange
           handleChangeField('question')(e.target.value);
-          setTextInput(e.target.value);
+          // setTextInput(e.target.value);
         }}
       />
       <Button
         onClick={() => {
           dispatch(resetTestSTTState());
-          setTextInput('');
+          // setTextInput('');
         }}
       >
         Reset state
