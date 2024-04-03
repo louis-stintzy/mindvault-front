@@ -43,6 +43,8 @@ function CardItemsList() {
       if (Number.isNaN(boxId)) {
         navigate(`/boxes`);
       }
+      // TODO : quand on vient de CardCreateEdit, génère un re-render pour rien  (enfin si juste pour récup le nom de la box )
+      // il faudrait revoir et transmettre peut-etre le nom de la box depuis CardCreateEdit dans le navigate du useEffect
       if (!boxNameFromBoxItemsList) {
         dispatch(getBoxById(boxId));
       }
