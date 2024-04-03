@@ -20,6 +20,7 @@ import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import useSpeechToText from '../../hook/useSpeechToText';
 import { changeCardField, createCard } from '../../store/reducers/cardOne';
+import TextFieldWithSTT from '../TestSTT/TextFieldWithSTT';
 
 function CardCreateEdit() {
   const dispatch = useAppDispatch();
@@ -148,6 +149,16 @@ function CardCreateEdit() {
             // }
             value={card.question}
             onChange={(e) => handleChangeField('question')(e.target.value)}
+          />
+          <TextFieldWithSTT
+            field="question"
+            id="question"
+            name="question"
+            label="Your question"
+            lang="fr-FR"
+            onSelectLang={() => {}}
+            value={card.question}
+            onChangeValue={(value) => handleChangeField('question')(value)}
           />
           <TextField
             id="answer"

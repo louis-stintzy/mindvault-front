@@ -15,7 +15,7 @@ const punctuationCommandsFR: PunctuationCommandsLang = {
 };
 
 const punctuationCommands: PunctuationCommands = {
-  fr: punctuationCommandsFR,
+  'fr-FR': punctuationCommandsFR,
 };
 
 const formatText = (text: string, lang: string) => {
