@@ -38,18 +38,6 @@ function useSpeechToText(options: SpeechToTextOptions) {
       options.continuous !== undefined ? options.continuous : true;
     recognition.lang = options.lang !== undefined ? options.lang : 'fr-FR';
 
-    // TODO : voir la pertinence de l'utilisation ici de grammars
-    // voir si besoin de reconnaître quand les utilisateurs disent le nom de signes de ponctuation
-    // ex : dire "point" pour insérer un "."
-    const SpeechGrammarList =
-      window.SpeechGrammarList || window.webkitSpeechGrammarList;
-    if (SpeechGrammarList) {
-      const grammar = `#JSGF V1.0; grammar punctuation; public <punct> = . | , | ? | ! | ; | : ;`;
-      const speechRecognitionList = new SpeechGrammarList();
-      speechRecognitionList.addFromString(grammar, 1);
-      recognition.grammars = speechRecognitionList;
-    }
-
     // "onresult" est déclenché lorsque l'API de reconnaissance vocale a détecté un résultat (final ou intermédiaire).
     // "let i = event.resultIndex" : index du dernier résultat retourné / boucle commence à l'index du nouveau résultat
     // évite de traiter à nouveau des résultats déjà obtenus vs "let i = 0"

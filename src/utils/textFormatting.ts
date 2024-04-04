@@ -1,38 +1,18 @@
-type PunctuationCommandsLang = { [command: string]: string };
+import {
+  PunctuationCommandsLang,
+  punctuationCommandsFR,
+  punctuationCommandsEN,
+  punctuationCommandsDE,
+  punctuationCommandsES,
+} from '../constants/punctuationCommands';
+
 type PunctuationCommands = { [lang: string]: PunctuationCommandsLang };
-
-const punctuationCommandsFR: PunctuationCommandsLang = {
-  "point d'interrogation": '?',
-  "point d'exclamation": '!',
-  virgule: ',',
-  'point virgule': ';',
-  'deux points': ':',
-  point: '.',
-  'ouvrir la parenthèse': '(',
-  'fermer la parenthèse': ')',
-  'ouvrir les guillemets': '"',
-  'fermer les guillemets': '"',
-};
-
-const punctuationCommandsEN: PunctuationCommandsLang = {
-  'question mark': '?',
-  'exclamation point': '!',
-  comma: ',',
-  semicolon: ';',
-  colon: ':',
-  period: '.',
-  'open parenthesis': '(',
-  'close parenthesis': ')',
-  'open quote': '“',
-  'close quote': '”',
-  'open bracket': '[',
-  'close bracket': ']',
-  dash: '-',
-};
 
 const punctuationCommands: PunctuationCommands = {
   'fr-FR': punctuationCommandsFR,
   'en-US': punctuationCommandsEN,
+  'de-DE': punctuationCommandsDE,
+  'es-ES': punctuationCommandsES,
 };
 
 const formatText = (text: string, lang: string) => {
@@ -63,6 +43,11 @@ const formatText = (text: string, lang: string) => {
   // chercher un ou plusieurs espaces "\s+" et les remplacer par un seul espace " "
   const regex2 = /\s+/g;
   formattedText = formattedText.replace(regex2, ' ');
+
+  // Enlève l'espace précédent la virgule
+  // chercher un espace "\s" suivi d'une virgule "," et les remplacer par une virgule ","
+  const regex3 = /(\s)(,)/g;
+  formattedText = formattedText.replace(regex3, ',');
 
   return formattedText;
 };

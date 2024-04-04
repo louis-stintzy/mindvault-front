@@ -12,9 +12,7 @@ import {
   MenuItem,
   Typography,
   FormControl,
-  InputLabel,
   Box,
-  Button,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import useSpeechToText from '../../hook/useSpeechToText';
@@ -35,6 +33,7 @@ interface TextFieldWithSTTProps {
   onChangeValue: (field: 'question' | 'answer', value: string) => void; // fonction pour changer la valeur du champ texte
 }
 
+// Pour complément d'informations, voir TestSTT.tsx
 function TextFieldWithSTT({
   required = false,
   field,
@@ -64,7 +63,7 @@ function TextFieldWithSTT({
     stopListening();
   };
 
-  // gère le déclenchement et l'arrêt de la reconnaissance vocale
+  // Gère le déclenchement et l'arrêt de la reconnaissance vocale
   const startStopListening = () => {
     if (isListening) {
       stopVoicieInput();
@@ -74,7 +73,7 @@ function TextFieldWithSTT({
   };
   return (
     <>
-      {/* Champ texte avec reconnaissance vocale */}
+      {/* ------- CHAMP DE TEXTE AVEC RECONNAISSANCE VOCALE -------- */}
       <TextField
         required={required}
         id={id}
@@ -122,7 +121,7 @@ function TextFieldWithSTT({
         }}
       />
 
-      {/* Sélection de la langue */}
+      {/* ---------------- SELECTION DE LA LANGUE ----------------- */}
       <Box
         sx={{
           display: 'flex',
@@ -160,20 +159,11 @@ function TextFieldWithSTT({
           >
             <MenuItem value="fr-FR">Français</MenuItem>
             <MenuItem value="en-US">English</MenuItem>
+            <MenuItem value="de-DE">Deutsch</MenuItem>
+            <MenuItem value="es-ES">Español</MenuItem>
           </Select>
         </FormControl>
       </Box>
-
-      {/* // -------------------------- BOUTTON RESET -------------------------- */}
-      {/* <Button
-        variant="outlined"
-        disabled={isListening}
-        onClick={() => {
-          onChangeValue(field, '');
-        }}
-      >
-        Clear the field
-      </Button> */}
     </>
   );
 }
