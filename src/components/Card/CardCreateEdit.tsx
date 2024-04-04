@@ -15,7 +15,7 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import useSpeechToText from '../../hook/useSpeechToText';
@@ -34,30 +34,33 @@ function CardCreateEdit() {
     (state) => state.cardOne
   );
 
+  const [langQuestion, setLangQuestion] = useState('fr-FR');
+  const [langAnswer, setLangAnswer] = useState('en-US');
+
   // Utilisation du hook useSpeechToText pour la question
-  const {
-    isListening: isListeningQuestion,
-    transcript: transcriptQuestion,
-    startListening: startListeningQuestion,
-    stopListening: stopListeningQuestion,
-  } = useSpeechToText({});
+  // const {
+  //   isListening: isListeningQuestion,
+  //   transcript: transcriptQuestion,
+  //   startListening: startListeningQuestion,
+  //   stopListening: stopListeningQuestion,
+  // } = useSpeechToText({});
 
-  const startStopListeningQuestion = () => {
-    if (isListeningQuestion) {
-      stopListeningQuestion();
-    } else {
-      startListeningQuestion();
-    }
-  };
+  // const startStopListeningQuestion = () => {
+  //   if (isListeningQuestion) {
+  //     stopListeningQuestion();
+  //   } else {
+  //     startListeningQuestion();
+  //   }
+  // };
 
-  useEffect(() => {
-    // Vérifie que l'écoute est arrêtée et que la question n'est pas vide
-    if (!isListeningQuestion && transcriptQuestion.trim().length > 0) {
-      const newValue =
-        card.question + (card.question.length ? ' ' : '') + transcriptQuestion;
-      dispatch(changeCardField({ field: 'question', value: newValue }));
-    }
-  }, [isListeningQuestion, transcriptQuestion, card.question, dispatch]);
+  // useEffect(() => {
+  // Vérifie que l'écoute est arrêtée et que la question n'est pas vide
+  //   if (!isListeningQuestion && transcriptQuestion.trim().length > 0) {
+  //     const newValue =
+  //       card.question + (card.question.length ? ' ' : '') + transcriptQuestion;
+  //     dispatch(changeCardField({ field: 'question', value: newValue }));
+  //   }
+  // }, [isListeningQuestion, transcriptQuestion, card.question, dispatch]);
 
   const isFormValid = card.question.length > 0 && card.answer.length > 0;
 
@@ -118,7 +121,7 @@ function CardCreateEdit() {
           ))}
 
         <form onSubmit={handleSubmit}>
-          <TextField
+          {/* <TextField
             required
             id="question"
             name="question"
@@ -139,28 +142,40 @@ function CardCreateEdit() {
               ),
             }}
             disabled={isListeningQuestion}
-            // value={
-            //   isListening
-            //     ? card.question +
-            //       (transcript.length
-            //         ? (card.question.length ? ' ' : '') + transcript
-            //         : '')
-            //     : card.question
-            // }
             value={card.question}
             onChange={(e) => handleChangeField('question')(e.target.value)}
-          />
-          <TextFieldWithSTT
-            field="question"
-            id="question"
-            name="question"
-            label="Your question"
-            lang="fr-FR"
-            onSelectLang={() => {}}
-            value={card.question}
-            onChangeValue={(value) => handleChangeField('question')(value)}
-          />
-          <TextField
+          /> */}
+          <Box sx={{ my: 2 }}>
+            <TextFieldWithSTT
+              field="question"
+              required
+              id="question"
+              name="question"
+              label="Your question"
+              lang={langQuestion}
+              onSelectLang={(field, value) => {
+                setLangQuestion(value);
+              }}
+              value={card.question}
+              onChangeValue={(field, value) => handleChangeField(field)(value)}
+            />
+          </Box>
+          <Box sx={{ my: 2 }}>
+            <TextFieldWithSTT
+              field="answer"
+              required
+              id="answer"
+              name="answer"
+              label="The answer to the question"
+              lang={langAnswer}
+              onSelectLang={(field, value) => {
+                setLangAnswer(value);
+              }}
+              value={card.answer}
+              onChangeValue={(field, value) => handleChangeField(field)(value)}
+            />
+          </Box>
+          {/* <TextField
             id="answer"
             name="answer"
             label="Answer to the question"
@@ -171,8 +186,8 @@ function CardCreateEdit() {
             margin="normal"
             value={card.answer}
             onChange={(e) => handleChangeField('answer')(e.target.value)}
-          />
-          <Box sx={{ my: 2 }}>
+          /> */}
+          <Box sx={{ my: 6 }}>
             <Button
               variant="outlined"
               fullWidth

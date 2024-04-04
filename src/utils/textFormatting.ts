@@ -14,8 +14,25 @@ const punctuationCommandsFR: PunctuationCommandsLang = {
   'fermer les guillemets': '"',
 };
 
+const punctuationCommandsEN: PunctuationCommandsLang = {
+  'question mark': '?',
+  'exclamation point': '!',
+  comma: ',',
+  semicolon: ';',
+  colon: ':',
+  period: '.',
+  'open parenthesis': '(',
+  'close parenthesis': ')',
+  'open quote': '“',
+  'close quote': '”',
+  'open bracket': '[',
+  'close bracket': ']',
+  dash: '-',
+};
+
 const punctuationCommands: PunctuationCommands = {
   'fr-FR': punctuationCommandsFR,
+  'en-US': punctuationCommandsEN,
 };
 
 const formatText = (text: string, lang: string) => {
