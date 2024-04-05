@@ -2,11 +2,14 @@ import { Box, FormControl, MenuItem, Select, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
 interface LanguageSelectorProps {
-  field1?: 'question' | 'answer';
+  field1?: 'questionLanguage' | 'answerLanguage';
   field2?: 'defaultQuestionLanguage' | 'defaultAnswerLanguage';
   instructions: string;
   selectedLang: string;
-  onLanguageChange1?: (field: 'question' | 'answer', lang: string) => void;
+  onLanguageChange1?: (
+    field: 'questionLanguage' | 'answerLanguage',
+    lang: string
+  ) => void;
   onLanguageChange2?: (
     field: 'defaultQuestionLanguage' | 'defaultAnswerLanguage',
     lang: string

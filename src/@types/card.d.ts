@@ -2,6 +2,8 @@ export interface CardData {
   id: number;
   boxId: number;
   creatorId: number;
+  questionLanguage: string;
+  answerLanguage: string;
   question: string;
   answer: string;
   attachment: string;
@@ -13,6 +15,8 @@ export interface CardData {
 }
 
 export interface CardDataLight {
+  questionLanguage: string;
+  answerLanguage: string;
   question: string;
   answer: string;
   attachment: string;

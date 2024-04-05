@@ -30,6 +30,8 @@ export const initialState: CardOneState = {
   success: '',
   isRegistered: false,
   card: {
+    questionLanguage: 'fr-FR',
+    answerLanguage: 'fr-FR',
     question: '',
     answer: '',
     attachment: '',
@@ -121,6 +123,8 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.card = {
+        questionLanguage: 'fr-FR',
+        answerLanguage: 'fr-FR',
         question: '',
         answer: '',
         attachment: '',
@@ -145,6 +149,8 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.success = 'Successfully created card';
       state.isRegistered = true;
       state.card = {
+        questionLanguage: 'fr-FR',
+        answerLanguage: 'fr-FR',
         question: '',
         answer: '',
         attachment: '',

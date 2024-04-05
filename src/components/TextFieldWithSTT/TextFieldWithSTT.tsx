@@ -29,7 +29,10 @@ interface TextFieldWithSTTProps {
   name: string; // nom du champ texte
   label: string; // label pour le TextField
   lang: string; // code langue pour la reconnaissance vocale
-  onSelectLang: (field: 'question' | 'answer', lang: string) => void; // fonction pour changer la langue
+  onSelectLang: (
+    field: 'questionLanguage' | 'answerLanguage',
+    lang: string
+  ) => void; // fonction pour changer la langue
   multiline?: boolean; // champ multilignes
   rows?: number; // nombre de lignes pour un champ multilignes
   value: string; // valeur du champ texte
@@ -126,7 +129,7 @@ function TextFieldWithSTT({
 
       {/* ---------------- SELECTION DE LA LANGUE ----------------- */}
       <LanguageSelector
-        field1={field}
+        field1={field === 'question' ? 'questionLanguage' : 'answerLanguage'}
         instructions="Choose the language to use for the field above:"
         selectedLang={lang}
         onLanguageChange1={onSelectLang}
