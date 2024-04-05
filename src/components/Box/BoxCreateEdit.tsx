@@ -12,15 +12,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  MenuItem,
-  Select,
-  FormControl,
 } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { grey } from '@mui/material/colors';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import {
@@ -28,6 +24,7 @@ import {
   createBox,
   deleteBox,
 } from '../../store/reducers/boxOne';
+import LanguageSelector from '../TextFieldWithSTT/LanguageSelector';
 
 interface BoxCreateEditProps {
   mode: 'create' | 'edit';
@@ -62,9 +59,8 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     }
   }, [boxCreated, isRegistered, navigate]);
 
-  // Les champs du formulaire sont pré-remplis si on est en mode edit
+  // NOTE: Les champs du formulaire sont pré-remplis si on est en mode edit
   // grâce à initialBoxFields dispatcher dans BoxItem
-
   // useEffect(() => {
   //   if (mode === 'edit' && currentBox) {
   //     dispatch(changeBoxField({ field: 'name', value: currentBox.name }));
@@ -126,9 +122,6 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     buttonText = mode === 'create' ? 'Create' : 'Edit';
   }
 
-  // En mode Edit : les champs sont pré-remplis grâce au dispatch de initialBoxFields dans BoxItem
-  // +setCurrentBox dans le handleEdit de BoxItem
-
   return (
     <>
       <Container
@@ -159,7 +152,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               </Alert>
             ))}
 
-          {/* ------------------------ Form ------------------------------- */}
+          {/* -------------- FORM : NAME, LABEL & DESCRIPTION ------------ */}
           <form onSubmit={handleSubmit}>
             <TextField
               required
@@ -192,101 +185,24 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               onChange={(e) => handleChangeField('description')(e.target.value)}
             />
 
-            {/* ---------------- QUESTION / SELECTION DE LA LANGUE PAR DEFAUT ----------------- */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{ fontSize: '0.875rem', color: grey[600], flexGrow: 1 }}
-              >
-                Please select the default language for questions
-              </Typography>
-              <FormControl sx={{ width: 'auto' }}>
-                <Select
-                  displayEmpty
-                  value={box.defaultQuestionLanguage}
-                  onChange={(e) =>
-                    handleChangeField('defaultQuestionLanguage')(e.target.value)
-                  }
-                  inputProps={{ 'aria-label': 'Select language' }}
-                  sx={{
-                    '.MuiSelect-select': {
-                      padding: '6px 32px 6px 12px', // Ajuste le padding pour réduire la hauteur
-                      fontSize: '0.875rem', // Réduit la taille de la police
-                    },
-                    '.MuiOutlinedInput-notchedOutline': {
-                      border: 'none', // Supprime la bordure
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      border: 'none', // Supprime la bordure au survol
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      border: 'none', // Supprime la bordure lorsque le Select est focus
-                    },
-                  }}
-                >
-                  <MenuItem value="fr-FR">Français</MenuItem>
-                  <MenuItem value="en-US">English</MenuItem>
-                  <MenuItem value="de-DE">Deutsch</MenuItem>
-                  <MenuItem value="es-ES">Español</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-            {/* ---------------- ANSWER / SELECTION DE LA LANGUE PAR DEFAUT ----------------- */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  fontSize: '0.875rem',
-                  color: grey[600],
-                  flexGrow: 1,
-                }}
-              >
-                Please select the default language for answers
-              </Typography>
-              <FormControl sx={{ width: 'auto' }}>
-                <Select
-                  displayEmpty
-                  value={box.defaultAnswerLanguage}
-                  onChange={(e) =>
-                    handleChangeField('defaultAnswerLanguage')(e.target.value)
-                  }
-                  inputProps={{ 'aria-label': 'Select language' }}
-                  sx={{
-                    '.MuiSelect-select': {
-                      padding: '6px 32px 6px 12px', // Ajuste le padding pour réduire la hauteur
-                      fontSize: '0.875rem', // Réduit la taille de la police
-                    },
-                    '.MuiOutlinedInput-notchedOutline': {
-                      border: 'none', // Supprime la bordure
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      border: 'none', // Supprime la bordure au survol
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      border: 'none', // Supprime la bordure lorsque le Select est focus
-                    },
-                  }}
-                >
-                  <MenuItem value="fr-FR">Français</MenuItem>
-                  <MenuItem value="en-US">English</MenuItem>
-                  <MenuItem value="de-DE">Deutsch</MenuItem>
-                  <MenuItem value="es-ES">Español</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
+            {/* ---------------------- LANGUAGE DEFAULT SELECTION ---------------------- */}
+            <LanguageSelector
+              field2="defaultQuestionLanguage"
+              instructions="Please select the default language for questions"
+              selectedLang={box.defaultQuestionLanguage}
+              onLanguageChange2={(field, lang) =>
+                handleChangeField(field)(lang)
+              }
+            />
+            <LanguageSelector
+              field2="defaultAnswerLanguage"
+              instructions="Please select the default language for questions"
+              selectedLang={box.defaultAnswerLanguage}
+              onLanguageChange2={(field, lang) =>
+                handleChangeField(field)(lang)
+              }
+            />
+            {/* -------------------------- UPLOAD ILLUSTRATION --------------------------- */}
             <Box sx={{ my: 2 }}>
               <Button
                 variant="outlined"
@@ -317,7 +233,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
                 label="Box of Box"
               />
             </Box>
-            {/* ---------------------- Buttons ----------------------------- */}
+            {/* ------------------------------ BUTTONS ------------------------------------ */}
             <Box
               sx={{
                 marginTop: 8,

@@ -17,6 +17,9 @@ import {
 import { grey } from '@mui/material/colors';
 import useSpeechToText from '../../hook/useSpeechToText';
 import formatText from '../../utils/textFormatting';
+import LanguageSelector from './LanguageSelector';
+
+// import { FieldType } from '../../@types/field';
 
 interface TextFieldWithSTTProps {
   // TODO: lister les nom de champs texte possibles
@@ -122,48 +125,12 @@ function TextFieldWithSTT({
       />
 
       {/* ---------------- SELECTION DE LA LANGUE ----------------- */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-        }}
-      >
-        <Typography
-          variant="body1"
-          sx={{ fontSize: '0.875rem', color: grey[600], flexGrow: 1 }}
-        >
-          Choose the language to use for the field above:
-        </Typography>
-        <FormControl sx={{ width: 'auto' }}>
-          <Select
-            value={lang}
-            onChange={(e) => onSelectLang(field, e.target.value)}
-            displayEmpty
-            inputProps={{ 'aria-label': 'Select language' }}
-            sx={{
-              '.MuiSelect-select': {
-                padding: '6px 32px 6px 12px', // Ajuste le padding pour réduire la hauteur
-                fontSize: '0.875rem', // Réduit la taille de la police
-              },
-              '.MuiOutlinedInput-notchedOutline': {
-                border: 'none', // Supprime la bordure
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                border: 'none', // Supprime la bordure au survol
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                border: 'none', // Supprime la bordure lorsque le Select est focus
-              },
-            }}
-          >
-            <MenuItem value="fr-FR">Français</MenuItem>
-            <MenuItem value="en-US">English</MenuItem>
-            <MenuItem value="de-DE">Deutsch</MenuItem>
-            <MenuItem value="es-ES">Español</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+      <LanguageSelector
+        field1={field}
+        instructions="Choose the language to use for the field above:"
+        selectedLang={lang}
+        onLanguageChange1={onSelectLang}
+      />
     </>
   );
 }
