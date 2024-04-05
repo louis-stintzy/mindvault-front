@@ -131,11 +131,11 @@ function TextFieldWithSTT({
       >
         <Typography
           variant="body1"
-          sx={{ fontSize: '0.875rem', color: grey[600] }}
+          sx={{ fontSize: '0.875rem', color: grey[600], flexGrow: 1 }}
         >
           Choose the language to use for the field above:
         </Typography>
-        <FormControl sx={{ minWidth: 100 }}>
+        <FormControl sx={{ width: 'auto' }}>
           <Select
             value={lang}
             onChange={(e) => onSelectLang(field, e.target.value)}

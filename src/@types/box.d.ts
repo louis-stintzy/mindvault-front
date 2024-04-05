@@ -13,6 +13,8 @@ export interface BoxData {
   color: string;
   label: string;
   level: string;
+  default_question_language: string;
+  default_answer_language: string;
   position: number;
   learn_it: boolean;
   type: number;
@@ -30,6 +32,8 @@ export interface BoxDataLight {
   color: string;
   label: string;
   level: string;
+  defaultQuestionLanguage: string;
+  defaultAnswerLanguage: string;
   learnIt: boolean;
   type: number;
 }

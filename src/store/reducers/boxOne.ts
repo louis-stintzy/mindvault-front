@@ -37,6 +37,8 @@ export const initialState: BoxOneState = {
     color: '',
     label: '',
     level: '',
+    defaultQuestionLanguage: 'fr-FR',
+    defaultAnswerLanguage: 'fr-FR',
     learnIt: true,
     type: 2,
   },
@@ -142,6 +144,8 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         color: '',
         label: '',
         level: '',
+        defaultQuestionLanguage: 'fr-FR',
+        defaultAnswerLanguage: 'fr-FR',
         learnIt: true,
         type: 2,
       };
@@ -206,6 +210,8 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         color: '',
         label: '',
         level: '',
+        defaultQuestionLanguage: 'fr-FR',
+        defaultAnswerLanguage: 'fr-FR',
         learnIt: true,
         type: 2,
       };

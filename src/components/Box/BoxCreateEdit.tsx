@@ -12,11 +12,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  MenuItem,
+  Select,
+  FormControl,
 } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { grey } from '@mui/material/colors';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import {
@@ -75,7 +79,15 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   // }, [currentBox, dispatch, mode]);
 
   const handleChangeField =
-    (field: 'name' | 'description' | 'label') => (value: string) => {
+    (
+      field:
+        | 'name'
+        | 'description'
+        | 'label'
+        | 'defaultQuestionLanguage'
+        | 'defaultAnswerLanguage'
+    ) =>
+    (value: string) => {
       // TODO: checker que les values respectent les contraintes comme name<255 caractères
       dispatch(changeBoxField({ field, value }));
     };
@@ -113,6 +125,9 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   } else {
     buttonText = mode === 'create' ? 'Create' : 'Edit';
   }
+
+  // En mode Edit : les champs sont pré-remplis grâce au dispatch de initialBoxFields dans BoxItem
+  // +setCurrentBox dans le handleEdit de BoxItem
 
   return (
     <>
@@ -176,6 +191,102 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               value={box.description}
               onChange={(e) => handleChangeField('description')(e.target.value)}
             />
+
+            {/* ---------------- QUESTION / SELECTION DE LA LANGUE PAR DEFAUT ----------------- */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{ fontSize: '0.875rem', color: grey[600], flexGrow: 1 }}
+              >
+                Please select the default language for questions
+              </Typography>
+              <FormControl sx={{ width: 'auto' }}>
+                <Select
+                  displayEmpty
+                  value={box.defaultQuestionLanguage}
+                  onChange={(e) =>
+                    handleChangeField('defaultQuestionLanguage')(e.target.value)
+                  }
+                  inputProps={{ 'aria-label': 'Select language' }}
+                  sx={{
+                    '.MuiSelect-select': {
+                      padding: '6px 32px 6px 12px', // Ajuste le padding pour réduire la hauteur
+                      fontSize: '0.875rem', // Réduit la taille de la police
+                    },
+                    '.MuiOutlinedInput-notchedOutline': {
+                      border: 'none', // Supprime la bordure
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      border: 'none', // Supprime la bordure au survol
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      border: 'none', // Supprime la bordure lorsque le Select est focus
+                    },
+                  }}
+                >
+                  <MenuItem value="fr-FR">Français</MenuItem>
+                  <MenuItem value="en-US">English</MenuItem>
+                  <MenuItem value="de-DE">Deutsch</MenuItem>
+                  <MenuItem value="es-ES">Español</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            {/* ---------------- ANSWER / SELECTION DE LA LANGUE PAR DEFAUT ----------------- */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: '0.875rem',
+                  color: grey[600],
+                  flexGrow: 1,
+                }}
+              >
+                Please select the default language for answers
+              </Typography>
+              <FormControl sx={{ width: 'auto' }}>
+                <Select
+                  displayEmpty
+                  value={box.defaultAnswerLanguage}
+                  onChange={(e) =>
+                    handleChangeField('defaultAnswerLanguage')(e.target.value)
+                  }
+                  inputProps={{ 'aria-label': 'Select language' }}
+                  sx={{
+                    '.MuiSelect-select': {
+                      padding: '6px 32px 6px 12px', // Ajuste le padding pour réduire la hauteur
+                      fontSize: '0.875rem', // Réduit la taille de la police
+                    },
+                    '.MuiOutlinedInput-notchedOutline': {
+                      border: 'none', // Supprime la bordure
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      border: 'none', // Supprime la bordure au survol
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      border: 'none', // Supprime la bordure lorsque le Select est focus
+                    },
+                  }}
+                >
+                  <MenuItem value="fr-FR">Français</MenuItem>
+                  <MenuItem value="en-US">English</MenuItem>
+                  <MenuItem value="de-DE">Deutsch</MenuItem>
+                  <MenuItem value="es-ES">Español</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
             <Box sx={{ my: 2 }}>
               <Button
                 variant="outlined"
@@ -227,6 +338,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               <Button
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                // TODO : pas besoin de recharger les boxes dans la page /boxes puisqu'on annule
                 onClick={() => navigate(`/boxes`)}
               >
                 Cancel
