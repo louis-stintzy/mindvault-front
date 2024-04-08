@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { CardData } from '../../@types/card';
 import { useAppDispatch } from '../../hook/redux';
@@ -25,11 +25,17 @@ function Question({ card, goToNextCard }: QuestionProps) {
   const [isCorrect, setIsCorrect] = useState(false);
 
   // TODO : passer du useState à une route backend pour modif la langue de la réponse
-  const [answerLanguage, setAnswerLanguage] = useState(card.answerLanguage);
+  const [answerLanguage, setAnswerLanguage] = useState('');
   const handleChangeField =
     (field: 'questionLanguage' | 'answerLanguage') => (value: string) => {
       setAnswerLanguage(value);
     };
+
+  const speakText = (text: string, lang: string) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang;
+    speechSynthesis.speak(utterance);
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,6 +73,17 @@ function Question({ card, goToNextCard }: QuestionProps) {
     setUserAnswer('');
     setIsFlipped(true);
   };
+
+  useEffect(() => {
+    setAnswerLanguage(card.answerLanguage);
+    speakText(card.question, card.questionLanguage);
+  }, [card.answerLanguage, card.question, card.questionLanguage]);
+
+  useEffect(() => {
+    if (isFlipped) {
+      speakText(card.answer, card.answerLanguage);
+    }
+  }, [isFlipped, card.answer, card.answerLanguage]);
 
   const handleNextButton = () => {
     setIsFlipped(false);
