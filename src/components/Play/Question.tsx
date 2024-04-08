@@ -11,6 +11,7 @@ import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { CardData } from '../../@types/card';
 import { useAppDispatch } from '../../hook/redux';
 import { updateCardAttributesAfterAnswer } from '../../store/reducers/cardOne';
+import TextFieldWithSTT from '../TextFieldWithSTT/TextFieldWithSTT';
 
 interface QuestionProps {
   card: CardData;
@@ -22,6 +23,13 @@ function Question({ card, goToNextCard }: QuestionProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
+
+  // TODO : passer du useState à une route backend pour modif la langue de la réponse
+  const [answerLanguage, setAnswerLanguage] = useState(card.answerLanguage);
+  const handleChangeField =
+    (field: 'questionLanguage' | 'answerLanguage') => (value: string) => {
+      setAnswerLanguage(value);
+    };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,12 +84,12 @@ function Question({ card, goToNextCard }: QuestionProps) {
           alignItems: 'center',
         }}
       >
-        {/* ------------------------- Title ----------------------------- */}
+        {/* // ------------------------- Title ----------------------------- */}
         <Typography variant="h4" component="h1" gutterBottom>
           Question
         </Typography>
 
-        {/* ------ !isFlipped : Question & Media & Field to Answer ------ */}
+        {/* // ------ !isFlipped : Question & Media & Field to Answer ------ */}
         {!isFlipped && (
           <Paper elevation={3} sx={{ padding: 2 }}>
             <Typography variant="h6" component="h2" gutterBottom>
@@ -97,7 +105,7 @@ function Question({ card, goToNextCard }: QuestionProps) {
               />
             )}
             <form onSubmit={handleSubmit}>
-              <TextField
+              {/* <TextField
                 id="answer"
                 name="answer"
                 label="Your answer"
@@ -108,6 +116,22 @@ function Question({ card, goToNextCard }: QuestionProps) {
                 margin="normal"
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
+              /> */}
+              <TextFieldWithSTT
+                field="answer"
+                id="answer"
+                name="answer"
+                label="Your answer"
+                lang={answerLanguage}
+                onSelectLang={(field, value) => {
+                  handleChangeField(field)(value);
+                }}
+                multiline
+                rows={2}
+                value={userAnswer}
+                onChangeValue={(field, userAnswerUpdated) => {
+                  setUserAnswer(userAnswerUpdated);
+                }}
               />
               <Button variant="contained" type="submit" sx={{ mt: 3, mb: 2 }}>
                 Submit
@@ -115,7 +139,7 @@ function Question({ card, goToNextCard }: QuestionProps) {
             </form>
           </Paper>
         )}
-        {/* ------------------ isFlipped : Answer ----------------- */}
+        {/* // ------------------ isFlipped : Answer ----------------- */}
         {isFlipped && (
           <Paper elevation={3} sx={{ padding: 2 }}>
             <Typography variant="h6" component="h2" gutterBottom>
@@ -147,7 +171,7 @@ function Question({ card, goToNextCard }: QuestionProps) {
         )}
       </Box>
 
-      {/* --------------------- Bottom Navigation --------------------- */}
+      {/* // --------------------- Bottom Navigation --------------------- */}
       <BottomNavigationMUI />
     </Container>
   );
