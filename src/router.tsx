@@ -13,7 +13,7 @@ import CardItemsList from './components/Card/CardItemsList';
 import CardCreateEdit from './components/Card/CardCreateEdit';
 import Play from './components/Play/Play';
 import BoxStats from './components/BoxStats/BoxStats';
-import TestSTT from './components/TextFieldWithSTT/TestSTT';
+import TestSTTandTTS from './components/TextFieldWithSTT/TestSTTandTTS';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -50,7 +50,7 @@ export const routerConfig = [
       },
       {
         path: '/test-stt',
-        element: <TestSTT />,
+        element: <TestSTTandTTS />,
       },
       {
         path: '/home',

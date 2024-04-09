@@ -16,13 +16,19 @@ interface ErrorResponse {
 
 interface TestSTTState {
   testField: {
+    questionLanguage: string;
+    answerLanguage: string;
     question: string;
+    answer: string;
   };
 }
 
 export const initialState: TestSTTState = {
   testField: {
+    questionLanguage: 'fr-FR',
+    answerLanguage: 'fr-FR',
     question: '',
+    answer: '',
   },
 };
 
@@ -39,7 +45,10 @@ const testSTTReducer = createReducer(initialState, (builder) => {
       state.testField[action.payload.field] = action.payload.value;
     })
     .addCase(resetTestSTTState, (state) => {
+      state.testField.questionLanguage = 'fr-FR';
+      state.testField.answerLanguage = 'fr-FR';
       state.testField.question = '';
+      state.testField.answer = '';
     });
 });
 
