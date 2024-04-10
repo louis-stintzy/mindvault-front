@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -31,6 +31,11 @@ import {
 import TextFieldWithSTT from './TextFieldWithSTT';
 
 function TestSTTandTTS() {
+  const dispatch = useAppDispatch();
+  // le store est mis à jour que lorsque l'écoute est arrêtée ou lors de la frappe au clavier
+  const { questionLanguage, question } = useAppSelector(
+    (state) => state.testSTT.testField
+  );
   // ----------------- AFFICHAGE DES COMMANDES DE PONCTUATION -----------------
   const [showList, setShowList] = useState(false);
 
@@ -52,6 +57,14 @@ function TestSTTandTTS() {
   };
 
   // ----------------- GESTION DU TEXT TO SPEECH -----------------
+  // liste les voix disponibles compatible avec la langue de la question
+  const [availableVoicesName, setAvailableVoicesName] = useState<string[]>(
+    speechSynthesis
+      .getVoices()
+      .filter((voice) => voice.lang === questionLanguage)
+      .map((voice) => voice.name)
+  );
+
   const [selectedVoiceName, setSelectedVoiceName] = useState<string>('');
   const speakText = (text: string, lang: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
@@ -67,12 +80,23 @@ function TestSTTandTTS() {
     }
   };
 
+  // charge les voix disponibles pour la langue de la question
+  // s'assure que la liste des voix est à jour car elles peuvent ne pas être chargées immédiatement
+  useEffect(() => {
+    const handleVoicesChanged = () => {
+      setAvailableVoicesName(
+        speechSynthesis
+          .getVoices()
+          .filter((voice) => voice.lang === questionLanguage)
+          .map((voice) => voice.name)
+      );
+      setSelectedVoiceName('');
+    };
+    handleVoicesChanged();
+    speechSynthesis.onvoiceschanged = handleVoicesChanged;
+  }, [questionLanguage]);
+
   // ----------------- GESTION DU SPEECH TO TEXT -----------------
-  const dispatch = useAppDispatch();
-  // le store est mis à jour que lorsque l'écoute est arrêtée ou lors de la frappe au clavier
-  const { questionLanguage, question } = useAppSelector(
-    (state) => state.testSTT.testField
-  );
   // const [textInput, setTextInput] = useState('');
 
   // transcriptQuestion est déjà une transcription qui se complète au fur et à mesur de la reconnaissance vocale
@@ -270,14 +294,19 @@ function TestSTTandTTS() {
                 },
               }}
             >
-              {speechSynthesis
+              {/* {speechSynthesis
                 .getVoices()
                 .filter((voice) => voice.lang === questionLanguage)
                 .map((voice) => (
                   <MenuItem key={voice.name} value={voice.name}>
                     {voice.name}
                   </MenuItem>
-                ))}
+                ))} */}
+              {availableVoicesName.map((voiceName) => (
+                <MenuItem key={voiceName} value={voiceName}>
+                  {voiceName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
