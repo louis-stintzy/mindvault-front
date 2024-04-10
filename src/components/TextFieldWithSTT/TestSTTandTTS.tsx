@@ -96,6 +96,12 @@ function TestSTTandTTS() {
     speechSynthesis.onvoiceschanged = handleVoicesChanged;
   }, [questionLanguage]);
 
+  useEffect(() => {
+    if (availableVoicesName.length) {
+      setSelectedVoiceName(availableVoicesName[0]);
+    }
+  }, [availableVoicesName]);
+
   // ----------------- GESTION DU SPEECH TO TEXT -----------------
   // const [textInput, setTextInput] = useState('');
 
