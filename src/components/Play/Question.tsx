@@ -2,16 +2,22 @@ import {
   Box,
   Button,
   Container,
+  FormControlLabel,
+  IconButton,
+  FormHelperText,
   Paper,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { CardData } from '../../@types/card';
-import { useAppDispatch } from '../../hook/redux';
+import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { updateCardAttributesAfterAnswer } from '../../store/reducers/cardOne';
 import TextFieldWithSTT from '../TextFieldWithSTT/TextFieldWithSTT';
+import { changeAutoRead } from '../../store/reducers/cardMultiple';
 
 interface QuestionProps {
   card: CardData;
@@ -23,12 +29,18 @@ function Question({ card, goToNextCard }: QuestionProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
+  const { autoRead } = useAppSelector((state) => state.cardMultiple);
 
   // TODO : passer du useState à une route backend pour modif la langue de la réponse
   const [answerLanguage, setAnswerLanguage] = useState('');
   const handleChangeField =
     (field: 'questionLanguage' | 'answerLanguage') => (value: string) => {
       setAnswerLanguage(value);
+    };
+
+  const handleChangeAutoRead =
+    (field: 'question' | 'answer') => (value: boolean) => {
+      dispatch(changeAutoRead({ field, value }));
     };
 
   const speakText = (text: string, lang: string) => {
@@ -76,14 +88,18 @@ function Question({ card, goToNextCard }: QuestionProps) {
 
   useEffect(() => {
     setAnswerLanguage(card.answerLanguage);
-    speakText(card.question, card.questionLanguage);
-  }, [card.answerLanguage, card.question, card.questionLanguage]);
+    if (autoRead.question) {
+      speakText(card.question, card.questionLanguage);
+    }
+  }, [card, autoRead.question]);
 
   useEffect(() => {
     if (isFlipped) {
-      speakText(card.answer, card.answerLanguage);
+      if (autoRead.answer) {
+        speakText(card.answer, card.answerLanguage);
+      }
     }
-  }, [isFlipped, card.answer, card.answerLanguage]);
+  }, [isFlipped, card, autoRead.answer]);
 
   const handleNextButton = () => {
     setIsFlipped(false);
@@ -111,6 +127,13 @@ function Question({ card, goToNextCard }: QuestionProps) {
           <Paper elevation={3} sx={{ padding: 2 }}>
             <Typography variant="h6" component="h2" gutterBottom>
               {card.question ? card.question : 'Card without question...'}
+              {/* // todo : ajouter une lecture "ralentie"/plus lente */}
+              <IconButton
+                onClick={() => speakText(card.question, card.questionLanguage)}
+                aria-label="speak question"
+              >
+                <CampaignIcon />
+              </IconButton>
             </Typography>
             {card.attachment ? (
               <img src={card.attachment} alt="media" />
@@ -150,6 +173,31 @@ function Question({ card, goToNextCard }: QuestionProps) {
                   setUserAnswer(userAnswerUpdated);
                 }}
               />
+              {/* // todo : prévoir de gérer l'autoRead dans les options */}
+              <Box sx={{ my: 2 }}>
+                <FormControlLabel
+                  label="Auto-read question"
+                  control={
+                    <Switch
+                      checked={autoRead.question}
+                      onChange={(event) =>
+                        handleChangeAutoRead('question')(event.target.checked)
+                      }
+                    />
+                  }
+                />
+                <FormControlLabel
+                  label="Auto-read answer"
+                  control={
+                    <Switch
+                      checked={autoRead.answer}
+                      onChange={(event) =>
+                        handleChangeAutoRead('answer')(event.target.checked)
+                      }
+                    />
+                  }
+                />
+              </Box>
               <Button variant="contained" type="submit" sx={{ mt: 3, mb: 2 }}>
                 Submit
               </Button>
@@ -176,6 +224,13 @@ function Question({ card, goToNextCard }: QuestionProps) {
             )}
             <Typography variant="h6" component="h2" gutterBottom>
               {card.answer ? card.answer : 'Card without answer...'}
+              {/* // todo : ajouter une lecture "ralentie"/plus lente */}
+              <IconButton
+                onClick={() => speakText(card.answer, card.answerLanguage)}
+                aria-label="speak answer"
+              >
+                <CampaignIcon />
+              </IconButton>
             </Typography>
             <Button
               variant="contained"

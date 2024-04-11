@@ -24,6 +24,10 @@ interface CardMultipleState {
   success: string;
   cardsAll: CardData[];
   cardsToReview: CardData[];
+  autoRead: {
+    question: boolean;
+    answer: boolean;
+  };
 }
 
 export const initialState: CardMultipleState = {
@@ -32,7 +36,19 @@ export const initialState: CardMultipleState = {
   success: '',
   cardsAll: [],
   cardsToReview: [],
+  autoRead: {
+    question: false,
+    answer: false,
+  },
 };
+
+type KeysOfAutoRead = keyof CardMultipleState['autoRead'];
+
+// todo : prévoir un enregistrement en bdd
+export const changeAutoRead = createAction<{
+  field: KeysOfAutoRead;
+  value: boolean;
+}>('cardMultiple/CHANGE_AUTO_READ');
 
 export const resetCardsAllState = createAction(
   'cardMultiple/RESET_CARDS_ALL_STATE'
@@ -88,6 +104,10 @@ const cardMultipleReducer = createReducer(initialState, (builder) => {
       state.error = null;
       state.success = '';
       state.cardsToReview = [];
+    })
+    // ----------- CHANGE AUTOREAD -----------
+    .addCase(changeAutoRead, (state, action) => {
+      state.autoRead[action.payload.field] = action.payload.value;
     })
     // ----------- GET BOX CARDS -----------
     .addCase(getBoxCards.pending, (state) => {
