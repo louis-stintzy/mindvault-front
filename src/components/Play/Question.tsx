@@ -9,6 +9,10 @@ import {
   Switch,
   TextField,
   Typography,
+  Card,
+  CardContent,
+  CardActions,
+  Stack,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import CampaignIcon from '@mui/icons-material/Campaign';
@@ -86,6 +90,12 @@ function Question({ card, goToNextCard }: QuestionProps) {
     setIsFlipped(true);
   };
 
+  const handlePassInForce = () => {
+    // todo : faire comme de handleSubmit en faisant attention au compartiment déjà modifié
+    // puis handleNextButton()
+    console.log('Pass In Force');
+  };
+
   useEffect(() => {
     setAnswerLanguage(card.answerLanguage);
     if (autoRead.question) {
@@ -124,28 +134,48 @@ function Question({ card, goToNextCard }: QuestionProps) {
 
         {/* // ------ !isFlipped : Question & Media & Field to Answer ------ */}
         {!isFlipped && (
-          <Paper elevation={3} sx={{ padding: 2 }}>
-            <Typography variant="h6" component="h2" gutterBottom>
-              {card.question ? card.question : 'Card without question...'}
-              {/* // todo : ajouter une lecture "ralentie"/plus lente */}
-              <IconButton
-                onClick={() => speakText(card.question, card.questionLanguage)}
-                aria-label="speak question"
-              >
-                <CampaignIcon />
-              </IconButton>
-            </Typography>
-            {card.attachment ? (
-              <img src={card.attachment} alt="media" />
-            ) : (
+          <Card
+            elevation={3}
+            sx={{
+              width: '100%',
+              maxWidth: {
+                xs: '100%',
+              },
+              padding: 2,
+              margin: 'auto',
+            }}
+          >
+            <CardContent>
+              <Typography variant="h6" component="h2" gutterBottom>
+                {card.question ? card.question : 'Card without question...'}
+                {/* // todo : ajouter une lecture "ralentie"/plus lente */}
+                <IconButton
+                  onClick={() =>
+                    speakText(card.question, card.questionLanguage)
+                  }
+                  aria-label="speak question"
+                >
+                  <CampaignIcon />
+                </IconButton>
+              </Typography>
+
               <img
-                src="https://source.unsplash.com/random"
+                src={
+                  card.attachment
+                    ? card.attachment
+                    : 'https://source.unsplash.com/random'
+                }
                 alt="media"
-                width="150px"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '150px', // todo : utiliser useTheme useMediaQuery (isXs ?)
+                  objectFit: 'cover',
+                }}
               />
-            )}
-            <form onSubmit={handleSubmit}>
-              {/* <TextField
+
+              <form onSubmit={handleSubmit}>
+                {/* <TextField
                 id="answer"
                 name="answer"
                 label="Your answer"
@@ -157,89 +187,146 @@ function Question({ card, goToNextCard }: QuestionProps) {
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
               /> */}
-              <TextFieldWithSTT
-                field="answer"
-                id="answer"
-                name="answer"
-                label="Your answer"
-                lang={answerLanguage}
-                onSelectLang={(field, value) => {
-                  handleChangeField(field)(value);
-                }}
-                multiline
-                rows={2}
-                value={userAnswer}
-                onChangeValue={(field, userAnswerUpdated) => {
-                  setUserAnswer(userAnswerUpdated);
-                }}
-              />
-              {/* // todo : prévoir de gérer l'autoRead dans les options */}
-              <Box sx={{ my: 2 }}>
-                <FormControlLabel
-                  label="Auto-read question"
-                  control={
-                    <Switch
-                      checked={autoRead.question}
-                      onChange={(event) =>
-                        handleChangeAutoRead('question')(event.target.checked)
-                      }
-                    />
-                  }
+                <TextFieldWithSTT
+                  field="answer"
+                  id="answer"
+                  name="answer"
+                  label="Your answer"
+                  lang={answerLanguage}
+                  onSelectLang={(field, value) => {
+                    handleChangeField(field)(value);
+                  }}
+                  multiline
+                  rows={2}
+                  value={userAnswer}
+                  onChangeValue={(field, userAnswerUpdated) => {
+                    setUserAnswer(userAnswerUpdated);
+                  }}
                 />
-                <FormControlLabel
-                  label="Auto-read answer"
-                  control={
-                    <Switch
-                      checked={autoRead.answer}
-                      onChange={(event) =>
-                        handleChangeAutoRead('answer')(event.target.checked)
-                      }
-                    />
-                  }
-                />
-              </Box>
-              <Button variant="contained" type="submit" sx={{ mt: 3, mb: 2 }}>
-                Submit
-              </Button>
-            </form>
-          </Paper>
+
+                <CardActions>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%',
+                    }}
+                  >
+                    <Stack spacing={0}>
+                      {/* // todo : prévoir de gérer l'autoRead dans les options */}
+
+                      <FormControlLabel
+                        label="Auto-read question"
+                        control={
+                          <Switch
+                            checked={autoRead.question}
+                            onChange={(event) =>
+                              handleChangeAutoRead('question')(
+                                event.target.checked
+                              )
+                            }
+                          />
+                        }
+                      />
+                      <FormControlLabel
+                        label="Auto-read answer"
+                        control={
+                          <Switch
+                            checked={autoRead.answer}
+                            onChange={(event) =>
+                              handleChangeAutoRead('answer')(
+                                event.target.checked
+                              )
+                            }
+                          />
+                        }
+                      />
+                    </Stack>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      sx={{ mt: 3, mb: 2, alignSelf: 'center' }}
+                    >
+                      Submit
+                    </Button>
+                  </Box>
+                </CardActions>
+              </form>
+            </CardContent>
+          </Card>
         )}
         {/* // ------------------ isFlipped : Answer ----------------- */}
         {isFlipped && (
-          <Paper elevation={3} sx={{ padding: 2 }}>
-            <Typography variant="h6" component="h2" gutterBottom>
-              {isCorrect ? 'Correct !' : 'Wrong...'}
-            </Typography>
-            <Typography variant="h6" component="h2" gutterBottom>
-              {card.question ? card.question : 'Card without question...'}
-            </Typography>
-            {card.attachment ? (
-              <img src={card.attachment} alt="media" />
-            ) : (
+          <Card
+            elevation={3}
+            sx={{
+              width: '100%',
+              maxWidth: {
+                xs: '100%',
+              },
+              padding: 2,
+              margin: 'auto',
+            }}
+          >
+            <CardContent>
+              <Typography variant="h6" component="h2" gutterBottom>
+                {isCorrect ? 'Correct !' : 'Wrong...'}
+              </Typography>
+              <Typography variant="h6" component="h2" gutterBottom>
+                {card.question ? card.question : 'Card without question...'}
+              </Typography>
               <img
-                src="https://source.unsplash.com/random"
+                src={
+                  card.attachment
+                    ? card.attachment
+                    : 'https://source.unsplash.com/random'
+                }
                 alt="media"
-                width="150px"
+                style={{
+                  width: '100%',
+                  maxHeight: '200px',
+                  objectFit: 'cover',
+                }}
               />
-            )}
-            <Typography variant="h6" component="h2" gutterBottom>
-              {card.answer ? card.answer : 'Card without answer...'}
-              {/* // todo : ajouter une lecture "ralentie"/plus lente */}
-              <IconButton
-                onClick={() => speakText(card.answer, card.answerLanguage)}
-                aria-label="speak answer"
-              >
-                <CampaignIcon />
-              </IconButton>
-            </Typography>
-            <Button
-              variant="contained"
-              onClick={handleNextButton}
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Next
-            </Button>
-          </Paper>
+              <Typography variant="h6" component="h2" gutterBottom>
+                {card.answer ? card.answer : 'Card without answer...'}
+                {/* // todo : ajouter une lecture "ralentie"/plus lente */}
+                <IconButton
+                  onClick={() => speakText(card.answer, card.answerLanguage)}
+                  aria-label="speak answer"
+                >
+                  <CampaignIcon />
+                </IconButton>
+              </Typography>
+              <CardActions>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    width: '100%',
+                    justifyContent: 'center',
+                    gap: '10px',
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    onClick={handleNextButton}
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Next
+                  </Button>
+                  {!isCorrect && (
+                    <Button
+                      variant="contained"
+                      onClick={handlePassInForce}
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      I was right
+                    </Button>
+                  )}
+                </Box>
+              </CardActions>
+            </CardContent>
+          </Card>
         )}
       </Box>
 
