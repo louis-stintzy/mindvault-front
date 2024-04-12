@@ -2,17 +2,11 @@ import {
   Box,
   Button,
   Container,
-  FormControlLabel,
   IconButton,
-  FormHelperText,
-  Paper,
-  Switch,
-  TextField,
   Typography,
   Card,
   CardContent,
   CardActions,
-  Stack,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import CampaignIcon from '@mui/icons-material/Campaign';
@@ -20,15 +14,14 @@ import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { CardData } from '../../@types/card';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { updateCardAttributesAfterAnswer } from '../../store/reducers/cardOne';
-import TextFieldWithSTT from '../TextFieldWithSTT/TextFieldWithSTT';
-import { changeAutoRead } from '../../store/reducers/cardMultiple';
+import CardQuestionSide from './CardQuestionSide';
 
 interface QuestionProps {
   card: CardData;
   goToNextCard: () => void;
 }
 
-function Question({ card, goToNextCard }: QuestionProps) {
+function CardTwoSides({ card, goToNextCard }: QuestionProps) {
   const dispatch = useAppDispatch();
   const [isFlipped, setIsFlipped] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
@@ -36,15 +29,11 @@ function Question({ card, goToNextCard }: QuestionProps) {
   const { autoRead } = useAppSelector((state) => state.cardMultiple);
 
   // TODO : passer du useState à une route backend pour modif la langue de la réponse
+  // note : speakText utilise card.answerLanguage et non answerLanguage du useState
   const [answerLanguage, setAnswerLanguage] = useState('');
   const handleChangeField =
     (field: 'questionLanguage' | 'answerLanguage') => (value: string) => {
       setAnswerLanguage(value);
-    };
-
-  const handleChangeAutoRead =
-    (field: 'question' | 'answer') => (value: boolean) => {
-      dispatch(changeAutoRead({ field, value }));
     };
 
   const speakText = (text: string, lang: string) => {
@@ -58,7 +47,7 @@ function Question({ card, goToNextCard }: QuestionProps) {
     const cardId = card.id;
     const answerIsCorrect =
       userAnswer.trim().toLowerCase() === card.answer.trim().toLowerCase();
-    console.log('answerIsCorrect', answerIsCorrect);
+    // todo : si réponse incorecte, on pourrait mettre ici la proposotion de "passer en force"
     const nextCompartment = answerIsCorrect ? card.compartment + 1 : 1;
     const nextDateToAskBeforeFormatting = new Date();
 
@@ -134,126 +123,15 @@ function Question({ card, goToNextCard }: QuestionProps) {
 
         {/* // ------ !isFlipped : Question & Media & Field to Answer ------ */}
         {!isFlipped && (
-          <Card
-            elevation={3}
-            sx={{
-              width: '100%',
-              maxWidth: {
-                xs: '100%',
-              },
-              padding: 2,
-              margin: 'auto',
-            }}
-          >
-            <CardContent>
-              <Typography variant="h6" component="h2" gutterBottom>
-                {card.question ? card.question : 'Card without question...'}
-                {/* // todo : ajouter une lecture "ralentie"/plus lente */}
-                <IconButton
-                  onClick={() =>
-                    speakText(card.question, card.questionLanguage)
-                  }
-                  aria-label="speak question"
-                >
-                  <CampaignIcon />
-                </IconButton>
-              </Typography>
-
-              <img
-                src={
-                  card.attachment
-                    ? card.attachment
-                    : 'https://source.unsplash.com/random'
-                }
-                alt="media"
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  maxHeight: '150px', // todo : utiliser useTheme useMediaQuery (isXs ?)
-                  objectFit: 'cover',
-                }}
-              />
-
-              <form onSubmit={handleSubmit}>
-                {/* <TextField
-                id="answer"
-                name="answer"
-                label="Your answer"
-                multiline
-                rows={2}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={userAnswer}
-                onChange={(e) => setUserAnswer(e.target.value)}
-              /> */}
-                <TextFieldWithSTT
-                  field="answer"
-                  id="answer"
-                  name="answer"
-                  label="Your answer"
-                  lang={answerLanguage}
-                  onSelectLang={(field, value) => {
-                    handleChangeField(field)(value);
-                  }}
-                  multiline
-                  rows={2}
-                  value={userAnswer}
-                  onChangeValue={(field, userAnswerUpdated) => {
-                    setUserAnswer(userAnswerUpdated);
-                  }}
-                />
-
-                <CardActions>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      width: '100%',
-                    }}
-                  >
-                    <Stack spacing={0}>
-                      {/* // todo : prévoir de gérer l'autoRead dans les options */}
-
-                      <FormControlLabel
-                        label="Auto-read question"
-                        control={
-                          <Switch
-                            checked={autoRead.question}
-                            onChange={(event) =>
-                              handleChangeAutoRead('question')(
-                                event.target.checked
-                              )
-                            }
-                          />
-                        }
-                      />
-                      <FormControlLabel
-                        label="Auto-read answer"
-                        control={
-                          <Switch
-                            checked={autoRead.answer}
-                            onChange={(event) =>
-                              handleChangeAutoRead('answer')(
-                                event.target.checked
-                              )
-                            }
-                          />
-                        }
-                      />
-                    </Stack>
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      sx={{ mt: 3, mb: 2, alignSelf: 'center' }}
-                    >
-                      Submit
-                    </Button>
-                  </Box>
-                </CardActions>
-              </form>
-            </CardContent>
-          </Card>
+          <CardQuestionSide
+            card={card}
+            answerLanguage={answerLanguage}
+            userAnswer={userAnswer}
+            setUserAnswer={setUserAnswer}
+            speakText={speakText}
+            handleChangeLang={handleChangeField}
+            handleSubmit={handleSubmit}
+          />
         )}
         {/* // ------------------ isFlipped : Answer ----------------- */}
         {isFlipped && (
@@ -336,4 +214,4 @@ function Question({ card, goToNextCard }: QuestionProps) {
   );
 }
 
-export default Question;
+export default CardTwoSides;

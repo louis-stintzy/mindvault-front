@@ -7,7 +7,7 @@ import {
   getRandomCards,
   resetCardsToReviewState,
 } from '../../store/reducers/cardMultiple';
-import Question from './Question';
+import CardTwoSides from './CardTwoSides';
 
 function Play() {
   const dispatch = useAppDispatch();
@@ -120,7 +120,7 @@ function Play() {
   // ----------------------- DISPLAY THE QUESTION -----------------------
   if (cardsToReview.length !== 0) {
     return (
-      <Question
+      <CardTwoSides
         card={cardsToReview[cardIndex]}
         goToNextCard={handleCardIndex}
       />
