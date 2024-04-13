@@ -15,6 +15,7 @@ import { CardData } from '../../@types/card';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { updateCardAttributesAfterAnswer } from '../../store/reducers/cardOne';
 import CardQuestionSide from './CardQuestionSide';
+import CardAnswerSide from './CardAnswerSide';
 
 interface QuestionProps {
   card: CardData;
@@ -135,76 +136,13 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
         )}
         {/* // ------------------ isFlipped : Answer ----------------- */}
         {isFlipped && (
-          <Card
-            elevation={3}
-            sx={{
-              width: '100%',
-              maxWidth: {
-                xs: '100%',
-              },
-              padding: 2,
-              margin: 'auto',
-            }}
-          >
-            <CardContent>
-              <Typography variant="h6" component="h2" gutterBottom>
-                {isCorrect ? 'Correct !' : 'Wrong...'}
-              </Typography>
-              <Typography variant="h6" component="h2" gutterBottom>
-                {card.question ? card.question : 'Card without question...'}
-              </Typography>
-              <img
-                src={
-                  card.attachment
-                    ? card.attachment
-                    : 'https://source.unsplash.com/random'
-                }
-                alt="media"
-                style={{
-                  width: '100%',
-                  maxHeight: '200px',
-                  objectFit: 'cover',
-                }}
-              />
-              <Typography variant="h6" component="h2" gutterBottom>
-                {card.answer ? card.answer : 'Card without answer...'}
-                {/* // todo : ajouter une lecture "ralentie"/plus lente */}
-                <IconButton
-                  onClick={() => speakText(card.answer, card.answerLanguage)}
-                  aria-label="speak answer"
-                >
-                  <CampaignIcon />
-                </IconButton>
-              </Typography>
-              <CardActions>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    width: '100%',
-                    justifyContent: 'center',
-                    gap: '10px',
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    onClick={handleNextButton}
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Next
-                  </Button>
-                  {!isCorrect && (
-                    <Button
-                      variant="contained"
-                      onClick={handlePassInForce}
-                      sx={{ mt: 3, mb: 2 }}
-                    >
-                      I was right
-                    </Button>
-                  )}
-                </Box>
-              </CardActions>
-            </CardContent>
-          </Card>
+          <CardAnswerSide
+            card={card}
+            isCorrect={isCorrect}
+            speakText={speakText}
+            handleNextButton={handleNextButton}
+            handlePassInForce={handlePassInForce}
+          />
         )}
       </Box>
 

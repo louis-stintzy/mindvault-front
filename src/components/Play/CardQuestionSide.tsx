@@ -17,7 +17,7 @@ import { CardData } from '../../@types/card';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeAutoRead } from '../../store/reducers/cardMultiple';
 
-interface QuestionProps {
+interface CardQuestionSideProps {
   card: CardData;
   answerLanguage: string;
   userAnswer: string;
@@ -37,7 +37,7 @@ function CardQuestionSide({
   speakText,
   handleChangeLang,
   handleSubmit,
-}: QuestionProps) {
+}: CardQuestionSideProps) {
   const dispatch = useAppDispatch();
   const { autoRead } = useAppSelector((state) => state.cardMultiple);
 
