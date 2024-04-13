@@ -85,7 +85,7 @@ function CardQuestionSide({
         />
 
         <form onSubmit={handleSubmit}>
-          <TextFieldWithSTT
+          <TextFieldWithSTT // todo : ajouter aria-label en props, du coup : à rajouter dans tous les composants qui utilisent TextFieldWithSTT
             field="answer"
             id="answer"
             name="answer"

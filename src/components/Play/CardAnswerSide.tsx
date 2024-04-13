@@ -13,6 +13,7 @@ import { CardData } from '../../@types/card';
 
 interface CardAnswerSideProps {
   card: CardData;
+  userAnswer: string;
   isCorrect: boolean;
   speakText: (text: string, lang: string) => void;
   handleNextButton: () => void;
@@ -21,6 +22,7 @@ interface CardAnswerSideProps {
 
 function CardAnswerSide({
   card,
+  userAnswer,
   isCorrect,
   speakText,
   handleNextButton,
@@ -58,6 +60,9 @@ function CardAnswerSide({
             objectFit: 'cover',
           }}
         />
+        <Typography variant="body1" component="p" gutterBottom>
+          Your answer: {userAnswer}
+        </Typography>
         <Typography variant="h6" component="h2" gutterBottom>
           {card.answer ? card.answer : 'Card without answer...'}
           {/* // todo : ajouter une lecture "ralentie"/plus lente */}

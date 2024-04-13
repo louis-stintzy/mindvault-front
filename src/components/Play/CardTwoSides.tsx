@@ -1,15 +1,5 @@
-import {
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Typography,
-  Card,
-  CardContent,
-  CardActions,
-} from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import CampaignIcon from '@mui/icons-material/Campaign';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { CardData } from '../../@types/card';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
@@ -25,6 +15,9 @@ interface QuestionProps {
 function CardTwoSides({ card, goToNextCard }: QuestionProps) {
   const dispatch = useAppDispatch();
   const [isFlipped, setIsFlipped] = useState(false);
+  const [initialCompartment, setInitialCompartment] = useState(
+    card.compartment
+  );
   const [userAnswer, setUserAnswer] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
   const { autoRead } = useAppSelector((state) => state.cardMultiple);
@@ -43,15 +36,20 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
     speechSynthesis.speak(utterance);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const cardId = card.id;
-    const answerIsCorrect =
-      userAnswer.trim().toLowerCase() === card.answer.trim().toLowerCase();
-    // todo : si réponse incorecte, on pourrait mettre ici la proposotion de "passer en force"
-    const nextCompartment = answerIsCorrect ? card.compartment + 1 : 1;
-    const nextDateToAskBeforeFormatting = new Date();
+  const verifyAnswer = (answerToCheck: string, correctAnswer: string) => {
+    return (
+      answerToCheck.trim().toLowerCase() === correctAnswer.trim().toLowerCase()
+    );
+  };
 
+  const updateCard = (
+    cardId: number,
+    compartment: number,
+    answerIsCorrect: boolean
+  ) => {
+    const nextCompartment = answerIsCorrect ? compartment + 1 : 1;
+    const nextDateToAskBeforeFormatting = new Date();
+    const timeToAdd = [0, 1, 3, 7, 15, 30, 90, 180, 10000];
     // Compartiment 1 : tous les jours
     // Compartiment 2 : tous les trois jours
     // Compartiment 3 : toutes les semaines
@@ -60,13 +58,10 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
     // Compartiment 6 : tous les trois mois
     // Compartiment 7 : tous les six mois
     // Compartiment 8 : connaissance acquise
-
-    const timeToAdd = [0, 1, 3, 7, 15, 30, 90, 180, 10000];
     nextDateToAskBeforeFormatting.setDate(
       nextDateToAskBeforeFormatting.getDate() + timeToAdd[nextCompartment]
     );
     const nextDateToAsk = nextDateToAskBeforeFormatting.toISOString();
-
     dispatch(
       updateCardAttributesAfterAnswer({
         cardId,
@@ -74,19 +69,31 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
         nextDateToAsk,
       })
     );
+  };
 
-    setIsCorrect(answerIsCorrect);
+  const handleNextButton = () => {
     setUserAnswer('');
+    setIsFlipped(false);
+    setIsCorrect(false);
+    goToNextCard();
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const answerIsCorrect = verifyAnswer(userAnswer, card.answer);
+    updateCard(card.id, card.compartment, answerIsCorrect);
+    setIsCorrect(answerIsCorrect);
     setIsFlipped(true);
   };
 
   const handlePassInForce = () => {
-    // todo : faire comme de handleSubmit en faisant attention au compartiment déjà modifié
-    // puis handleNextButton()
-    console.log('Pass In Force');
+    const userSaysAnswerIsCorrect = true;
+    updateCard(card.id, initialCompartment, userSaysAnswerIsCorrect);
+    handleNextButton();
   };
 
   useEffect(() => {
+    setInitialCompartment(card.compartment);
     setAnswerLanguage(card.answerLanguage);
     if (autoRead.question) {
       speakText(card.question, card.questionLanguage);
@@ -100,12 +107,6 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
       }
     }
   }, [isFlipped, card, autoRead.answer]);
-
-  const handleNextButton = () => {
-    setIsFlipped(false);
-    setIsCorrect(false);
-    goToNextCard();
-  };
 
   return (
     <Container component="main" maxWidth="xs" className="question-container">
@@ -138,6 +139,7 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
         {isFlipped && (
           <CardAnswerSide
             card={card}
+            userAnswer={userAnswer}
             isCorrect={isCorrect}
             speakText={speakText}
             handleNextButton={handleNextButton}
