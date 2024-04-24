@@ -14,7 +14,9 @@ export interface BoxData {
   label: string;
   level: string;
   default_question_language: string;
+  default_question_voice: string;
   default_answer_language: string;
+  default_answer_voice: string;
   position: number;
   learn_it: boolean;
   type: number;
@@ -33,7 +35,9 @@ export interface BoxDataLight {
   label: string;
   level: string;
   defaultQuestionLanguage: string;
+  defaultQuestionVoice: string;
   defaultAnswerLanguage: string;
+  defaultAnswerVoice: string;
   learnIt: boolean;
   type: number;
 }

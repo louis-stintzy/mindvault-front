@@ -25,6 +25,7 @@ import {
   deleteBox,
 } from '../../store/reducers/boxOne';
 import LanguageSelector from '../TextFieldWithSTT/LanguageSelector';
+import VoiceSelector from '../TextFieldWithSTT/VoiceSelector';
 
 interface BoxCreateEditProps {
   mode: 'create' | 'edit';
@@ -34,6 +35,8 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedQuestionVoice, setSelectedQuestionVoice] = useState('');
+  const [selectedAnswerVoice, setSelectedAnswerVoice] = useState('');
 
   const {
     isLoading,
@@ -94,6 +97,19 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Enregistre les voix selectionnées dans le store avant de créer la box, voix qui n'avaient pas pu être enregistrées avant car généraient des rendus inutiles et bugs. Les voix se chargent petit à petit
+    dispatch(
+      changeBoxField({
+        field: 'defaultQuestionVoice',
+        value: selectedQuestionVoice,
+      })
+    );
+    dispatch(
+      changeBoxField({
+        field: 'defaultAnswerVoice',
+        value: selectedAnswerVoice,
+      })
+    );
 
     if (mode === 'create') {
       dispatch(createBox(box));
@@ -152,7 +168,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               </Alert>
             ))}
 
-          {/* -------------- FORM : NAME, LABEL & DESCRIPTION ------------ */}
+          {/* // -------------- FORM : NAME, LABEL & DESCRIPTION ------------ */}
           <form onSubmit={handleSubmit}>
             <TextField
               required
@@ -185,7 +201,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               onChange={(e) => handleChangeField('description')(e.target.value)}
             />
 
-            {/* ---------------------- LANGUAGE DEFAULT SELECTION ---------------------- */}
+            {/* // ---------------------- LANGUAGE DEFAULT SELECTION ---------------------- */}
             <LanguageSelector
               field2="defaultQuestionLanguage"
               instructions="Please select the default language for questions"
@@ -193,6 +209,12 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               onLanguageChange2={(field, lang) =>
                 handleChangeField(field)(lang)
               }
+            />
+            <VoiceSelector
+              instructions="Please select the default voice for questions"
+              lang={box.defaultQuestionLanguage}
+              selectedVoiceName={selectedQuestionVoice}
+              setSelectedVoiceName={setSelectedQuestionVoice}
             />
             <LanguageSelector
               field2="defaultAnswerLanguage"
@@ -202,7 +224,13 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
                 handleChangeField(field)(lang)
               }
             />
-            {/* -------------------------- UPLOAD ILLUSTRATION --------------------------- */}
+            <VoiceSelector
+              instructions="Please select the default voice for answers"
+              lang={box.defaultAnswerLanguage}
+              selectedVoiceName={selectedAnswerVoice}
+              setSelectedVoiceName={setSelectedAnswerVoice}
+            />
+            {/* // -------------------------- UPLOAD ILLUSTRATION --------------------------- */}
             <Box sx={{ my: 2 }}>
               <Button
                 variant="outlined"
@@ -215,6 +243,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
                 {/* <VisuallyHiddenInput type="file" /> */}
               </Button>
             </Box>
+            {/* // ------------------------------ OPTIONS BUTTONS ------------------------------------ */}
             <Box sx={{ my: 2 }}>
               <FormControlLabel
                 control={
@@ -233,7 +262,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
                 label="Box of Box"
               />
             </Box>
-            {/* ------------------------------ BUTTONS ------------------------------------ */}
+            {/* // ------------------------------ ACTION BUTTONS ------------------------------------ */}
             <Box
               sx={{
                 marginTop: 8,

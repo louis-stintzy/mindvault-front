@@ -31,6 +31,7 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
     };
 
   const speakText = (text: string, lang: string) => {
+    // todo : voix par défaut si la voix choisie n'est pas disponible
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
     speechSynthesis.speak(utterance);
