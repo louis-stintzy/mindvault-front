@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
@@ -77,19 +77,23 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   //   }
   // }, [currentBox, dispatch, mode]);
 
-  const handleChangeField =
+  const handleChangeField = useCallback(
     (
-      field:
-        | 'name'
-        | 'description'
-        | 'label'
-        | 'defaultQuestionLanguage'
-        | 'defaultAnswerLanguage'
-    ) =>
-    (value: string) => {
-      // TODO: checker que les values respectent les contraintes comme name<255 caractères
-      dispatch(changeBoxField({ field, value }));
-    };
+        field:
+          | 'name'
+          | 'description'
+          | 'label'
+          | 'defaultQuestionLanguage'
+          | 'defaultQuestionVoice'
+          | 'defaultAnswerLanguage'
+          | 'defaultAnswerVoice'
+      ) =>
+      (value: string) => {
+        // TODO: checker que les values respectent les contraintes comme name<255 caractères
+        dispatch(changeBoxField({ field, value }));
+      },
+    [dispatch]
+  );
 
   const handleChangeCheckbox = (field: 'learnIt') => (value: boolean) => {
     dispatch(changeBoxField({ field, value }));
@@ -97,22 +101,15 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Enregistre les voix selectionnées dans le store avant de créer la box, voix qui n'avaient pas pu être enregistrées avant car généraient des rendus inutiles et bugs. Les voix se chargent petit à petit
-    dispatch(
-      changeBoxField({
-        field: 'defaultQuestionVoice',
-        value: selectedQuestionVoice,
-      })
-    );
-    dispatch(
-      changeBoxField({
-        field: 'defaultAnswerVoice',
-        value: selectedAnswerVoice,
-      })
-    );
+    // je n'arrive pas à enregistrer les voix dans le store alors j'envoie les voix directement du composant
+    const boxToSubmit = {
+      ...box,
+      defaultQuestionVoice: selectedQuestionVoice,
+      defaultAnswerVoice: selectedAnswerVoice,
+    };
 
     if (mode === 'create') {
-      dispatch(createBox(box));
+      dispatch(createBox(boxToSubmit));
     }
     if (mode === 'edit') {
       console.log('Edit the box');

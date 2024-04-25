@@ -81,9 +81,9 @@ export const changeBoxField = createAction<{
 
 export const createBox = createAsyncThunk(
   'boxOne/CREATE_BOX',
-  async (box: BoxDataLight, { rejectWithValue }) => {
+  async (boxToSubmit: BoxDataLight, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/boxes', box);
+      const response = await axiosInstance.post('/boxes', boxToSubmit);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
