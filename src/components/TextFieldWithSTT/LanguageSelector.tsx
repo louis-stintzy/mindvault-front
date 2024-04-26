@@ -1,5 +1,6 @@
 import { Box, FormControl, MenuItem, Select, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import selectSX from '../../constants/selectSX';
 
 interface LanguageSelectorProps {
   field1?: 'questionLanguage' | 'answerLanguage';
@@ -15,22 +16,6 @@ interface LanguageSelectorProps {
     lang: string
   ) => void;
 }
-
-const selectSX = {
-  '.MuiSelect-select': {
-    padding: '6px 32px 6px 12px', // Ajuste le padding pour réduire la hauteur
-    fontSize: '0.875rem', // Réduit la taille de la police
-  },
-  '.MuiOutlinedInput-notchedOutline': {
-    border: 'none', // Supprime la bordure
-  },
-  '&:hover .MuiOutlinedInput-notchedOutline': {
-    border: 'none', // Supprime la bordure au survol
-  },
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    border: 'none', // Supprime la bordure lorsque le Select est focus
-  },
-};
 
 // NOTE: Le composant est codé ainsi pour cause de problème de typage
 // field n'a pas le même type dans les deux cas

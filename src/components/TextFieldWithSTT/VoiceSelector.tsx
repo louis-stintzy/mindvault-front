@@ -1,29 +1,26 @@
-import { Box, FormControl, MenuItem, Select, Typography } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  IconButton,
+  MenuItem,
+  Select,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { grey } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
+import { Language } from '../../@types/lang';
+import selectSX from '../../constants/selectSX';
+import getSampleText from '../../constants/sampleText';
 
 interface VoiceSelectorProps {
   instructions: string;
-  lang: string;
+  lang: Language;
   selectedVoiceName: string;
   setSelectedVoiceName: (voice: string) => void;
 }
-
-const selectSX = {
-  '.MuiSelect-select': {
-    padding: '6px 32px 6px 12px', // Ajuste le padding pour réduire la hauteur
-    fontSize: '0.875rem', // Réduit la taille de la police
-  },
-  '.MuiOutlinedInput-notchedOutline': {
-    border: 'none', // Supprime la bordure
-  },
-  '&:hover .MuiOutlinedInput-notchedOutline': {
-    border: 'none', // Supprime la bordure au survol
-  },
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    border: 'none', // Supprime la bordure lorsque le Select est focus
-  },
-};
 
 function VoiceSelector({
   instructions,
@@ -65,6 +62,20 @@ function VoiceSelector({
     }
   }, [availableVoicesName, setSelectedVoiceName]);
 
+  const testVoice = (voiceName: string) => {
+    const utterance = new SpeechSynthesisUtterance(getSampleText(lang));
+    utterance.lang = lang;
+    const selectedVoice = speechSynthesis
+      .getVoices()
+      .find((voice) => voice.name === voiceName);
+    if (!selectedVoice) {
+      console.error('Voice not found');
+    } else {
+      utterance.voice = selectedVoice;
+      speechSynthesis.speak(utterance);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -80,6 +91,11 @@ function VoiceSelector({
       >
         {instructions}
       </Typography>
+      <Tooltip title="The available voices depend on the browser and device you are using. Selected voices may become unavailable if you switch to a different browser or device.">
+        <IconButton size="small">
+          <HelpOutlineIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
       <FormControl sx={{ width: 'auto' }}>
         <Select
           value={selectedVoiceName}
@@ -97,6 +113,13 @@ function VoiceSelector({
 
         {/* //todo : ajouter un bouton pour tester la voix */}
       </FormControl>
+      {selectedVoiceName && (
+        <Tooltip title="Test the voice">
+          <IconButton onClick={() => testVoice(selectedVoiceName)} size="small">
+            <PlayCircleOutlineIcon />
+          </IconButton>
+        </Tooltip>
+      )}
     </Box>
   );
 }
