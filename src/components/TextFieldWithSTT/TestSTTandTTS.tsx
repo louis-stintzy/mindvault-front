@@ -29,6 +29,7 @@ import {
 } from '../../store/reducers/testSTT';
 // import formatText from '../../utils/textFormatting';
 import TextFieldWithSTT from './TextFieldWithSTT';
+import { Language } from '../../@types/lang';
 
 function TestSTTandTTS() {
   const dispatch = useAppDispatch();
@@ -66,7 +67,7 @@ function TestSTTandTTS() {
   );
 
   const [selectedVoiceName, setSelectedVoiceName] = useState<string>('');
-  const speakText = (text: string, lang: string) => {
+  const speakText = (text: string, lang: Language) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
     const selectedVoice = speechSynthesis
