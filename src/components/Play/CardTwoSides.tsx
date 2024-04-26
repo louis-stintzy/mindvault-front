@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { updateCardAttributesAfterAnswer } from '../../store/reducers/cardOne';
 import CardQuestionSide from './CardQuestionSide';
 import CardAnswerSide from './CardAnswerSide';
+import { Language } from '../../@types/lang';
 
 interface QuestionProps {
   card: CardData;
@@ -24,9 +25,9 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
 
   // TODO : passer du useState à une route backend pour modif la langue de la réponse
   // note : speakText utilise card.answerLanguage et non answerLanguage du useState
-  const [answerLanguage, setAnswerLanguage] = useState('');
+  const [answerLanguage, setAnswerLanguage] = useState<Language>('');
   const handleChangeField =
-    (field: 'questionLanguage' | 'answerLanguage') => (value: string) => {
+    (field: 'questionLanguage' | 'answerLanguage') => (value: Language) => {
       setAnswerLanguage(value);
     };
 

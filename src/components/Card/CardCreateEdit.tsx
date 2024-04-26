@@ -15,6 +15,8 @@ import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeCardField, createCard } from '../../store/reducers/cardOne';
 import TextFieldWithSTT from '../TextFieldWithSTT/TextFieldWithSTT';
+import VoiceSelector from '../TextFieldWithSTT/VoiceSelector';
+import { Language } from '../../@types/lang';
 
 function CardCreateEdit() {
   const dispatch = useAppDispatch();
@@ -31,6 +33,9 @@ function CardCreateEdit() {
     (state) => state.cardOne
   );
   const isLoadingCard = useAppSelector((state) => state.cardOne.isLoading);
+
+  const [selectedQuestionVoice, setSelectedQuestionVoice] = useState('');
+  const [selectedAnswerVoice, setSelectedAnswerVoice] = useState('');
 
   // const [langQuestion, setLangQuestion] = useState(currentBox?.default_question_language || 'fr-FR');
   // const [langAnswer, setLangAnswer] = useState(currentBox?.default_answer_language || 'fr-FR');
@@ -53,8 +58,16 @@ function CardCreateEdit() {
   // handleChangeField est recréée à chaque rendu : cela peut potentiellement causer des exécutions inutiles dans useEffect
   // Avec useCallback, la fonction handleChangeField ne sera recréée que lorsque dispatch change, ce qui en pratique ne se produira pas
   const handleChangeField = useCallback(
-    (field: 'questionLanguage' | 'answerLanguage' | 'question' | 'answer') =>
-      (value: string) => {
+    (
+        field:
+          | 'questionLanguage'
+          | 'questionVoice'
+          | 'answerVoice'
+          | 'answerLanguage'
+          | 'question'
+          | 'answer'
+      ) =>
+      (value: Language | string) => {
         dispatch(changeCardField({ field, value }));
       },
     [dispatch]
@@ -126,6 +139,13 @@ function CardCreateEdit() {
               value={card.question}
               onChangeValue={(field, value) => handleChangeField(field)(value)}
             />
+            <VoiceSelector
+              lang={card.questionLanguage}
+              instructions="Choose the voice to use for the field above:"
+              presetVoiceName={currentBox?.default_question_voice}
+              selectedVoiceName={selectedQuestionVoice}
+              setSelectedVoiceName={setSelectedQuestionVoice}
+            />
           </Box>
           <Box sx={{ my: 2 }}>
             <TextFieldWithSTT
@@ -140,6 +160,13 @@ function CardCreateEdit() {
               }}
               value={card.answer}
               onChangeValue={(field, value) => handleChangeField(field)(value)}
+            />
+            <VoiceSelector
+              lang={card.answerLanguage}
+              instructions="Choose the voice to use for the field above:"
+              presetVoiceName={currentBox?.default_answer_voice}
+              selectedVoiceName={selectedAnswerVoice}
+              setSelectedVoiceName={setSelectedAnswerVoice}
             />
           </Box>
           <Box sx={{ my: 6 }}>

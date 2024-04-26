@@ -15,9 +15,12 @@ import {
   Box,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { useState } from 'react';
 import useSpeechToText from '../../hook/useSpeechToText';
 import formatText from '../../utils/textFormatting';
 import LanguageSelector from './LanguageSelector';
+import VoiceSelector from './VoiceSelector';
+import { Language } from '../../@types/lang';
 
 // import { FieldType } from '../../@types/field';
 
@@ -28,10 +31,10 @@ interface TextFieldWithSTTProps {
   id: string; // id du champ texte
   name: string; // nom du champ texte
   label: string; // label pour le TextField
-  lang: string; // code langue pour la reconnaissance vocale
+  lang: Language; // code langue pour la reconnaissance vocale
   onSelectLang: (
     field: 'questionLanguage' | 'answerLanguage',
-    lang: string
+    lang: Language
   ) => void; // fonction pour changer la langue
   multiline?: boolean; // champ multilignes
   rows?: number; // nombre de lignes pour un champ multilignes
@@ -127,7 +130,7 @@ function TextFieldWithSTT({
         }}
       />
 
-      {/* ---------------- SELECTION DE LA LANGUE ----------------- */}
+      {/* // ------------- SELECTION DE LA LANGUE ET DE LA VOIX -------------- */}
       <LanguageSelector
         field1={field === 'question' ? 'questionLanguage' : 'answerLanguage'}
         instructions="Choose the language to use for the field above:"

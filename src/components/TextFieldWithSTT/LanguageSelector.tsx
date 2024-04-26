@@ -1,6 +1,7 @@
 import { Box, FormControl, MenuItem, Select, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import selectSX from '../../constants/selectSX';
+import { Language } from '../../@types/lang';
 
 interface LanguageSelectorProps {
   field1?: 'questionLanguage' | 'answerLanguage';
@@ -9,11 +10,11 @@ interface LanguageSelectorProps {
   selectedLang: string;
   onLanguageChange1?: (
     field: 'questionLanguage' | 'answerLanguage',
-    lang: string
+    lang: Language
   ) => void;
   onLanguageChange2?: (
     field: 'defaultQuestionLanguage' | 'defaultAnswerLanguage',
-    lang: string
+    lang: Language
   ) => void;
 }
 
@@ -45,7 +46,9 @@ function LanguageSelector({
         {field1 && onLanguageChange1 && (
           <Select
             value={selectedLang}
-            onChange={(e) => onLanguageChange1(field1, e.target.value)}
+            onChange={(e) =>
+              onLanguageChange1(field1, e.target.value as Language)
+            }
             displayEmpty
             inputProps={{ 'aria-label': 'Select language' }}
             sx={selectSX}
@@ -59,7 +62,9 @@ function LanguageSelector({
         {field2 && onLanguageChange2 && (
           <Select
             value={selectedLang}
-            onChange={(e) => onLanguageChange2(field2, e.target.value)}
+            onChange={(e) =>
+              onLanguageChange2(field2, e.target.value as Language)
+            }
             displayEmpty
             inputProps={{ 'aria-label': 'Select language' }}
             sx={selectSX}

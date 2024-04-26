@@ -18,6 +18,7 @@ import getSampleText from '../../constants/sampleText';
 interface VoiceSelectorProps {
   instructions: string;
   lang: Language;
+  presetVoiceName?: string;
   selectedVoiceName: string;
   setSelectedVoiceName: (voice: string) => void;
 }
@@ -25,6 +26,7 @@ interface VoiceSelectorProps {
 function VoiceSelector({
   instructions,
   lang,
+  presetVoiceName,
   selectedVoiceName,
   setSelectedVoiceName,
 }: VoiceSelectorProps) {
@@ -57,10 +59,14 @@ function VoiceSelector({
   }, [lang, setSelectedVoiceName]);
 
   useEffect(() => {
-    if (availableVoicesName.length) {
+    if (presetVoiceName && availableVoicesName.includes(presetVoiceName)) {
+      setSelectedVoiceName(presetVoiceName);
+    } else if (availableVoicesName.length) {
       setSelectedVoiceName(availableVoicesName[0]);
+    } else {
+      setSelectedVoiceName('');
     }
-  }, [availableVoicesName, setSelectedVoiceName]);
+  }, [availableVoicesName, presetVoiceName, setSelectedVoiceName]);
 
   const testVoice = (voiceName: string) => {
     const utterance = new SpeechSynthesisUtterance(getSampleText(lang));
@@ -123,5 +129,10 @@ function VoiceSelector({
     </Box>
   );
 }
+
+// Add defaultProps declaration
+VoiceSelector.defaultProps = {
+  presetVoiceName: '',
+};
 
 export default VoiceSelector;

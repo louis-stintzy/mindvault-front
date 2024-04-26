@@ -9,6 +9,7 @@ import { CardData, CardDataLight } from '../../@types/card';
 
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
+import { Language } from '../../@types/lang';
 
 interface ErrorResponse {
   errCode: number;
@@ -31,7 +32,9 @@ export const initialState: CardOneState = {
   isRegistered: false,
   card: {
     questionLanguage: 'fr-FR',
+    questionVoice: '',
     answerLanguage: 'fr-FR',
+    answerVoice: '',
     question: '',
     answer: '',
     attachment: '',
@@ -124,7 +127,9 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.isRegistered = false;
       state.card = {
         questionLanguage: 'fr-FR',
+        questionVoice: '',
         answerLanguage: 'fr-FR',
+        answerVoice: '',
         question: '',
         answer: '',
         attachment: '',
@@ -133,7 +138,14 @@ const cardOneReducer = createReducer(initialState, (builder) => {
     })
     // ----------- CHANGE FIELD -----------
     .addCase(changeCardField, (state, action) => {
-      state.card[action.payload.field] = action.payload.value;
+      if (
+        action.payload.field === 'questionLanguage' ||
+        action.payload.field === 'answerLanguage'
+      ) {
+        state.card[action.payload.field] = action.payload.value as Language;
+      } else {
+        state.card[action.payload.field] = action.payload.value;
+      }
     })
     // ----------- CREATE CARD -----------
     .addCase(createCard.pending, (state) => {
@@ -150,7 +162,9 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.isRegistered = true;
       state.card = {
         questionLanguage: 'fr-FR',
+        questionVoice: '',
         answerLanguage: 'fr-FR',
+        answerVoice: '',
         question: '',
         answer: '',
         attachment: '',

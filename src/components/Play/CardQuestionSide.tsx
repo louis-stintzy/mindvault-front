@@ -16,16 +16,17 @@ import TextFieldWithSTT from '../TextFieldWithSTT/TextFieldWithSTT';
 import { CardData } from '../../@types/card';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { changeAutoRead } from '../../store/reducers/cardMultiple';
+import { Language } from '../../@types/lang';
 
 interface CardQuestionSideProps {
   card: CardData;
-  answerLanguage: string;
+  answerLanguage: Language;
   userAnswer: string;
   setUserAnswer: (value: string) => void;
   speakText: (text: string, lang: string) => void;
   handleChangeLang: (
     field: 'questionLanguage' | 'answerLanguage'
-  ) => (value: string) => void;
+  ) => (value: Language) => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
