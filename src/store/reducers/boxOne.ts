@@ -9,6 +9,7 @@ import { BoxData, BoxDataLight } from '../../@types/box';
 
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
+import { Language } from '../../@types/lang';
 
 interface ErrorResponse {
   errCode: number;
@@ -190,6 +191,11 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         state.box[field] = value as boolean;
       } else if (field === 'type') {
         state.box[field] = value as number;
+      } else if (
+        field === 'defaultQuestionLanguage' ||
+        field === 'defaultAnswerLanguage'
+      ) {
+        state.box[field] = value as Language;
       } else {
         state.box[field] = value as string;
       }
