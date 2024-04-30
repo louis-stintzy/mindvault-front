@@ -54,11 +54,14 @@ export const changeCardField = createAction<{
 export const createCard = createAsyncThunk(
   'cardOne/CREATE',
   async (
-    { boxId, card }: { boxId: number; card: CardDataLight },
+    { boxId, cardToSubmit }: { boxId: number; cardToSubmit: CardDataLight },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.post(`/box/${boxId}/cards`, card);
+      const response = await axiosInstance.post(
+        `/box/${boxId}/cards`,
+        cardToSubmit
+      );
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {

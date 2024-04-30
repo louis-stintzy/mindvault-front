@@ -58,24 +58,22 @@ function CardCreateEdit() {
   // handleChangeField est recréée à chaque rendu : cela peut potentiellement causer des exécutions inutiles dans useEffect
   // Avec useCallback, la fonction handleChangeField ne sera recréée que lorsque dispatch change, ce qui en pratique ne se produira pas
   const handleChangeField = useCallback(
-    (
-        field:
-          | 'questionLanguage'
-          | 'questionVoice'
-          | 'answerVoice'
-          | 'answerLanguage'
-          | 'question'
-          | 'answer'
-      ) =>
+    (field: 'questionLanguage' | 'answerLanguage' | 'question' | 'answer') =>
       (value: Language | string) => {
         dispatch(changeCardField({ field, value }));
       },
     [dispatch]
   );
 
+  // pour BoxCreateEdit : je n'arrive pas à enregistrer les voix dans le store alors j'envoie les voix directement du composant
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(createCard({ boxId, card }));
+    const cardToSubmit = {
+      ...card,
+      questionVoice: selectedQuestionVoice,
+      answerVoice: selectedAnswerVoice,
+    };
+    dispatch(createCard({ boxId, cardToSubmit }));
   };
 
   useEffect(() => {
