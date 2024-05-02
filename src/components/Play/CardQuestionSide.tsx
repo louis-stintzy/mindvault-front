@@ -23,7 +23,7 @@ interface CardQuestionSideProps {
   answerLanguage: Language;
   userAnswer: string;
   setUserAnswer: (value: string) => void;
-  speakText: (text: string, lang: string) => void;
+  speakText: (text: string, lang: string, voiceName?: string) => void;
   handleChangeLang: (
     field: 'questionLanguage' | 'answerLanguage'
   ) => (value: Language) => void;
@@ -63,7 +63,13 @@ function CardQuestionSide({
           {card.question ? card.question : 'Card without question...'}
           {/* // todo : ajouter une lecture "ralentie"/plus lente */}
           <IconButton
-            onClick={() => speakText(card.question, card.questionLanguage)}
+            onClick={() =>
+              speakText(
+                card.question,
+                card.questionLanguage,
+                card.questionVoice
+              )
+            }
             aria-label="speak question"
           >
             <CampaignIcon />

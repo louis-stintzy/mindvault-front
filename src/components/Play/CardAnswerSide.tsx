@@ -15,7 +15,7 @@ interface CardAnswerSideProps {
   card: CardData;
   userAnswer: string;
   isCorrect: boolean;
-  speakText: (text: string, lang: string) => void;
+  speakText: (text: string, lang: string, voiceName?: string) => void;
   handleNextButton: () => void;
   handlePassInForce: () => void;
 }
@@ -67,7 +67,9 @@ function CardAnswerSide({
           {card.answer ? card.answer : 'Card without answer...'}
           {/* // todo : ajouter une lecture "ralentie"/plus lente */}
           <IconButton
-            onClick={() => speakText(card.answer, card.answerLanguage)}
+            onClick={() =>
+              speakText(card.answer, card.answerLanguage, card.answerVoice)
+            }
             aria-label="speak answer"
           >
             <CampaignIcon />
