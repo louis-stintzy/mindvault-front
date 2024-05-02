@@ -56,6 +56,10 @@ function BoxItem({ box }: BoxCardProps) {
         color: box.color,
         label: box.label,
         level: box.level,
+        defaultQuestionLanguage: box.default_question_language,
+        defaultQuestionVoice: box.default_question_voice,
+        defaultAnswerLanguage: box.default_answer_language,
+        defaultAnswerVoice: box.default_answer_voice,
         learnIt: box.learn_it,
         type: box.type,
       })

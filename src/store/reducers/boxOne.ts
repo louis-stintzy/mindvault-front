@@ -9,6 +9,7 @@ import { BoxData, BoxDataLight } from '../../@types/box';
 
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
+import { Language } from '../../@types/lang';
 
 interface ErrorResponse {
   errCode: number;
@@ -37,6 +38,10 @@ export const initialState: BoxOneState = {
     color: '',
     label: '',
     level: '',
+    defaultQuestionLanguage: 'fr-FR',
+    defaultQuestionVoice: '',
+    defaultAnswerLanguage: 'fr-FR',
+    defaultAnswerVoice: '',
     learnIt: true,
     type: 2,
   },
@@ -77,9 +82,9 @@ export const changeBoxField = createAction<{
 
 export const createBox = createAsyncThunk(
   'boxOne/CREATE_BOX',
-  async (box: BoxDataLight, { rejectWithValue }) => {
+  async (boxToSubmit: BoxDataLight, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/boxes', box);
+      const response = await axiosInstance.post('/boxes', boxToSubmit);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -142,6 +147,10 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         color: '',
         label: '',
         level: '',
+        defaultQuestionLanguage: 'fr-FR',
+        defaultQuestionVoice: '',
+        defaultAnswerLanguage: 'fr-FR',
+        defaultAnswerVoice: '',
         learnIt: true,
         type: 2,
       };
@@ -182,6 +191,11 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         state.box[field] = value as boolean;
       } else if (field === 'type') {
         state.box[field] = value as number;
+      } else if (
+        field === 'defaultQuestionLanguage' ||
+        field === 'defaultAnswerLanguage'
+      ) {
+        state.box[field] = value as Language;
       } else {
         state.box[field] = value as string;
       }
@@ -206,6 +220,10 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         color: '',
         label: '',
         level: '',
+        defaultQuestionLanguage: 'fr-FR',
+        defaultQuestionVoice: '',
+        defaultAnswerLanguage: 'fr-FR',
+        defaultAnswerVoice: '',
         learnIt: true,
         type: 2,
       };

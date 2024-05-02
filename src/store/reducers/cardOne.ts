@@ -9,6 +9,7 @@ import { CardData, CardDataLight } from '../../@types/card';
 
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
+import { Language } from '../../@types/lang';
 
 interface ErrorResponse {
   errCode: number;
@@ -30,6 +31,10 @@ export const initialState: CardOneState = {
   success: '',
   isRegistered: false,
   card: {
+    questionLanguage: 'fr-FR',
+    questionVoice: '',
+    answerLanguage: 'fr-FR',
+    answerVoice: '',
     question: '',
     answer: '',
     attachment: '',
@@ -49,11 +54,14 @@ export const changeCardField = createAction<{
 export const createCard = createAsyncThunk(
   'cardOne/CREATE',
   async (
-    { boxId, card }: { boxId: number; card: CardDataLight },
+    { boxId, cardToSubmit }: { boxId: number; cardToSubmit: CardDataLight },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.post(`/box/${boxId}/cards`, card);
+      const response = await axiosInstance.post(
+        `/box/${boxId}/cards`,
+        cardToSubmit
+      );
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -121,6 +129,10 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.success = '';
       state.isRegistered = false;
       state.card = {
+        questionLanguage: 'fr-FR',
+        questionVoice: '',
+        answerLanguage: 'fr-FR',
+        answerVoice: '',
         question: '',
         answer: '',
         attachment: '',
@@ -129,7 +141,14 @@ const cardOneReducer = createReducer(initialState, (builder) => {
     })
     // ----------- CHANGE FIELD -----------
     .addCase(changeCardField, (state, action) => {
-      state.card[action.payload.field] = action.payload.value;
+      if (
+        action.payload.field === 'questionLanguage' ||
+        action.payload.field === 'answerLanguage'
+      ) {
+        state.card[action.payload.field] = action.payload.value as Language;
+      } else {
+        state.card[action.payload.field] = action.payload.value;
+      }
     })
     // ----------- CREATE CARD -----------
     .addCase(createCard.pending, (state) => {
@@ -145,6 +164,10 @@ const cardOneReducer = createReducer(initialState, (builder) => {
       state.success = 'Successfully created card';
       state.isRegistered = true;
       state.card = {
+        questionLanguage: 'fr-FR',
+        questionVoice: '',
+        answerLanguage: 'fr-FR',
+        answerVoice: '',
         question: '',
         answer: '',
         attachment: '',

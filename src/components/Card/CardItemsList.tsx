@@ -43,6 +43,8 @@ function CardItemsList() {
       if (Number.isNaN(boxId)) {
         navigate(`/boxes`);
       }
+      // TODO : quand on vient de CardCreateEdit, génère un re-render pour rien  (enfin si juste pour récup le nom de la box )
+      // il faudrait revoir et transmettre peut-etre le nom de la box depuis CardCreateEdit dans le navigate du useEffect
       if (!boxNameFromBoxItemsList) {
         dispatch(getBoxById(boxId));
       }
@@ -60,6 +62,19 @@ function CardItemsList() {
     navigateFromCardCreateEdit,
     boxNameFromBoxItemsList,
   ]);
+
+  const handleClickAddCard = () => {
+    if (id) {
+      const boxId = parseInt(id, 10);
+      if (Number.isNaN(boxId)) {
+        navigate(`/boxes`);
+      }
+      dispatch(getBoxById(boxId));
+      navigate(`/box/${boxId}/items/create`);
+    } else {
+      navigate(`/boxes`);
+    }
+  };
 
   // Si chargement des cards ou du nom de la box, on affiche un loader
   // ou si on a pas encore le nom de la box à afficher
@@ -102,20 +117,21 @@ function CardItemsList() {
         dans le bottomNavigation avec un bouton retour et si retour pas besoin
         de nouvel appel API pour recharger les box */}
 
-        <Link
+        {/* <Link
           to={`/box/${id}/items/create`}
           style={{ textDecoration: 'none', color: 'inherit' }}
+        > */}
+        <Button
+          variant="outlined"
+          onClick={handleClickAddCard}
+          startIcon={<AddIcon />}
+          sx={{
+            marginBottom: { xs: '20px', md: '40px' },
+          }}
         >
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            sx={{
-              marginBottom: { xs: '20px', md: '40px' },
-            }}
-          >
-            Add a new card
-          </Button>
-        </Link>
+          Add a new card
+        </Button>
+        {/* </Link> */}
         {/* --------------------------- Items --------------------------- */}
         <Box>
           <Typography variant="h6" component="h2" gutterBottom>

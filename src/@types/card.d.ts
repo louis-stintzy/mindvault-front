@@ -1,7 +1,13 @@
+import { Language } from './lang';
+
 export interface CardData {
   id: number;
   boxId: number;
   creatorId: number;
+  questionLanguage: Language;
+  questionVoice: string;
+  answerLanguage: Language;
+  answerVoice: string;
   question: string;
   answer: string;
   attachment: string;
@@ -13,6 +19,10 @@ export interface CardData {
 }
 
 export interface CardDataLight {
+  questionLanguage: Language;
+  questionVoice: string;
+  answerLanguage: Language;
+  answerVoice: string;
   question: string;
   answer: string;
   attachment: string;

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
@@ -24,6 +24,8 @@ import {
   createBox,
   deleteBox,
 } from '../../store/reducers/boxOne';
+import LanguageSelector from '../TextFieldWithSTT/LanguageSelector';
+import VoiceSelector from '../TextFieldWithSTT/VoiceSelector';
 
 interface BoxCreateEditProps {
   mode: 'create' | 'edit';
@@ -33,6 +35,8 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedQuestionVoice, setSelectedQuestionVoice] = useState('');
+  const [selectedAnswerVoice, setSelectedAnswerVoice] = useState('');
 
   const {
     isLoading,
@@ -58,9 +62,8 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     }
   }, [boxCreated, isRegistered, navigate]);
 
-  // Les champs du formulaire sont pré-remplis si on est en mode edit
+  // NOTE: Les champs du formulaire sont pré-remplis si on est en mode edit
   // grâce à initialBoxFields dispatcher dans BoxItem
-
   // useEffect(() => {
   //   if (mode === 'edit' && currentBox) {
   //     dispatch(changeBoxField({ field: 'name', value: currentBox.name }));
@@ -74,11 +77,23 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   //   }
   // }, [currentBox, dispatch, mode]);
 
-  const handleChangeField =
-    (field: 'name' | 'description' | 'label') => (value: string) => {
-      // TODO: checker que les values respectent les contraintes comme name<255 caractères
-      dispatch(changeBoxField({ field, value }));
-    };
+  const handleChangeField = useCallback(
+    (
+        field:
+          | 'name'
+          | 'description'
+          | 'label'
+          | 'defaultQuestionLanguage'
+          | 'defaultQuestionVoice'
+          | 'defaultAnswerLanguage'
+          | 'defaultAnswerVoice'
+      ) =>
+      (value: string) => {
+        // TODO: checker que les values respectent les contraintes comme name<255 caractères
+        dispatch(changeBoxField({ field, value }));
+      },
+    [dispatch]
+  );
 
   const handleChangeCheckbox = (field: 'learnIt') => (value: boolean) => {
     dispatch(changeBoxField({ field, value }));
@@ -86,9 +101,15 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // je n'arrive pas à enregistrer les voix dans le store alors j'envoie les voix directement du composant
+    const boxToSubmit = {
+      ...box,
+      defaultQuestionVoice: selectedQuestionVoice,
+      defaultAnswerVoice: selectedAnswerVoice,
+    };
 
     if (mode === 'create') {
-      dispatch(createBox(box));
+      dispatch(createBox(boxToSubmit));
     }
     if (mode === 'edit') {
       console.log('Edit the box');
@@ -144,7 +165,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               </Alert>
             ))}
 
-          {/* ------------------------ Form ------------------------------- */}
+          {/* // -------------- FORM : NAME, LABEL & DESCRIPTION ------------ */}
           <form onSubmit={handleSubmit}>
             <TextField
               required
@@ -176,6 +197,37 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               value={box.description}
               onChange={(e) => handleChangeField('description')(e.target.value)}
             />
+
+            {/* // ---------------------- LANGUAGE DEFAULT SELECTION ---------------------- */}
+            <LanguageSelector
+              field2="defaultQuestionLanguage"
+              instructions="Please select the default language for questions"
+              selectedLang={box.defaultQuestionLanguage}
+              onLanguageChange2={(field, lang) =>
+                handleChangeField(field)(lang)
+              }
+            />
+            <VoiceSelector
+              instructions="Please select the default voice for questions"
+              lang={box.defaultQuestionLanguage}
+              selectedVoiceName={selectedQuestionVoice}
+              setSelectedVoiceName={setSelectedQuestionVoice}
+            />
+            <LanguageSelector
+              field2="defaultAnswerLanguage"
+              instructions="Please select the default language for questions"
+              selectedLang={box.defaultAnswerLanguage}
+              onLanguageChange2={(field, lang) =>
+                handleChangeField(field)(lang)
+              }
+            />
+            <VoiceSelector
+              instructions="Please select the default voice for answers"
+              lang={box.defaultAnswerLanguage}
+              selectedVoiceName={selectedAnswerVoice}
+              setSelectedVoiceName={setSelectedAnswerVoice}
+            />
+            {/* // -------------------------- UPLOAD ILLUSTRATION --------------------------- */}
             <Box sx={{ my: 2 }}>
               <Button
                 variant="outlined"
@@ -188,6 +240,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
                 {/* <VisuallyHiddenInput type="file" /> */}
               </Button>
             </Box>
+            {/* // ------------------------------ OPTIONS BUTTONS ------------------------------------ */}
             <Box sx={{ my: 2 }}>
               <FormControlLabel
                 control={
@@ -206,7 +259,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
                 label="Box of Box"
               />
             </Box>
-            {/* ---------------------- Buttons ----------------------------- */}
+            {/* // ------------------------------ ACTION BUTTONS ------------------------------------ */}
             <Box
               sx={{
                 marginTop: 8,
@@ -227,6 +280,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               <Button
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                // TODO : pas besoin de recharger les boxes dans la page /boxes puisqu'on annule
                 onClick={() => navigate(`/boxes`)}
               >
                 Cancel

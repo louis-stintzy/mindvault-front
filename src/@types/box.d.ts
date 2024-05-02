@@ -1,3 +1,5 @@
+import { Language } from './lang';
+
 export interface BoxData {
   id: number;
   owner_id: number;
@@ -13,6 +15,10 @@ export interface BoxData {
   color: string;
   label: string;
   level: string;
+  default_question_language: Language;
+  default_question_voice: string;
+  default_answer_language: Language;
+  default_answer_voice: string;
   position: number;
   learn_it: boolean;
   type: number;
@@ -30,6 +36,10 @@ export interface BoxDataLight {
   color: string;
   label: string;
   level: string;
+  defaultQuestionLanguage: Language;
+  defaultQuestionVoice: string;
+  defaultAnswerLanguage: Language;
+  defaultAnswerVoice: string;
   learnIt: boolean;
   type: number;
 }
