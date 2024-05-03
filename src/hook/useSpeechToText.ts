@@ -31,6 +31,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
       return;
     }
     // interimResults : détermine si des résultats temporaires doivent être retournés par l'API pendant que l'utilisateur parle.
+    // false pour éviter que le texte ne se dédouble sur mobile
     // continuous : détermine si la reconnaissance vocale doit capturer une seule phrase ou continuer à écouter après que l'utilisateur ait cessé de parler.
     recognition.interimResults =
       options.interimResults !== undefined ? options.interimResults : false;
@@ -42,24 +43,18 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // "let i = event.resultIndex" : index du dernier résultat retourné / boucle commence à l'index du nouveau résultat
     // évite de traiter à nouveau des résultats déjà obtenus vs "let i = 0"
     recognition.onresult = (event) => {
-      let interimTranscript = '';
-      let finalTranscript = '';
+      let newTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; i += 1) {
         if (event.results[i].isFinal) {
           // si le résultat est final, on ajoute (récupère) la transcription
           // le += au lieu du simple = est apparemment par sécurité si plusieurs isFinal
-          // finalTranscript = morceau de la transcription finale
-          finalTranscript += event.results[i][0].transcript;
-        } else {
-          // si le résultat n'est pas final, on ajoute (récupère) la transcription
-          // le += au lieu du simple = est apparemment par sécurité si plusieurs isFinal
-          // interimTranscript = morceau de la transcription intermédiaire
-          interimTranscript += event.results[i][0].transcript;
+          // newTranscript = morceau de la transcription finale
+          newTranscript += event.results[i][0].transcript;
         }
       }
       // on ajoute la nouvelle transcription à la transcription existante (transcription en cours)
       // conserve et accumule toute la transcription reçue pendant la session d'écoute.
-      setTranscript((prevTranscript) => prevTranscript + finalTranscript);
+      setTranscript((prevTranscript) => prevTranscript + newTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -69,10 +64,15 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // "onend" est déclenché lorsque l'API de reconnaissance vocale s'arrête (arrête de parler ou erreur, ou arrêt manuel)
     // "onend" sert à nettoyer ou préparer l'application pour la prochaine entrée vocale
     recognition.onend = () => {
-      setIsListening(false);
-      if (options.continuous) {
+      if (isListening) {
         recognition.start();
+      } else {
+        setIsListening(false);
       }
+      // setIsListening(false);
+      // if (options.continuous) {
+      //   recognition.start();
+      // }
     };
 
     // nettoye et arrête la reconnaissance vocale lorsque le composant est démonté ou l'état change
