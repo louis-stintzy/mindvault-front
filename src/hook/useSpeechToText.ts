@@ -55,6 +55,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
       // on ajoute la nouvelle transcription à la transcription existante (transcription en cours)
       // conserve et accumule toute la transcription reçue pendant la session d'écoute.
       setTranscript((prevTranscript) => prevTranscript + newTranscript);
+      console.log('Speech recognition result : ', newTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -64,15 +65,8 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // "onend" est déclenché lorsque l'API de reconnaissance vocale s'arrête (arrête de parler ou erreur, ou arrêt manuel)
     // "onend" sert à nettoyer ou préparer l'application pour la prochaine entrée vocale
     recognition.onend = () => {
-      if (isListening) {
-        recognition.start();
-      } else {
-        setIsListening(false);
-      }
-      // setIsListening(false);
-      // if (options.continuous) {
-      //   recognition.start();
-      // }
+      setIsListening(false);
+      console.log('Speech recognition ended');
     };
 
     // nettoye et arrête la reconnaissance vocale lorsque le composant est démonté ou l'état change
@@ -85,6 +79,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
     if (recognitionRef.current && !isListening) {
       recognitionRef.current.start();
       setIsListening(true);
+      console.log('Speech recognition started');
     }
   };
   const stopListening = () => {
@@ -92,6 +87,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
       recognitionRef.current.stop();
       setIsListening(false);
       setTranscript('');
+      console.log('Speech recognition stopped');
     }
   };
 

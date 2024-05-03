@@ -62,6 +62,7 @@ function TextFieldWithSTT({
 
   // Arrêt de l'écoute : ajoute la transcription au texte existant dans l'input
   const stopVoicieInput = () => {
+    console.log('stopVoicieInput');
     const formattedTranscript = formatText(transcript, lang);
     const newValue =
       value +
