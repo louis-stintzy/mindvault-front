@@ -13,6 +13,20 @@ function useSpeechToText(options: SpeechToTextOptions) {
   // useRef est utile pour conserver la même instance de SpeechRecognition à travers les rendus successifs sans provoquer de re-rendus inutiles.
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
+  const startListening = () => {
+    if (recognitionRef.current && !isListening) {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+  const stopListening = () => {
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      setTranscript('');
+    }
+  };
+
   useEffect(() => {
     // Vérification de la compatibilité du navigateur
     // webkitSpeechRecognition est une implémentation spécifique à WebKit
@@ -65,6 +79,8 @@ function useSpeechToText(options: SpeechToTextOptions) {
     recognition.onend = () => {
       setIsListening(false);
       // note: modif ici
+      // assure la continuité de l'écoute même après une pause
+      startListening();
       // setTranscript('');
     };
 
@@ -73,20 +89,6 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // eslint-disable-next-line consistent-return
     return () => recognition.stop();
   }, [options.continuous, options.interimResults, options.lang]);
-
-  const startListening = () => {
-    if (recognitionRef.current && !isListening) {
-      recognitionRef.current.start();
-      setIsListening(true);
-    }
-  };
-  const stopListening = () => {
-    if (recognitionRef.current && isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
-      setTranscript('');
-    }
-  };
 
   return {
     isListening,
