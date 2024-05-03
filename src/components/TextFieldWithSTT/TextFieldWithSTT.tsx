@@ -15,7 +15,7 @@ import {
   Box,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSpeechToText from '../../hook/useSpeechToText';
 import formatText from '../../utils/textFormatting';
 import LanguageSelector from './LanguageSelector';
@@ -62,6 +62,7 @@ function TextFieldWithSTT({
 
   // Arrêt de l'écoute : ajoute la transcription au texte existant dans l'input
   const stopVoicieInput = () => {
+    // console.log('stopVoicieInput');
     const formattedTranscript = formatText(transcript, lang);
     const newValue =
       value +
@@ -71,6 +72,17 @@ function TextFieldWithSTT({
     onChangeValue(field, newValue);
     stopListening();
   };
+
+  // useEffect(() => {
+  //   console.log('useEffect onChangeValue');
+  //   const formattedTranscript = formatText(transcript, lang);
+  //   const newValue =
+  //     value +
+  //     (formattedTranscript.length
+  //       ? (value.length ? ' ' : '') + formattedTranscript
+  //       : '');
+  //   onChangeValue(field, newValue);
+  // }, [transcript, lang, value, onChangeValue, field]);
 
   // Gère le déclenchement et l'arrêt de la reconnaissance vocale
   const startStopListening = () => {

@@ -1,5 +1,11 @@
 import {
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   IconButton,
   MenuItem,
@@ -31,12 +37,10 @@ function VoiceSelector({
   setSelectedVoiceName,
 }: VoiceSelectorProps) {
   // liste les voix disponibles compatible avec la langue de la question
-  const [availableVoicesName, setAvailableVoicesName] = useState<string[]>(
-    speechSynthesis
-      .getVoices()
-      .filter((voice) => voice.lang === lang)
-      .map((voice) => voice.name)
-  );
+  const [availableVoicesName, setAvailableVoicesName] = useState<string[]>([]);
+
+  // boite de dialogue pour afficher message d'aide sur mobile
+  const [openDialog, setOpenDialog] = useState(false);
 
   // charge les voix disponibles pour la langue de la question
   // s'assure que la liste des voix est à jour car elles peuvent ne pas être chargées immédiatement
@@ -45,7 +49,7 @@ function VoiceSelector({
       setAvailableVoicesName(
         speechSynthesis
           .getVoices()
-          .filter((voice) => voice.lang === lang)
+          .filter((voice) => voice.lang.replace('_', '-') === lang)
           .map((voice) => voice.name)
       );
       setSelectedVoiceName('');
@@ -98,10 +102,23 @@ function VoiceSelector({
         {instructions}
       </Typography>
       <Tooltip title="The available voices depend on the browser and device you are using. Selected voices may become unavailable if you switch to a different browser or device.">
-        <IconButton size="small">
+        <IconButton size="small" onClick={() => setOpenDialog(true)}>
           <HelpOutlineIcon fontSize="small" />
         </IconButton>
       </Tooltip>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Available Voices</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            The available voices depend on the browser and device you are using.
+            Selected voices may become unavailable if you switch to a different
+            browser or device.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>OK</Button>
+        </DialogActions>
+      </Dialog>
       <FormControl sx={{ width: 'auto' }}>
         <Select
           value={selectedVoiceName}

@@ -59,12 +59,7 @@ function TestSTTandTTS() {
 
   // ----------------- GESTION DU TEXT TO SPEECH -----------------
   // liste les voix disponibles compatible avec la langue de la question
-  const [availableVoicesName, setAvailableVoicesName] = useState<string[]>(
-    speechSynthesis
-      .getVoices()
-      .filter((voice) => voice.lang === questionLanguage)
-      .map((voice) => voice.name)
-  );
+  const [availableVoicesName, setAvailableVoicesName] = useState<string[]>([]);
 
   const [selectedVoiceName, setSelectedVoiceName] = useState<string>('');
   const speakText = (text: string, lang: Language) => {
@@ -88,7 +83,7 @@ function TestSTTandTTS() {
       setAvailableVoicesName(
         speechSynthesis
           .getVoices()
-          .filter((voice) => voice.lang === questionLanguage)
+          .filter((voice) => voice.lang.replace('_', '-') === questionLanguage)
           .map((voice) => voice.name)
       );
       setSelectedVoiceName('');
