@@ -64,7 +64,8 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // "onend" sert à nettoyer ou préparer l'application pour la prochaine entrée vocale
     recognition.onend = () => {
       setIsListening(false);
-      setTranscript('');
+      // note: modif ici
+      // setTranscript('');
     };
 
     // nettoye et arrête la reconnaissance vocale lorsque le composant est démonté ou l'état change
@@ -83,6 +84,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
       setIsListening(false);
+      setTranscript('');
     }
   };
 
