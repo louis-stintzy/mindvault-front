@@ -60,13 +60,13 @@ function useSpeechToText(options: SpeechToTextOptions) {
       console.error('Speech recognition error : ', event.error);
     };
 
-    // continuous : détermine si la reconnaissance vocale doit capturer une seule phrase ou continuer à écouter après que l'utilisateur ait cessé de parler.
-    recognition.continuous = true;
-
     // "onend" est déclenché lorsque l'API de reconnaissance vocale s'arrête (arrête de parler ou erreur, ou arrêt manuel)
     // "onend" sert à nettoyer ou préparer l'application pour la prochaine entrée vocale
     recognition.onend = () => {
       setIsListening(false);
+      if (options.continuous) {
+        recognition.start();
+      }
       // note: modif ici
       // setTranscript('');
     };
