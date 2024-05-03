@@ -33,7 +33,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // interimResults : détermine si des résultats temporaires doivent être retournés par l'API pendant que l'utilisateur parle.
     // continuous : détermine si la reconnaissance vocale doit capturer une seule phrase ou continuer à écouter après que l'utilisateur ait cessé de parler.
     recognition.interimResults =
-      options.interimResults !== undefined ? options.interimResults : true;
+      options.interimResults !== undefined ? options.interimResults : false;
     recognition.continuous =
       options.continuous !== undefined ? options.continuous : true;
     recognition.lang = options.lang !== undefined ? options.lang : 'fr-FR';
@@ -42,18 +42,24 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // "let i = event.resultIndex" : index du dernier résultat retourné / boucle commence à l'index du nouveau résultat
     // évite de traiter à nouveau des résultats déjà obtenus vs "let i = 0"
     recognition.onresult = (event) => {
-      let newTranscript = '';
+      let interimTranscript = '';
+      let finalTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; i += 1) {
         if (event.results[i].isFinal) {
           // si le résultat est final, on ajoute (récupère) la transcription
           // le += au lieu du simple = est apparemment par sécurité si plusieurs isFinal
-          // newTranscript = morceau de la transcription finale
-          newTranscript += event.results[i][0].transcript;
+          // finalTranscript = morceau de la transcription finale
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          // si le résultat n'est pas final, on ajoute (récupère) la transcription
+          // le += au lieu du simple = est apparemment par sécurité si plusieurs isFinal
+          // interimTranscript = morceau de la transcription intermédiaire
+          interimTranscript += event.results[i][0].transcript;
         }
       }
       // on ajoute la nouvelle transcription à la transcription existante (transcription en cours)
       // conserve et accumule toute la transcription reçue pendant la session d'écoute.
-      setTranscript((prevTranscript) => prevTranscript + newTranscript);
+      setTranscript((prevTranscript) => prevTranscript + finalTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -67,8 +73,6 @@ function useSpeechToText(options: SpeechToTextOptions) {
       if (options.continuous) {
         recognition.start();
       }
-      // note: modif ici
-      // setTranscript('');
     };
 
     // nettoye et arrête la reconnaissance vocale lorsque le composant est démonté ou l'état change
