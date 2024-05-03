@@ -31,12 +31,7 @@ function VoiceSelector({
   setSelectedVoiceName,
 }: VoiceSelectorProps) {
   // liste les voix disponibles compatible avec la langue de la question
-  const [availableVoicesName, setAvailableVoicesName] = useState<string[]>(
-    speechSynthesis
-      .getVoices()
-      .filter((voice) => voice.lang === lang)
-      .map((voice) => voice.name)
-  );
+  const [availableVoicesName, setAvailableVoicesName] = useState<string[]>([]);
 
   // charge les voix disponibles pour la langue de la question
   // s'assure que la liste des voix est à jour car elles peuvent ne pas être chargées immédiatement
@@ -45,7 +40,7 @@ function VoiceSelector({
       setAvailableVoicesName(
         speechSynthesis
           .getVoices()
-          .filter((voice) => voice.lang === lang)
+          .filter((voice) => voice.lang.replace('_', '-') === lang)
           .map((voice) => voice.name)
       );
       setSelectedVoiceName('');
