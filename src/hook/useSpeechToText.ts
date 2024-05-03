@@ -13,20 +13,6 @@ function useSpeechToText(options: SpeechToTextOptions) {
   // useRef est utile pour conserver la même instance de SpeechRecognition à travers les rendus successifs sans provoquer de re-rendus inutiles.
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  const startListening = () => {
-    if (recognitionRef.current && !isListening) {
-      recognitionRef.current.start();
-      setIsListening(true);
-    }
-  };
-  const stopListening = () => {
-    if (recognitionRef.current && isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
-      setTranscript('');
-    }
-  };
-
   useEffect(() => {
     // Vérification de la compatibilité du navigateur
     // webkitSpeechRecognition est une implémentation spécifique à WebKit
@@ -74,13 +60,14 @@ function useSpeechToText(options: SpeechToTextOptions) {
       console.error('Speech recognition error : ', event.error);
     };
 
+    // continuous : détermine si la reconnaissance vocale doit capturer une seule phrase ou continuer à écouter après que l'utilisateur ait cessé de parler.
+    recognition.continuous = true;
+
     // "onend" est déclenché lorsque l'API de reconnaissance vocale s'arrête (arrête de parler ou erreur, ou arrêt manuel)
     // "onend" sert à nettoyer ou préparer l'application pour la prochaine entrée vocale
     recognition.onend = () => {
       setIsListening(false);
       // note: modif ici
-      // assure la continuité de l'écoute même après une pause
-      startListening();
       // setTranscript('');
     };
 
@@ -89,6 +76,20 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // eslint-disable-next-line consistent-return
     return () => recognition.stop();
   }, [options.continuous, options.interimResults, options.lang]);
+
+  const startListening = () => {
+    if (recognitionRef.current && !isListening) {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+  const stopListening = () => {
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      setTranscript('');
+    }
+  };
 
   return {
     isListening,
