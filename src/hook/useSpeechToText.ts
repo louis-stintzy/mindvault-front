@@ -9,18 +9,21 @@ interface SpeechToTextOptions {
 function useSpeechToText(options: SpeechToTextOptions) {
   const [isListening, setIsListening] = useState(false);
   const [userStopped, setUserStopped] = useState(false);
-  const [onendStatus, setOnendStatus] = useState(false);
   const [transcript, setTranscript] = useState('');
 
   // useRef est utile pour conserver la même instance de SpeechRecognition à travers les rendus successifs sans provoquer de re-rendus inutiles.
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
+  // Pour Chrome sur Android : useEffect pour redémarrer la reconnaissance vocale si l'utilisateur n'a pas arrêté manuellement l'écoute
+  // l'utilisateur n'a pas appuyé sur "stop" et nous en sommes à l'étape .onend (isListening = false et userStopped = false)
+  // alors on redémarre la reconnaissance vocale comme avec startListening
   useEffect(() => {
     if (!userStopped && !isListening && recognitionRef.current) {
+      setTranscript((prevTranscript) => `${prevTranscript} `);
       recognitionRef.current.start();
       setIsListening(true);
       setUserStopped(false);
-      console.log('Restarting recognition due to automatic stop.');
+      // console.log('Restarting recognition due to automatic stop.');
     }
   }, [isListening, userStopped]);
 
@@ -66,7 +69,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
       // on ajoute la nouvelle transcription à la transcription existante (transcription en cours)
       // conserve et accumule toute la transcription reçue pendant la session d'écoute.
       setTranscript((prevTranscript) => prevTranscript + newTranscript);
-      console.log('Speech recognition result : ', newTranscript);
+      // console.log('Speech recognition result : ', newTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -77,7 +80,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
     // "onend" sert à nettoyer ou préparer l'application pour la prochaine entrée vocale
     recognition.onend = () => {
       setIsListening(false);
-      console.log('Speech recognition ended');
+      // console.log('Speech recognition ended');
     };
 
     // nettoye et arrête la reconnaissance vocale lorsque le composant est démonté ou l'état change
@@ -91,7 +94,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
       recognitionRef.current.start();
       setIsListening(true);
       setUserStopped(false);
-      console.log('Speech recognition started');
+      // console.log('Speech recognition started');
     }
   };
   const stopListening = () => {
@@ -100,7 +103,7 @@ function useSpeechToText(options: SpeechToTextOptions) {
       setIsListening(false);
       setUserStopped(true);
       setTranscript('');
-      console.log('Speech recognition stopped by user');
+      // console.log('Speech recognition stopped by user');
     }
   };
 
