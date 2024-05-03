@@ -8,10 +8,19 @@ interface SpeechToTextOptions {
 
 function useSpeechToText(options: SpeechToTextOptions) {
   const [isListening, setIsListening] = useState(false);
+  const [userStopped, setUserStopped] = useState(false);
   const [transcript, setTranscript] = useState('');
 
   // useRef est utile pour conserver la même instance de SpeechRecognition à travers les rendus successifs sans provoquer de re-rendus inutiles.
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  useEffect(() => {
+    if (!userStopped && recognitionRef.current) {
+      recognitionRef.current.start();
+      setIsListening(true);
+      console.log('Restarting recognition due to automatic stop.');
+    }
+  }, [userStopped]);
 
   useEffect(() => {
     // Vérification de la compatibilité du navigateur
@@ -86,8 +95,9 @@ function useSpeechToText(options: SpeechToTextOptions) {
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
       setIsListening(false);
+      setUserStopped(true);
       setTranscript('');
-      console.log('Speech recognition stopped');
+      console.log('Speech recognition stopped by user');
     }
   };
 
