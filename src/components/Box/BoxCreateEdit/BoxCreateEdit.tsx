@@ -17,15 +17,15 @@ import {
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
-import { useAppDispatch, useAppSelector } from '../../hook/redux';
+import BottomNavigationMUI from '../../BottomNavigationMUI/BottomNavigationMUI';
+import { useAppDispatch, useAppSelector } from '../../../hook/redux';
 import {
   changeBoxField,
   createBox,
   deleteBox,
-} from '../../store/reducers/boxOne';
-import LanguageSelector from '../TextFieldWithSTT/LanguageSelector';
-import VoiceSelector from '../TextFieldWithSTT/VoiceSelector';
+} from '../../../store/reducers/boxOne';
+import LanguageSelector from '../../TextFieldWithSTT/LanguageSelector';
+import VoiceSelector from '../../TextFieldWithSTT/VoiceSelector';
 
 interface BoxCreateEditProps {
   mode: 'create' | 'edit';
@@ -166,6 +166,10 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
             ))}
 
           {/* // -------------- FORM : NAME, LABEL & DESCRIPTION ------------ */}
+
+          {/* // note Don't forget the enctype="multipart/form-data" in your form.
+          <form action="/profile" method="post" enctype="multipart/form-data"> */}
+
           <form onSubmit={handleSubmit}>
             <TextField
               required
