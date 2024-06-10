@@ -6,23 +6,15 @@ import {
   TextField,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useCallback } from 'react';
 import LanguageSelector from '../../TextFieldWithSTT/LanguageSelector';
 import VoiceSelector from '../../TextFieldWithSTT/VoiceSelector';
 import { BoxDataLight } from '../../../@types/box';
+import { useAppDispatch } from '../../../hook/redux';
+import { changeBoxField } from '../../../store/reducers/boxOne';
 
 interface BoxCreateEditFormFieldsProps {
   box: BoxDataLight;
-  handleChangeField: (
-    field:
-      | 'name'
-      | 'description'
-      | 'label'
-      | 'defaultQuestionLanguage'
-      | 'defaultQuestionVoice'
-      | 'defaultAnswerLanguage'
-      | 'defaultAnswerVoice'
-  ) => (value: string) => void;
-  handleChangeCheckbox: (field: 'learnIt') => (value: boolean) => void;
   selectedQuestionVoice: string;
   setSelectedQuestionVoice: (voiceName: string) => void;
   selectedAnswerVoice: string;
@@ -31,13 +23,34 @@ interface BoxCreateEditFormFieldsProps {
 
 function BoxCreateEditFormFields({
   box,
-  handleChangeField,
-  handleChangeCheckbox,
   selectedQuestionVoice,
   setSelectedQuestionVoice,
   selectedAnswerVoice,
   setSelectedAnswerVoice,
 }: BoxCreateEditFormFieldsProps) {
+  const dispatch = useAppDispatch();
+  const handleChangeField = useCallback(
+    (
+        field:
+          | 'name'
+          | 'description'
+          | 'label'
+          | 'defaultQuestionLanguage'
+          | 'defaultQuestionVoice'
+          | 'defaultAnswerLanguage'
+          | 'defaultAnswerVoice'
+      ) =>
+      (value: string) => {
+        // TODO: checker que les values respectent les contraintes comme name<255 caractères
+        dispatch(changeBoxField({ field, value }));
+      },
+    [dispatch]
+  );
+
+  const handleChangeCheckbox = (field: 'learnIt') => (value: boolean) => {
+    dispatch(changeBoxField({ field, value }));
+  };
+
   return (
     <>
       <TextField
@@ -72,6 +85,9 @@ function BoxCreateEditFormFields({
       />
 
       {/* // ---------------------- LANGUAGE DEFAULT SELECTION ---------------------- */}
+      {/* //todo: voir pourquoi -parfois- la voix par default pour les questions n'est pas renseignée alors qu'elle l'est bien pour les réponse
+      si pas de modif de l'utilisateur : la voix pour les reponse est bien enregistrée mais pas pour les question
+      rappel dans les voix sont rajoutée dans le submit et ne passe pas dans le store */}
       <LanguageSelector
         field2="defaultQuestionLanguage"
         instructions="Please select the default language for questions"

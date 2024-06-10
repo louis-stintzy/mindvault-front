@@ -1,22 +1,32 @@
 import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../../hook/redux';
 
 interface BoxCreateEditActionButtonsProps {
-  isLoading: boolean;
+  // isLoading: boolean;
   isFormValid: boolean;
   mode: 'create' | 'edit';
   handleDelete: () => void;
-  buttonText: string;
+  // buttonText: string;
 }
 
 function BoxCreateEditActionButtons({
-  isLoading,
+  // isLoading,
   isFormValid,
   mode,
   handleDelete,
-  buttonText,
-}: BoxCreateEditActionButtonsProps) {
+}: // buttonText,
+BoxCreateEditActionButtonsProps) {
   const navigate = useNavigate();
+  const { isLoading } = useAppSelector((state) => state.boxOne);
+
+  let buttonText;
+  if (isLoading) {
+    buttonText = 'Loading...';
+  } else {
+    buttonText = mode === 'create' ? 'Create' : 'Edit';
+  }
+
   return (
     <Box
       sx={{

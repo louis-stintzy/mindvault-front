@@ -1,4 +1,10 @@
-import { Box, Button, Container, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Typography,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -15,6 +21,7 @@ function BoxItemsList() {
 
   const navigateFromBoxStats = location.state?.navigateFromBoxStats || false;
   const userBoxesList = useAppSelector((state) => state.boxMultiple.boxes);
+  const isLoading = useAppSelector((state) => state.boxMultiple.isLoading);
 
   useEffect(() => {
     // si l'utilisateur revient de BoxStats, on ne recharge pas la liste des boxes
@@ -26,6 +33,21 @@ function BoxItemsList() {
     dispatch(resetBoxOneState());
     dispatch(resetStatsState());
   }, [dispatch, navigateFromBoxStats]);
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs">
