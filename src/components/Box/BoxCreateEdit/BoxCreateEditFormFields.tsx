@@ -1,17 +1,11 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-} from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Box, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { useCallback } from 'react';
 import LanguageSelector from '../../TextFieldWithSTT/LanguageSelector';
 import VoiceSelector from '../../TextFieldWithSTT/VoiceSelector';
 import { BoxDataLight } from '../../../@types/box';
 import { useAppDispatch } from '../../../hook/redux';
 import { changeBoxField } from '../../../store/reducers/boxOne';
+import ImageInput from '../../ImageUpload/ImageInput';
 
 interface BoxCreateEditFormFieldsProps {
   box: BoxDataLight;
@@ -113,18 +107,8 @@ function BoxCreateEditFormFields({
         setSelectedVoiceName={setSelectedAnswerVoice}
       />
       {/* // -------------------------- UPLOAD ILLUSTRATION --------------------------- */}
-      <Box sx={{ my: 2 }}>
-        <Button
-          variant="outlined"
-          fullWidth
-          component="label"
-          startIcon={<CloudUploadIcon />}
-        >
-          Upload Illustration
-          <input type="file" hidden />
-          {/* <VisuallyHiddenInput type="file" /> */}
-        </Button>
-      </Box>
+      <ImageInput />
+
       {/* // ------------------------------ OPTIONS BUTTONS ------------------------------------ */}
       <Box sx={{ my: 2 }}>
         <FormControlLabel
