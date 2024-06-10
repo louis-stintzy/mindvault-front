@@ -6,6 +6,7 @@ import {
   Typography,
   Button,
   CircularProgress,
+  Alert,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
@@ -25,7 +26,9 @@ function CardItemsList() {
     location.state?.navigateFromCardCreateEdit || false;
   const boxNameFromBoxItemsList = location.state?.boxName;
 
-  const { cardsAll, isLoading } = useAppSelector((state) => state.cardMultiple);
+  const { cardsAll, isLoading, error } = useAppSelector(
+    (state) => state.cardMultiple
+  );
   const boxName = useAppSelector((state) => state.boxOne.currentBox?.name);
   const boxNameIsLoading = useAppSelector((state) => state.boxOne.isLoading);
 
@@ -80,6 +83,32 @@ function CardItemsList() {
   // ou si on a pas encore le nom de la box à afficher
   // pour éviter qu'apparaisse brievement le composant vide de cards
   if (isLoading || boxNameIsLoading || (!boxNameFromBoxItemsList && !boxName)) {
+    if (error) {
+      return (
+        <Container component="main" maxWidth="xs">
+          <Box
+            sx={{
+              padding: { xs: '20px', md: '40px' },
+              paddingBottom: { xs: '20px', md: '40px' },
+            }}
+          >
+            {error.map((err) => (
+              <Alert key={err.errCode} severity="error">
+                {err.errMessage}
+              </Alert>
+            ))}
+            <Button
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              // TODO : pas besoin de recharger les boxes dans la page /boxes puisqu'on annule
+              onClick={() => navigate(`/boxes`)}
+            >
+              Back to the boxes
+            </Button>
+          </Box>
+        </Container>
+      );
+    }
     return (
       <Box
         sx={{
@@ -132,6 +161,14 @@ function CardItemsList() {
           Add a new card
         </Button>
         {/* </Link> */}
+        {/* ---------------------- Error Display ---------------------- */}
+        {/* Affichage des erreurs - à voir par la suite pour toutes les erreurs */}
+        {/* {error &&
+          error.map((err) => (
+            <Alert key={err.errCode} severity="error">
+              {err.errMessage}
+            </Alert>
+          ))} */}
         {/* --------------------------- Items --------------------------- */}
         <Box>
           <Typography variant="h6" component="h2" gutterBottom>
