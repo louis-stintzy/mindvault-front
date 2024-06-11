@@ -30,7 +30,7 @@ BoxCreateEditActionButtonsProps) {
   return (
     <Box
       sx={{
-        marginTop: 8,
+        mt: 2,
         display: 'flex',
         justifyContent: 'center',
         gap: '10px',

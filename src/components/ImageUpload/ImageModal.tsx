@@ -1,5 +1,4 @@
 import { Modal, Button, Box } from '@mui/material';
-import { Height } from '@mui/icons-material';
 import ImageCropper from './ImageCropper';
 
 interface ImageModalProps {
@@ -29,7 +28,7 @@ function ImageModal({
   setImgURL,
 }: ImageModalProps) {
   const handleClose = () => {
-    // todo Reset image ne fonctionne pas
+    // todo Reset image ne fonctionne pas car le chargement d'une nouvelle image n'ouvre pas la modal
     setImgURL('https://via.placeholder.com/150');
     setOpenModal(false);
   };
@@ -49,7 +48,7 @@ function ImageModal({
       <Box sx={style}>
         {imgURL && <ImageCropper imgURL={imgURL} />}
         {/* <img src={imgURL} alt="uploaded" width="150px" height="150px" /> */}
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleSave}>Save</Button>
         </Box>

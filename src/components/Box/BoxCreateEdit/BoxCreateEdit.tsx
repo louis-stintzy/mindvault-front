@@ -94,6 +94,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
         component="main"
         maxWidth="xs"
         className="create-box-container"
+        sx={{ pb: 8 }}
       >
         <Box
           sx={{

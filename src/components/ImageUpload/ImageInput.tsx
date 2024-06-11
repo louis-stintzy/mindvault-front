@@ -1,6 +1,7 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import ImageModal from './ImageModal';
 
 function ImageInput() {
@@ -9,37 +10,50 @@ function ImageInput() {
   );
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleFileChange function');
-    const file = e.target.files?.[0];
+  const onDrop = (acceptedFiles: File[]) => {
+    console.log('onDrop function');
+    const file = acceptedFiles[0];
     if (!file) return;
     setImgURL(URL.createObjectURL(file));
     setOpenModal(true);
   };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.gif'] },
+  });
+
   return (
     <Box sx={{ my: 2 }}>
-      <Button
-        variant="outlined"
-        fullWidth
-        component="label"
-        startIcon={<CloudUploadIcon />}
+      <Box
+        {...getRootProps()}
+        sx={{
+          border: '1px dashed #ccc',
+          borderRadius: 1,
+          textAlign: 'center',
+          padding: 2,
+        }}
       >
-        Upload Illustration
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={(e) => handleFileChange(e)}
-        />
-        {/* <VisuallyHiddenInput type="file" /> */}
-      </Button>
+        <input {...getInputProps()} />
+        <Typography variant="body1">
+          Drag n drop some files here, or click to select files
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          (Only *.jpg, *.jpeg, *.png, *.gif images will be accepted)
+        </Typography>
+
+        <Button
+          variant="outlined"
+          fullWidth
+          component="span"
+          startIcon={<CloudUploadIcon />}
+          sx={{ mt: 2 }}
+        >
+          Upload Illustration
+        </Button>
+      </Box>
       <Box sx={{ mt: 2 }}>
-        <img
-          src="https://via.placeholder.com/150"
-          alt="uploaded"
-          width="150px"
-          height="150px"
-        />
+        <img src={imgURL} alt="uploaded" width="150px" height="150px" />
       </Box>
       <ImageModal
         openModal={openModal}
