@@ -1,4 +1,4 @@
-import { Modal, Button, Box } from '@mui/material';
+import { Modal, Box } from '@mui/material';
 import ImageCropper from './ImageCropper';
 
 interface ImageModalProps {
@@ -27,31 +27,34 @@ function ImageModal({
   imgURL,
   setImgURL,
 }: ImageModalProps) {
-  const handleClose = () => {
-    // todo Reset image ne fonctionne pas car le chargement d'une nouvelle image n'ouvre pas la modal
+  const handleCancel = () => {
     setImgURL('https://via.placeholder.com/150');
     setOpenModal(false);
   };
 
-  const handleSave = () => {
-    // todo Save cropped image
+  const handleCropImage = (croppedImage: Blob) => {
+    const croppedFile = new File([croppedImage], 'croppedImage.jpg', {
+      type: 'image/jpeg',
+    });
+    setImgURL(URL.createObjectURL(croppedFile));
     setOpenModal(false);
   };
 
   return (
     <Modal
       open={openModal}
-      onClose={handleClose}
+      onClose={handleCancel}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        {imgURL && <ImageCropper imgURL={imgURL} />}
-        {/* <img src={imgURL} alt="uploaded" width="150px" height="150px" /> */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save</Button>
-        </Box>
+        {imgURL && (
+          <ImageCropper
+            imgURL={imgURL}
+            onCroppedImage={handleCropImage}
+            onCancel={handleCancel}
+          />
+        )}
       </Box>
     </Modal>
   );

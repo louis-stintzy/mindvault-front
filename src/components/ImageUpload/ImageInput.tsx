@@ -11,7 +11,6 @@ function ImageInput() {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const onDrop = (acceptedFiles: File[]) => {
-    console.log('onDrop function');
     const file = acceptedFiles[0];
     if (!file) return;
     setImgURL(URL.createObjectURL(file));
@@ -53,7 +52,7 @@ function ImageInput() {
         </Button>
       </Box>
       <Box sx={{ mt: 2 }}>
-        <img src={imgURL} alt="uploaded" width="150px" height="150px" />
+        <img src={imgURL} alt="uploaded" width="200px" height="150px" />
       </Box>
       <ImageModal
         openModal={openModal}
