@@ -13,6 +13,7 @@ interface BoxCreateEditFormFieldsProps {
   setSelectedQuestionVoice: (voiceName: string) => void;
   selectedAnswerVoice: string;
   setSelectedAnswerVoice: (voiceName: string) => void;
+  setImageFile: (file: File | null) => void;
 }
 
 function BoxCreateEditFormFields({
@@ -21,6 +22,7 @@ function BoxCreateEditFormFields({
   setSelectedQuestionVoice,
   selectedAnswerVoice,
   setSelectedAnswerVoice,
+  setImageFile,
 }: BoxCreateEditFormFieldsProps) {
   const dispatch = useAppDispatch();
   const handleChangeField = useCallback(
@@ -107,7 +109,7 @@ function BoxCreateEditFormFields({
         setSelectedVoiceName={setSelectedAnswerVoice}
       />
       {/* // -------------------------- UPLOAD ILLUSTRATION --------------------------- */}
-      <ImageInput />
+      <ImageInput setImageFile={setImageFile} />
 
       {/* // ------------------------------ OPTIONS BUTTONS ------------------------------------ */}
       <Box sx={{ my: 2 }}>

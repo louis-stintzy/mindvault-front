@@ -1,11 +1,13 @@
 import { Modal, Box } from '@mui/material';
 import ImageCropper from './ImageCropper';
+import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
 
 interface ImageModalProps {
   openModal: boolean;
   setOpenModal: (open: boolean) => void;
   imgURL: string;
   setImgURL: (imgURL: string) => void;
+  setCroppedImage: (file: File | null) => void;
 }
 
 const style = {
@@ -26,9 +28,10 @@ function ImageModal({
   setOpenModal,
   imgURL,
   setImgURL,
+  setCroppedImage,
 }: ImageModalProps) {
   const handleCancel = () => {
-    setImgURL('https://via.placeholder.com/150');
+    setImgURL(boxDefaultPicture);
     setOpenModal(false);
   };
 
@@ -37,6 +40,7 @@ function ImageModal({
       type: 'image/jpeg',
     });
     setImgURL(URL.createObjectURL(croppedFile));
+    setCroppedImage(croppedFile);
     setOpenModal(false);
   };
 

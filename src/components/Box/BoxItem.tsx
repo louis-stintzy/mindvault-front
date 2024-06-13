@@ -20,7 +20,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { BoxData } from '../../@types/box';
 
-import boxDefaultPicture from '../../assets/boxDefaultPicture.png';
+import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
 import { useAppDispatch } from '../../hook/redux';
 import {
   initializeBoxFields,

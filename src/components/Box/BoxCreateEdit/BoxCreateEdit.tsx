@@ -18,6 +18,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedQuestionVoice, setSelectedQuestionVoice] = useState('');
   const [selectedAnswerVoice, setSelectedAnswerVoice] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const {
     isLoading,
@@ -61,14 +62,30 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // je n'arrive pas à enregistrer les voix dans le store alors j'envoie les voix directement du composant
-    const boxToSubmit = {
-      ...box,
-      defaultQuestionVoice: selectedQuestionVoice,
-      defaultAnswerVoice: selectedAnswerVoice,
-    };
+    // const boxToSubmit = {
+    //   ...box,
+    //   defaultQuestionVoice: selectedQuestionVoice,
+    //   defaultAnswerVoice: selectedAnswerVoice,
+    // };
+
+    const formData = new FormData();
+    formData.append('name', box.name);
+    formData.append('description', box.description);
+    formData.append('color', box.color);
+    formData.append('label', box.label);
+    formData.append('level', box.level);
+    formData.append('defaultQuestionLanguage', box.defaultQuestionLanguage);
+    formData.append('defaultQuestionVoice', selectedQuestionVoice);
+    formData.append('defaultAnswerLanguage', box.defaultAnswerLanguage);
+    formData.append('defaultAnswerVoice', selectedAnswerVoice);
+    formData.append('learnIt', box.learnIt.toString()); // ou String(box.learnIt) qui peut gérer les null et undefined
+    formData.append('type', box.type.toString());
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
 
     if (mode === 'create') {
-      dispatch(createBox(boxToSubmit));
+      dispatch(createBox(formData));
     }
     if (mode === 'edit') {
       console.log('Edit the box');
@@ -120,17 +137,14 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
             ))}
 
           {/* // ------------------------- FORM ------------------------------- */}
-
-          {/* // note Don't forget the enctype="multipart/form-data" in your form.
-          <form action="/profile" method="post" enctype="multipart/form-data"> */}
-
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
             <BoxCreateEditFormFields
               box={box}
               selectedQuestionVoice={selectedQuestionVoice}
               setSelectedQuestionVoice={setSelectedQuestionVoice}
               selectedAnswerVoice={selectedAnswerVoice}
               setSelectedAnswerVoice={setSelectedAnswerVoice}
+              setImageFile={setImageFile}
             />
             <BoxCreateEditActionButtons
               isFormValid={isFormValid}

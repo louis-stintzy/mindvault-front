@@ -3,11 +3,14 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ImageModal from './ImageModal';
+import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
 
-function ImageInput() {
-  const [imgURL, setImgURL] = useState<string>(
-    'https://via.placeholder.com/150'
-  );
+interface ImageInputProps {
+  setImageFile: (file: File | null) => void;
+}
+
+function ImageInput({ setImageFile }: ImageInputProps) {
+  const [imgURL, setImgURL] = useState<string>(boxDefaultPicture);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -52,13 +55,18 @@ function ImageInput() {
         </Button>
       </Box>
       <Box sx={{ mt: 2 }}>
-        <img src={imgURL} alt="uploaded" width="200px" height="150px" />
+        <img
+          src={imgURL}
+          alt="uploaded"
+          style={{ width: '100%', maxHeight: '230px', objectFit: 'contain' }}
+        />
       </Box>
       <ImageModal
         openModal={openModal}
         setOpenModal={setOpenModal}
         imgURL={imgURL}
         setImgURL={setImgURL}
+        setCroppedImage={setImageFile}
       />
     </Box>
   );
