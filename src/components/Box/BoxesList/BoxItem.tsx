@@ -1,8 +1,6 @@
 import {
   Box,
-  Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
@@ -16,18 +14,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { BoxData } from '../../@types/box';
+import { BoxData } from '../../../@types/box';
 
-import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
-import { useAppDispatch } from '../../hook/redux';
+import boxDefaultPicture from '../../../assets/boxDefaultPicture2.png';
+import { useAppDispatch } from '../../../hook/redux';
 import {
   initializeBoxFields,
   setCurrentBox,
   updateBoxLearnItValue,
-} from '../../store/reducers/boxOne';
-import { getBoxCards, getRandomCards } from '../../store/reducers/cardMultiple';
+} from '../../../store/reducers/boxOne';
 
 interface BoxCardProps {
   box: BoxData;
@@ -87,23 +84,21 @@ function BoxItem({ box }: BoxCardProps) {
         display: 'flex',
         marginBottom: 2,
         backgroundColor: box.color || 'default',
+        height: 150,
       }}
     >
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'row',
+          height: '100%',
         }}
       >
         {/* --------------- Illustration ---------------- */}
         <CardMedia
           component="img"
-          sx={{ width: 151 }}
-          image={
-            box.box_picture
-              ? `${apiUrl}/media/${box.box_picture}`
-              : boxDefaultPicture
-          }
+          sx={{ width: 200, height: 150, objectFit: 'cover' }}
+          image={box.box_picture ? box.box_picture : boxDefaultPicture}
           alt={`Image for the box : ${box.name}`}
         />
         {/* -------------- Reste de la card -------------- */}
@@ -111,41 +106,32 @@ function BoxItem({ box }: BoxCardProps) {
           sx={{
             display: 'flex',
             flexDirection: 'column',
+            height: '100%',
           }}
         >
           {/* Name, Label, Level, Description */}
-          <CardContent sx={{ flex: '1 0 auto' }}>
+          <CardContent
+            sx={{
+              flex: '1 0 auto',
+              padding: '8px',
+              '&:last-child': {
+                paddingBottom: '8px',
+              },
+            }}
+          >
             <Typography
               gutterBottom
-              variant="h5"
+              variant="h2"
               component="div"
-              sx={{ textAlign: 'left', cursor: 'pointer' }}
+              sx={{ textAlign: 'left', cursor: 'pointer', fontSize: '1.2rem' }}
               onClick={handleBoxNameClick}
             >
               {box.name}
-              {/* <Link
-                to={`/box/${box.id}/items`}
-                state={{ boxName: box.name }}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                {box.name}
-              </Link> */}
-              {/* <span
-                onClick={handleBoxNameClick}
-                style={{
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                }}
-              >
-                {box.name}
-              </span> */}
             </Typography>
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'left',
-                // pl: 1,
                 pb: 1,
               }}
             >
@@ -153,6 +139,7 @@ function BoxItem({ box }: BoxCardProps) {
                 variant="subtitle1"
                 color="text.secondary"
                 component="div"
+                sx={{ fontSize: '0.8rem' }}
               >
                 <LabelImportantIcon />
                 {box.label}
@@ -163,32 +150,46 @@ function BoxItem({ box }: BoxCardProps) {
             <Typography
               variant="subtitle1"
               color="text.secondary"
-              sx={{ textAlign: 'left' }}
+              sx={{ textAlign: 'left', fontSize: '0.8rem' }}
             >
-              {box.description}
+              {box.description.length > 20
+                ? `${box.description.slice(0, 20)}...`
+                : box.description}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontSize: '0.8rem' }}
+            >
               Number of cards to review: {box.cards_to_review}
             </Typography>
           </CardContent>
           {/* Learn it, Stats, Edit, Play */}
           <CardActions
-            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              padding: '8px',
+            }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Checkbox checked={box.learn_it} onChange={handleLearnIt} />
-              <Typography variant="body2" display="block">
+              <Typography
+                variant="body2"
+                display="block"
+                sx={{ fontSize: '0.8rem' }}
+              >
                 Learn it
               </Typography>
             </Box>
             <Box>
-              <IconButton aria-label="stats" onClick={handleStats}>
+              <IconButton aria-label="stats" onClick={handleStats} size="small">
                 <BarChartIcon />
               </IconButton>
-              <IconButton aria-label="edit" onClick={handleEdit}>
+              <IconButton aria-label="edit" onClick={handleEdit} size="small">
                 <EditIcon />
               </IconButton>
-              <IconButton aria-label="play" onClick={handlePlay}>
+              <IconButton aria-label="play" onClick={handlePlay} size="small">
                 <PlayArrowIcon />
               </IconButton>
             </Box>

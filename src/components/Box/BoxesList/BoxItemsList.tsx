@@ -8,12 +8,12 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
+import BottomNavigationMUI from '../../BottomNavigationMUI/BottomNavigationMUI';
 import BoxItem from './BoxItem';
-import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import { getUserBoxes } from '../../store/reducers/boxMultiple';
-import { resetBoxOneState } from '../../store/reducers/boxOne';
-import { resetStatsState } from '../../store/reducers/stats';
+import { useAppDispatch, useAppSelector } from '../../../hook/redux';
+import { getUserBoxes } from '../../../store/reducers/boxMultiple';
+import { resetBoxOneState } from '../../../store/reducers/boxOne';
+import { resetStatsState } from '../../../store/reducers/stats';
 
 function BoxItemsList() {
   const dispatch = useAppDispatch();
@@ -50,7 +50,7 @@ function BoxItemsList() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ pb: 8 }}>
       <Box>
         <Typography variant="h4" component="h1">
           Boxes
