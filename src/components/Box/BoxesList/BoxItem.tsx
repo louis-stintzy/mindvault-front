@@ -84,7 +84,7 @@ function BoxItem({ box }: BoxCardProps) {
         display: 'flex',
         marginBottom: 2,
         backgroundColor: box.color || 'default',
-        height: 150,
+        height: 200,
       }}
     >
       <Box
@@ -97,7 +97,7 @@ function BoxItem({ box }: BoxCardProps) {
         {/* --------------- Illustration ---------------- */}
         <CardMedia
           component="img"
-          sx={{ width: 200, height: 150, objectFit: 'cover' }}
+          sx={{ width: 150, height: 200, objectFit: 'cover' }}
           image={box.box_picture ? box.box_picture : boxDefaultPicture}
           alt={`Image for the box : ${box.name}`}
         />
@@ -121,9 +121,9 @@ function BoxItem({ box }: BoxCardProps) {
           >
             <Typography
               gutterBottom
-              variant="h2"
+              variant="h6"
               component="div"
-              sx={{ textAlign: 'left', cursor: 'pointer', fontSize: '1.2rem' }}
+              sx={{ textAlign: 'left', cursor: 'pointer' }}
               onClick={handleBoxNameClick}
             >
               {box.name}
@@ -139,7 +139,7 @@ function BoxItem({ box }: BoxCardProps) {
                 variant="subtitle1"
                 color="text.secondary"
                 component="div"
-                sx={{ fontSize: '0.8rem' }}
+                // sx={{ fontSize: '0.8rem' }}
               >
                 <LabelImportantIcon />
                 {box.label}
@@ -153,7 +153,7 @@ function BoxItem({ box }: BoxCardProps) {
               sx={{ textAlign: 'left', fontSize: '0.8rem' }}
             >
               {box.description.length > 20
-                ? `${box.description.slice(0, 20)}...`
+                ? `${box.description.slice(0, 30)}...`
                 : box.description}
             </Typography>
             <Typography

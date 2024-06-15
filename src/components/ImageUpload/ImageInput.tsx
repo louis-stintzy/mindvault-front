@@ -3,14 +3,15 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ImageModal from './ImageModal';
-import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
 
 interface ImageInputProps {
   setImageFile: (file: File | null) => void;
+  aspectRatio: number;
+  picture: string;
 }
 
-function ImageInput({ setImageFile }: ImageInputProps) {
-  const [imgURL, setImgURL] = useState<string>(boxDefaultPicture);
+function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
+  const [imgURL, setImgURL] = useState<string>(picture);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -54,17 +55,23 @@ function ImageInput({ setImageFile }: ImageInputProps) {
           Upload Illustration
         </Button>
       </Box>
+      {/* // todo : ajouter borderRadius à Box et/ou img */}
       <Box sx={{ mt: 2 }}>
         <img
           src={imgURL}
           alt="uploaded"
-          style={{ width: '100%', maxHeight: '230px', objectFit: 'contain' }}
+          style={{
+            width: '100%',
+            maxHeight: '266px',
+            objectFit: 'contain',
+          }}
         />
       </Box>
       <ImageModal
         openModal={openModal}
         setOpenModal={setOpenModal}
         imgURL={imgURL}
+        aspectRatio={aspectRatio}
         setImgURL={setImgURL}
         setCroppedImage={setImageFile}
       />

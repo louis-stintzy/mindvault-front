@@ -6,6 +6,7 @@ import { BoxDataLight } from '../../../@types/box';
 import { useAppDispatch } from '../../../hook/redux';
 import { changeBoxField } from '../../../store/reducers/boxOne';
 import ImageInput from '../../ImageUpload/ImageInput';
+import boxDefaultPicture from '../../../assets/boxDefaultPicture2.png';
 
 interface BoxCreateEditFormFieldsProps {
   box: BoxDataLight;
@@ -109,7 +110,11 @@ function BoxCreateEditFormFields({
         setSelectedVoiceName={setSelectedAnswerVoice}
       />
       {/* // -------------------------- UPLOAD ILLUSTRATION --------------------------- */}
-      <ImageInput setImageFile={setImageFile} />
+      <ImageInput
+        setImageFile={setImageFile}
+        aspectRatio={3 / 4}
+        picture={box.boxPicture || boxDefaultPicture}
+      />
 
       {/* // ------------------------------ OPTIONS BUTTONS ------------------------------------ */}
       <Box sx={{ my: 2 }}>

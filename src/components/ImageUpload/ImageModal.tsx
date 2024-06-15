@@ -6,6 +6,7 @@ interface ImageModalProps {
   openModal: boolean;
   setOpenModal: (open: boolean) => void;
   imgURL: string;
+  aspectRatio: number;
   setImgURL: (imgURL: string) => void;
   setCroppedImage: (file: File | null) => void;
 }
@@ -27,6 +28,7 @@ function ImageModal({
   openModal,
   setOpenModal,
   imgURL,
+  aspectRatio,
   setImgURL,
   setCroppedImage,
 }: ImageModalProps) {
@@ -55,6 +57,7 @@ function ImageModal({
         {imgURL && (
           <ImageCropper
             imgURL={imgURL}
+            aspectRatio={aspectRatio}
             onCroppedImage={handleCropImage}
             onCancel={handleCancel}
           />

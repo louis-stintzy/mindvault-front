@@ -5,11 +5,17 @@ import getCroppedImg from '../../utils/cropImage';
 
 interface ImageCropperProps {
   imgURL: string;
+  aspectRatio: number;
   onCroppedImage: (croppedImage: Blob) => void;
   onCancel: () => void;
 }
 
-function ImageCropper({ imgURL, onCroppedImage, onCancel }: ImageCropperProps) {
+function ImageCropper({
+  imgURL,
+  aspectRatio,
+  onCroppedImage,
+  onCancel,
+}: ImageCropperProps) {
   // croppedArea de la forme : { x: 0.1, y: 0.1, width: 0.5, height: 0.5 }
   // x et y sont les coordonnées du coin supérieur gauche du rectangle de sélection
   // width et height sont les dimensions du rectangle de sélection en pourcentage de l'image
@@ -67,7 +73,7 @@ function ImageCropper({ imgURL, onCroppedImage, onCancel }: ImageCropperProps) {
           image={imgURL}
           crop={crop}
           zoom={zoom}
-          aspect={4 / 3}
+          aspect={aspectRatio}
           onCropChange={setCrop}
           onCropComplete={onCropComplete}
           onZoomChange={setZoom}
