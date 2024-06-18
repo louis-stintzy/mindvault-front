@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNavigationMUI from '../../BottomNavigationMUI/BottomNavigationMUI';
 import { useAppDispatch, useAppSelector } from '../../../hook/redux';
-import { createBox, deleteBox } from '../../../store/reducers/boxOne';
+import {
+  createBox,
+  deleteBox,
+  updateBox,
+} from '../../../store/reducers/boxOne';
 import BoxCreateEditDelConfirmDial from './BoxCreateEditDelConfirmDial';
 import BoxCreateEditFormFields from './BoxCreateEditFormFields';
 import BoxCreateEditActionButtons from './BoxCreateEditActionButtons';
@@ -80,6 +84,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     formData.append('defaultAnswerVoice', selectedAnswerVoice);
     formData.append('learnIt', box.learnIt.toString()); // ou String(box.learnIt) qui peut gérer les null et undefined
     formData.append('type', box.type.toString());
+
     if (imageFile) {
       formData.append('image', imageFile);
     }
@@ -87,8 +92,8 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     if (mode === 'create') {
       dispatch(createBox(formData));
     }
-    if (mode === 'edit') {
-      console.log('Edit the box');
+    if (mode === 'edit' && currentBox) {
+      dispatch(updateBox({ boxId: currentBox.id, formData }));
     }
   };
 

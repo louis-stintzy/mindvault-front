@@ -100,6 +100,29 @@ export const createBox = createAsyncThunk(
   }
 );
 
+export const updateBox = createAsyncThunk(
+  'boxOne/UPDATE_BOX',
+  async (
+    { boxId, formData }: { boxId: number; formData: FormData },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put(`/box/${boxId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
 export const updateBoxLearnItValue = createAsyncThunk(
   'boxOne/UPDATE_BOX_LEARN_IT_VALUE',
   async (
@@ -234,6 +257,48 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.boxCreated = action.payload;
     })
     .addCase(createBox.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+        state.success = '';
+        state.isRegistered = false;
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
+      state.success = '';
+      state.isRegistered = false;
+      state.boxCreated = null;
+    })
+    // --------------- UPDATE BOX ----------------
+    .addCase(updateBox.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+      state.isRegistered = false;
+      state.boxCreated = null;
+    })
+    .addCase(updateBox.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = 'Successfully updated box';
+      state.isRegistered = true;
+      state.box = {
+        name: '',
+        description: '',
+        boxPicture: '',
+        color: '',
+        label: '',
+        level: '',
+        defaultQuestionLanguage: 'fr-FR',
+        defaultQuestionVoice: '',
+        defaultAnswerLanguage: 'fr-FR',
+        defaultAnswerVoice: '',
+        learnIt: true,
+        type: 2,
+      };
+      state.boxCreated = action.payload; // à voir si on laisse created, et à voir à quoi cela sert
+    })
+    .addCase(updateBox.rejected, (state, action) => {
       state.isLoading = false;
       if (action.payload) {
         state.error = action.payload as ErrorResponse[];
