@@ -93,6 +93,9 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
       dispatch(createBox(formData));
     }
     if (mode === 'edit' && currentBox) {
+      if (!imageFile && box.boxPicture) {
+        formData.append('existingImageUrl', box.boxPicture.split('?')[0]);
+      }
       dispatch(updateBox({ boxId: currentBox.id, formData }));
     }
   };
