@@ -7,6 +7,7 @@ import cardMultipleReducer from './cardMultiple';
 import cardOneReducer from './cardOne';
 import statsReducer from './stats';
 import testSTTReducer from './testSTT';
+import unsplashReducer from './unsplash';
 
 const reducer = {
   signUp: signupReducer,
@@ -18,6 +19,7 @@ const reducer = {
   cardOne: cardOneReducer,
   stats: statsReducer,
   testSTT: testSTTReducer,
+  unsplash: unsplashReducer,
 };
 
 export default reducer;
