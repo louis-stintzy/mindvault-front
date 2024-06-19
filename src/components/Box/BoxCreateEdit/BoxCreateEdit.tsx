@@ -48,29 +48,12 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     }
   }, [boxCreated, isRegistered, navigate]);
 
-  // NOTE: Les champs du formulaire sont pré-remplis si on est en mode edit
-  // grâce à initialBoxFields dispatcher dans BoxItem
-  // useEffect(() => {
-  //   if (mode === 'edit' && currentBox) {
-  //     dispatch(changeBoxField({ field: 'name', value: currentBox.name }));
-  //     dispatch(
-  //       changeBoxField({ field: 'description', value: currentBox.description })
-  //     );
-  //     dispatch(changeBoxField({ field: 'label', value: currentBox.label }));
-  //     dispatch(
-  //       changeBoxField({ field: 'learnIt', value: currentBox.learn_it })
-  //     );
-  //   }
-  // }, [currentBox, dispatch, mode]);
+  // NOTE: Les champs du formulaire sont pré-remplis si on est en mode edit grâce à initialBoxFields dispatché dans BoxItem
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // je n'arrive pas à enregistrer les voix dans le store alors j'envoie les voix directement du composant
-    // const boxToSubmit = {
-    //   ...box,
-    //   defaultQuestionVoice: selectedQuestionVoice,
-    //   defaultAnswerVoice: selectedAnswerVoice,
-    // };
+    // const boxToSubmit = { ...box, defaultQuestionVoice: selectedQuestionVoice, defaultAnswerVoice: selectedAnswerVoice};
 
     const formData = new FormData();
     formData.append('name', box.name);
@@ -94,6 +77,10 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     }
     if (mode === 'edit' && currentBox) {
       if (!imageFile && box.boxPicture) {
+        // en mode edit, on retrouve l'url de l'image en bdd à partir de l'url signée qui est dans box.boxPicture
+        // on envoie l'url de l'image en bdd afin de pouvoir la resigner pour la remettre en cache
+        // sinon dans notre code backend on n'arriverai pas à obtenir la bonne clé de l'objet s3
+        // cf generateSignedUrlAndSaveItToCache.js : const s3ObjectKey = s3Url.split('/').pop();
         formData.append('existingImageUrl', box.boxPicture.split('?')[0]);
       }
       dispatch(updateBox({ boxId: currentBox.id, formData }));
@@ -144,7 +131,7 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
               </Alert>
             ))}
 
-          {/* // ------------------------- FORM ------------------------------- */}
+          {/* // ------------------------- Form ------------------------------- */}
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <BoxCreateEditFormFields
               box={box}
@@ -161,10 +148,10 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
             />
           </form>
         </Box>
-        {/* --------------------- Bottom Navigation --------------------- */}
+        {/* // --------------------- Bottom Navigation --------------------- */}
         <BottomNavigationMUI />
       </Container>
-      {/* ---------------------------- Dialog --------------------------- */}
+      {/* // ---------------------------- Dialog --------------------------- */}
       <BoxCreateEditDelConfirmDial
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
