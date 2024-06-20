@@ -3,8 +3,8 @@ import ImageCropper from './ImageCropper';
 import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
 
 interface ImageModalProps {
-  openModal: boolean;
-  setOpenModal: (open: boolean) => void;
+  openCroppingModal: boolean;
+  setOpenCroppingModal: (open: boolean) => void;
   imgURL: string;
   aspectRatio: number;
   setImgURL: (imgURL: string) => void;
@@ -25,8 +25,8 @@ const style = {
 };
 
 function ImageModal({
-  openModal,
-  setOpenModal,
+  openCroppingModal,
+  setOpenCroppingModal,
   imgURL,
   aspectRatio,
   setImgURL,
@@ -34,7 +34,7 @@ function ImageModal({
 }: ImageModalProps) {
   const handleCancel = () => {
     setImgURL(boxDefaultPicture);
-    setOpenModal(false);
+    setOpenCroppingModal(false);
   };
 
   const handleCropImage = (croppedImage: Blob) => {
@@ -43,12 +43,12 @@ function ImageModal({
     });
     setImgURL(URL.createObjectURL(croppedFile));
     setCroppedImage(croppedFile);
-    setOpenModal(false);
+    setOpenCroppingModal(false);
   };
 
   return (
     <Modal
-      open={openModal}
+      open={openCroppingModal}
       onClose={handleCancel}
       aria-labelledby="crop image modal"
       aria-describedby="crop image modal"

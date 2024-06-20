@@ -8,7 +8,15 @@ import {
 } from '../../store/reducers/unsplash';
 import UnsplashImagesSearchResults from './UnsplashImagesSearchResults';
 
-function UnsplashImagesSearch() {
+interface UnsplashImagesSearchProps {
+  setImgURL: (imgURL: string) => void;
+  setOpenCroppingModal: (open: boolean) => void;
+}
+
+function UnsplashImagesSearch({
+  setImgURL,
+  setOpenCroppingModal,
+}: UnsplashImagesSearchProps) {
   const dispatch = useAppDispatch();
   const query = useAppSelector((state) => state.unsplash.query);
   const images = useAppSelector((state) => state.unsplash.images);
@@ -51,8 +59,10 @@ function UnsplashImagesSearch() {
         }}
       />
       <UnsplashImagesSearchResults
-        openModal={openSearchResultsModal}
-        setOpenModal={setOpenSearchResultsModal}
+        openSearchResultsModal={openSearchResultsModal}
+        setOpenSearchResultsModal={setOpenSearchResultsModal}
+        setImgURL={setImgURL}
+        setOpenCroppingModal={setOpenCroppingModal}
         images={images}
       />
     </Box>

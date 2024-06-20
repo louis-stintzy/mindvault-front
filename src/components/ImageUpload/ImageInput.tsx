@@ -13,13 +13,13 @@ interface ImageInputProps {
 
 function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
   const [imgURL, setImgURL] = useState<string>(picture);
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openCroppingModal, setOpenCroppingModal] = useState<boolean>(false);
 
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
     setImgURL(URL.createObjectURL(file));
-    setOpenModal(true);
+    setOpenCroppingModal(true);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -56,7 +56,10 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
           Upload Illustration
         </Button>
       </Box>
-      <UnsplashImagesSearch />
+      <UnsplashImagesSearch
+        setOpenCroppingModal={setOpenCroppingModal}
+        setImgURL={setImgURL}
+      />
       {/* // todo : ajouter borderRadius à Box et/ou img */}
       <Box sx={{ mt: 2 }}>
         <img
@@ -70,8 +73,8 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
         />
       </Box>
       <ImageModal
-        openModal={openModal}
-        setOpenModal={setOpenModal}
+        openCroppingModal={openCroppingModal}
+        setOpenCroppingModal={setOpenCroppingModal}
         imgURL={imgURL}
         aspectRatio={aspectRatio}
         setImgURL={setImgURL}

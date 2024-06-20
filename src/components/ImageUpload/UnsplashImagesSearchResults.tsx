@@ -2,8 +2,10 @@ import { Modal, Box, ImageList, ImageListItem } from '@mui/material';
 import { UnsplashImage } from '../../@types/image';
 
 interface UnsplashImagesSearchResultsProps {
-  openModal: boolean;
-  setOpenModal: (open: boolean) => void;
+  openSearchResultsModal: boolean;
+  setOpenSearchResultsModal: (open: boolean) => void;
+  setImgURL: (imgURL: string) => void;
+  setOpenCroppingModal: (open: boolean) => void;
   images: UnsplashImage[];
 }
 
@@ -23,21 +25,25 @@ const style = {
 };
 
 function UnsplashImagesSearchResults({
-  openModal,
-  setOpenModal,
+  openSearchResultsModal,
+  setOpenSearchResultsModal,
+  setImgURL,
+  setOpenCroppingModal,
   images,
 }: UnsplashImagesSearchResultsProps) {
   const handleCancel = () => {
-    setOpenModal(false);
+    setOpenSearchResultsModal(false);
   };
-  const handleImageClick = (image: string) => {
-    console.log(image);
-    // setOpenModal(false);
+  const handleImageClick = (imageURL: string) => {
+    console.log(imageURL);
+    setOpenSearchResultsModal(false);
+    setOpenCroppingModal(true);
+    setImgURL(imageURL);
   };
 
   return (
     <Modal
-      open={openModal}
+      open={openSearchResultsModal}
       onClose={handleCancel}
       aria-labelledby="Search results modal"
       aria-describedby="Unsplash images search results modal"
@@ -45,16 +51,19 @@ function UnsplashImagesSearchResults({
       <Box sx={style}>
         <ImageList cols={3}>
           {images.map((image) => (
-            <ImageListItem
+            <Box
               key={image.id}
-              // onClick={handleImageClick(image.urls.thumb)}
+              onClick={() => handleImageClick(image.urls.small)}
+              sx={{ cursor: 'pointer' }}
             >
-              <img
-                src={image.urls.thumb}
-                alt={image.alt_description}
-                loading="lazy"
-              />
-            </ImageListItem>
+              <ImageListItem>
+                <img
+                  src={image.urls.thumb}
+                  alt={image.alt_description}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            </Box>
           ))}
         </ImageList>
       </Box>
