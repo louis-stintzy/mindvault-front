@@ -1,29 +1,34 @@
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import {
-  changeUnsplashImageSearchField,
+  changeUnsplashImagesSearchField,
   searchUnsplashImages,
 } from '../../store/reducers/unsplash';
+import UnsplashImagesSearchResults from './UnsplashImagesSearchResults';
 
-function UnsplashImageSearch() {
+function UnsplashImagesSearch() {
   const dispatch = useAppDispatch();
   const query = useAppSelector((state) => state.unsplash.query);
   const images = useAppSelector((state) => state.unsplash.images);
 
+  const [openSearchResultsModal, setOpenSearchResultsModal] =
+    useState<boolean>(false);
+
   const handleChangeField = (value: string) => {
-    dispatch(changeUnsplashImageSearchField(value));
+    dispatch(changeUnsplashImagesSearchField(value));
   };
   const searchImages = () => {
     dispatch(searchUnsplashImages(query));
+    setOpenSearchResultsModal(true);
   };
 
-  useEffect(() => {
-    if (images.length > 0) {
-      console.log(images);
-    }
-  }, [images]);
+  // useEffect(() => {
+  //   if (images.length > 0) {
+  //     console.log(images);
+  //   }
+  // }, [images]);
 
   return (
     <Box>
@@ -45,8 +50,13 @@ function UnsplashImageSearch() {
           ),
         }}
       />
+      <UnsplashImagesSearchResults
+        openModal={openSearchResultsModal}
+        setOpenModal={setOpenSearchResultsModal}
+        images={images}
+      />
     </Box>
   );
 }
 
-export default UnsplashImageSearch;
+export default UnsplashImagesSearch;

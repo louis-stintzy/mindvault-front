@@ -50,8 +50,8 @@ function ImageModal({
     <Modal
       open={openModal}
       onClose={handleCancel}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby="crop image modal"
+      aria-describedby="crop image modal"
     >
       <Box sx={style}>
         {imgURL && (

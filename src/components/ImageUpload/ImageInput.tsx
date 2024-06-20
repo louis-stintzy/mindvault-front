@@ -3,7 +3,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ImageModal from './ImageModal';
-import UnsplashImageSearch from './UnsplashImageSearch';
+import UnsplashImagesSearch from './UnsplashImagesSearch';
 
 interface ImageInputProps {
   setImageFile: (file: File | null) => void;
@@ -56,7 +56,7 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
           Upload Illustration
         </Button>
       </Box>
-      <UnsplashImageSearch />
+      <UnsplashImagesSearch />
       {/* // todo : ajouter borderRadius à Box et/ou img */}
       <Box sx={{ mt: 2 }}>
         <img
