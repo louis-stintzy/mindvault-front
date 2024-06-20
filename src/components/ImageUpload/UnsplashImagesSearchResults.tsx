@@ -1,9 +1,10 @@
 import { Modal, Box, ImageList, ImageListItem } from '@mui/material';
+import { UnsplashImage } from '../../@types/image';
 
 interface UnsplashImagesSearchResultsProps {
   openModal: boolean;
   setOpenModal: (open: boolean) => void;
-  images: [];
+  images: UnsplashImage[];
 }
 
 const style = {

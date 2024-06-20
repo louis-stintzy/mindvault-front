@@ -4,11 +4,13 @@ import {
   createAction,
 } from '@reduxjs/toolkit';
 
+// import { createApi } from 'unsplash-js';
 import axios from 'axios';
+import { UnsplashImage } from '../../@types/image';
 
 interface UnsplashState {
   query: string;
-  images: [];
+  images: UnsplashImage[];
   isLoading: boolean;
   error: string;
 }
@@ -24,9 +26,39 @@ export const changeUnsplashImagesSearchField = createAction<string>(
   'unsplash/CHANGE_UNSPLASH_IMAGES_SEARCH_FIELD'
 );
 
+// const unsplash = createApi({
+//   accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
+// });
+
 export const searchUnsplashImages = createAsyncThunk(
   'unsplash/SEARCH_UNSPLASH_IMAGES',
   async (query: string, { rejectWithValue }) => {
+    // try {
+    //   const result = await unsplash.search.getPhotos({
+    //     query,
+    //     perPage: 12,
+    //   });
+    //   if (result.errors) {
+    //     return rejectWithValue({
+    //       errCode: 223,
+    //       errMessage: result.errors.join(', '),
+    //     });
+    //   }
+    //   const photos = result.response.results;
+    //   return photos.map((photo: any) => {
+    //     return {
+    //       id: photo.id,
+    //       urls: {
+    //         regular: photo.urls.regular,
+    //         small: photo.urls.small,
+    //         thumb: photo.urls.thumb,
+    //       },
+    //       links: {
+    //         html: photo.links.html,
+    //       },
+    //       alt_description: photo.alt_description,
+    //     };
+    //   });
     try {
       const response = await axios.get(
         `https://api.unsplash.com/search/photos`,
@@ -42,7 +74,19 @@ export const searchUnsplashImages = createAsyncThunk(
           },
         }
       );
-      return response.data.results; // peut mapper les données ici si besoin (ex: response.data.results.map((result: any) => result.urls.small)))
+      return response.data.results.map((item: UnsplashImage) => {
+        return {
+          id: item.id,
+          urls: {
+            small: item.urls.small,
+            thumb: item.urls.thumb,
+          },
+          // links: {
+          //   html: item.links.html,
+          // },
+          alt_description: item.alt_description,
+        };
+      });
     } catch (error) {
       console.log('Unsplash API error');
       console.error(error);
