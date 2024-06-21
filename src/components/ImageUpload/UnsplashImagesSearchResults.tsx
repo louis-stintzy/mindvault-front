@@ -5,8 +5,12 @@ import {
   ImageListItem,
   CircularProgress,
 } from '@mui/material';
+import { useEffect } from 'react';
 import { UnsplashImageLight } from '../../@types/image';
-import { resetUnsplashState } from '../../store/reducers/unsplash';
+import {
+  getImageProxy,
+  resetUnsplashState,
+} from '../../store/reducers/unsplash';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 
 interface UnsplashImagesSearchResultsProps {
@@ -40,18 +44,30 @@ function UnsplashImagesSearchResults({
   images,
 }: UnsplashImagesSearchResultsProps) {
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state) => state.unsplash.isLoading);
+  const { isLoading, imageUrlFromProxy } = useAppSelector(
+    (state) => state.unsplash
+  );
 
   const handleCancel = () => {
     dispatch(resetUnsplashState());
     setOpenSearchResultsModal(false);
   };
-  const handleImageClick = (imageURL: string) => {
-    console.log(imageURL);
-    setOpenSearchResultsModal(false);
-    setOpenCroppingModal(true);
-    setImgURL(imageURL);
+  const handleImageClick = async (url: string, downloadLocation: string) => {
+    await dispatch(getImageProxy({ url, downloadLocation }));
   };
+
+  useEffect(() => {
+    if (imageUrlFromProxy) {
+      setImgURL(imageUrlFromProxy);
+      setOpenSearchResultsModal(false);
+      setOpenCroppingModal(true);
+    }
+  }, [
+    imageUrlFromProxy,
+    setImgURL,
+    setOpenCroppingModal,
+    setOpenSearchResultsModal,
+  ]);
 
   return (
     <Modal
@@ -81,7 +97,12 @@ function UnsplashImagesSearchResults({
             {images.map((image) => (
               <Box
                 key={image.id}
-                onClick={() => handleImageClick(image.urls.small_s3)}
+                onClick={() =>
+                  handleImageClick(
+                    image.urls.small,
+                    image.links.download_location
+                  )
+                }
                 sx={{ cursor: 'pointer' }}
               >
                 <ImageListItem>

@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../../hook/redux';
 import { getUserBoxes } from '../../../store/reducers/boxMultiple';
 import { resetBoxOneState } from '../../../store/reducers/boxOne';
 import { resetStatsState } from '../../../store/reducers/stats';
+import { resetUnsplashState } from '../../../store/reducers/unsplash';
 
 function BoxItemsList() {
   const dispatch = useAppDispatch();
@@ -32,6 +33,7 @@ function BoxItemsList() {
     // a voir si on utilise BoxOne sinon on peu le mettre au dessus avec getUserBoxes
     dispatch(resetBoxOneState());
     dispatch(resetStatsState());
+    dispatch(resetUnsplashState());
   }, [dispatch, navigateFromBoxStats]);
 
   if (isLoading) {

@@ -1,6 +1,8 @@
 import { Modal, Box } from '@mui/material';
 import ImageCropper from './ImageCropper';
 import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
+import { useAppDispatch } from '../../hook/redux';
+import { resetUnsplashState } from '../../store/reducers/unsplash';
 
 interface ImageModalProps {
   openCroppingModal: boolean;
@@ -32,7 +34,9 @@ function ImageModal({
   setImgURL,
   setCroppedImage,
 }: ImageModalProps) {
+  const dispatch = useAppDispatch();
   const handleCancel = () => {
+    dispatch(resetUnsplashState());
     setImgURL(boxDefaultPicture);
     setOpenCroppingModal(false);
   };
