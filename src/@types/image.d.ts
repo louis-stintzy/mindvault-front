@@ -24,6 +24,15 @@ export interface UnsplashImage {
   tags: Tag[];
 }
 
+export interface UnsplashImageLight {
+  id: string;
+  alternative_slugs: AlternativeSlugs;
+  alt_description: string;
+  urls: Urls;
+  links: Links;
+  user: User;
+}
+
 export interface AlternativeSlugs {
   en: string;
   es: string;

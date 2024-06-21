@@ -1,12 +1,20 @@
-import { Modal, Box, ImageList, ImageListItem } from '@mui/material';
-import { UnsplashImage } from '../../@types/image';
+import {
+  Modal,
+  Box,
+  ImageList,
+  ImageListItem,
+  CircularProgress,
+} from '@mui/material';
+import { UnsplashImageLight } from '../../@types/image';
+import { resetUnsplashState } from '../../store/reducers/unsplash';
+import { useAppDispatch, useAppSelector } from '../../hook/redux';
 
 interface UnsplashImagesSearchResultsProps {
   openSearchResultsModal: boolean;
   setOpenSearchResultsModal: (open: boolean) => void;
   setImgURL: (imgURL: string) => void;
   setOpenCroppingModal: (open: boolean) => void;
-  images: UnsplashImage[];
+  images: UnsplashImageLight[];
 }
 
 const style = {
@@ -31,7 +39,11 @@ function UnsplashImagesSearchResults({
   setOpenCroppingModal,
   images,
 }: UnsplashImagesSearchResultsProps) {
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.unsplash.isLoading);
+
   const handleCancel = () => {
+    dispatch(resetUnsplashState());
     setOpenSearchResultsModal(false);
   };
   const handleImageClick = (imageURL: string) => {
@@ -49,23 +61,40 @@ function UnsplashImagesSearchResults({
       aria-describedby="Unsplash images search results modal"
     >
       <Box sx={style}>
-        <ImageList cols={3}>
-          {images.map((image) => (
-            <Box
-              key={image.id}
-              onClick={() => handleImageClick(image.urls.small)}
-              sx={{ cursor: 'pointer' }}
-            >
-              <ImageListItem>
-                <img
-                  src={image.urls.thumb}
-                  alt={image.alt_description}
-                  loading="lazy"
-                />
-              </ImageListItem>
-            </Box>
-          ))}
-        </ImageList>
+        {isLoading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <ImageList
+            sx={{ width: '99%', height: '90%' }}
+            cols={3}
+            rowHeight={180}
+          >
+            {images.map((image) => (
+              <Box
+                key={image.id}
+                onClick={() => handleImageClick(image.urls.small_s3)}
+                sx={{ cursor: 'pointer' }}
+              >
+                <ImageListItem>
+                  <img
+                    src={image.urls.small_s3}
+                    alt={image.alt_description}
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              </Box>
+            ))}
+          </ImageList>
+        )}
       </Box>
     </Modal>
   );

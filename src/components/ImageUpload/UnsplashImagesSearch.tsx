@@ -32,11 +32,8 @@ function UnsplashImagesSearch({
     setOpenSearchResultsModal(true);
   };
 
-  // useEffect(() => {
-  //   if (images.length > 0) {
-  //     console.log(images);
-  //   }
-  // }, [images]);
+  // todo : côté backend proxy : tester les "order_by:"
+  // todo : côté frontend : ajouter un bouton pour chercher 12 autres images
 
   return (
     <Box>

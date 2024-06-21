@@ -4,12 +4,15 @@ import {
   createAction,
 } from '@reduxjs/toolkit';
 
-import axios from 'axios';
-import { UnsplashImage } from '../../@types/image';
+import { AxiosError } from 'axios';
+import { axiosInstance } from '../../utils/axios';
+import analyseError from './errorHandling';
+
+import { UnsplashImageLight } from '../../@types/image';
 
 interface UnsplashState {
   query: string;
-  images: UnsplashImage[];
+  images: UnsplashImageLight[];
   isLoading: boolean;
   error: string;
 }
@@ -21,6 +24,8 @@ const initialState: UnsplashState = {
   error: '',
 };
 
+export const resetUnsplashState = createAction('unsplash/RESET_UNSPLASH_STATE');
+
 export const changeUnsplashImagesSearchField = createAction<string>(
   'unsplash/CHANGE_UNSPLASH_IMAGES_SEARCH_FIELD'
 );
@@ -29,45 +34,33 @@ export const searchUnsplashImages = createAsyncThunk(
   'unsplash/SEARCH_UNSPLASH_IMAGES',
   async (query: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `https://api.unsplash.com/search/photos`,
-        {
-          params: {
-            query,
-            per_page: 12,
-          },
-          headers: {
-            Authorization: `Client-ID ${
-              import.meta.env.VITE_UNSPLASH_ACCESS_KEY
-            }`,
-          },
-        }
-      );
-      return response.data.results.map((item: UnsplashImage) => {
-        return {
-          id: item.id,
-          urls: {
-            small: item.urls.small,
-            thumb: item.urls.thumb,
-          },
-          // links: {
-          //   html: item.links.html,
-          // },
-          alt_description: item.alt_description,
-        };
+      const response = await axiosInstance.get(`/proxy/images`, {
+        params: {
+          query,
+        },
       });
+      return response.data.map((item: UnsplashImageLight) => ({
+        id: item.id,
+        alternative_slugs: item.alternative_slugs,
+        altDescription: item.alt_description,
+        urls: { small_s3: item.urls.small_s3 },
+        links: { download_location: item.links.download_location },
+        user: {
+          id: item.user.id,
+          username: item.user.username,
+          name: item.user.name,
+          links: { html: item.user.links.html },
+        },
+      }));
     } catch (error) {
-      console.log('Unsplash API error');
-      console.error(error);
-      return rejectWithValue({
-        errCode: 222,
-        errMessage: 'Unsplash API error',
-      });
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
     }
   }
 );
-
-export const resetUnsplashState = createAction('unsplash/RESET_UNSPLASH_STATE');
 
 const unsplashReducer = createReducer(initialState, (builder) => {
   builder
