@@ -13,12 +13,17 @@ interface ImageInputProps {
 
 function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
   const [imgURL, setImgURL] = useState<string>(picture);
+  const [photoCredits, setPhotoCredits] = useState<{
+    photographer: string;
+    profileUrl: string;
+  } | null>(null);
   const [openCroppingModal, setOpenCroppingModal] = useState<boolean>(false);
 
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
     setImgURL(URL.createObjectURL(file));
+    setPhotoCredits(null);
     setOpenCroppingModal(true);
   };
 
@@ -59,6 +64,7 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
       <UnsplashImagesSearch
         setOpenCroppingModal={setOpenCroppingModal}
         setImgURL={setImgURL}
+        setPhotoCredits={setPhotoCredits}
       />
       {/* // todo : ajouter borderRadius à Box et/ou img */}
       <Box sx={{ mt: 2 }}>
@@ -67,10 +73,49 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
           alt="uploaded"
           style={{
             width: '100%',
-            maxHeight: '266px',
+            maxHeight: '268px',
             objectFit: 'contain',
           }}
         />
+        {photoCredits && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              position: 'relative',
+              bottom: '48px',
+              width: '201px',
+              margin: 'auto',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: '#fff',
+              padding: '4px 8px',
+            }}
+          >
+            <Typography variant="body2">
+              Photo by{' '}
+              <a
+                href={photoCredits.profileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#fff', textDecoration: 'underline' }}
+              >
+                {photoCredits.photographer}
+              </a>{' '}
+            </Typography>
+            <Typography variant="body2">
+              on{' '}
+              <a
+                href="https://unsplash.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#fff', textDecoration: 'underline' }}
+              >
+                Unsplash
+              </a>
+            </Typography>
+          </Box>
+        )}
       </Box>
       <ImageModal
         openCroppingModal={openCroppingModal}
