@@ -1,15 +1,16 @@
 import { Modal, Box } from '@mui/material';
 import ImageCropper from './ImageCropper';
 import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
-import { useAppDispatch } from '../../hook/redux';
+import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { resetUnsplashState } from '../../store/reducers/unsplash';
+import { setPictureData } from '../../store/reducers/boxOne';
 
 interface ImageModalProps {
   openCroppingModal: boolean;
   setOpenCroppingModal: (open: boolean) => void;
-  imgURL: string;
+  // imgURL: string;
   aspectRatio: number;
-  setImgURL: (imgURL: string) => void;
+  // setImgURL: (imgURL: string) => void;
   setCroppedImage: (file: File | null) => void;
 }
 
@@ -29,15 +30,20 @@ const style = {
 function ImageModal({
   openCroppingModal,
   setOpenCroppingModal,
-  imgURL,
+  // imgURL,
   aspectRatio,
-  setImgURL,
+  // setImgURL,
   setCroppedImage,
 }: ImageModalProps) {
   const dispatch = useAppDispatch();
+  const pictureUrl = useAppSelector(
+    (state) => state.boxOne.box.picture.pictureUrl
+  );
+
   const handleCancel = () => {
     dispatch(resetUnsplashState());
-    setImgURL(boxDefaultPicture);
+    dispatch(setPictureData({ field: 'pictureUrl', value: boxDefaultPicture }));
+    // setImgURL(boxDefaultPicture);
     setOpenCroppingModal(false);
   };
 
@@ -45,7 +51,13 @@ function ImageModal({
     const croppedFile = new File([croppedImage], 'croppedImage.jpg', {
       type: 'image/jpeg',
     });
-    setImgURL(URL.createObjectURL(croppedFile));
+    dispatch(
+      setPictureData({
+        field: 'pictureUrl',
+        value: URL.createObjectURL(croppedFile),
+      })
+    );
+    // setImgURL(URL.createObjectURL(croppedFile));
     setCroppedImage(croppedFile);
     setOpenCroppingModal(false);
   };
@@ -58,9 +70,9 @@ function ImageModal({
       aria-describedby="crop image modal"
     >
       <Box sx={style}>
-        {imgURL && (
+        {pictureUrl && (
           <ImageCropper
-            imgURL={imgURL}
+            // imgURL={imgURL}
             aspectRatio={aspectRatio}
             onCroppedImage={handleCropImage}
             onCancel={handleCancel}

@@ -9,17 +9,17 @@ import {
 import UnsplashImagesSearchResults from './UnsplashImagesSearchResults';
 
 interface UnsplashImagesSearchProps {
-  setImgURL: (imgURL: string) => void;
-  setPhotoCredits: (photoCredits: {
-    photographer: string;
-    profileUrl: string;
-  }) => void;
+  // setImgURL: (imgURL: string) => void;
+  // setPhotoCredits: (photoCredits: {
+  //   photographer: string;
+  //   profileUrl: string;
+  // }) => void;
   setOpenCroppingModal: (open: boolean) => void;
 }
 
 function UnsplashImagesSearch({
-  setImgURL,
-  setPhotoCredits,
+  // setImgURL,
+  // setPhotoCredits,
   setOpenCroppingModal,
 }: UnsplashImagesSearchProps) {
   const dispatch = useAppDispatch();
@@ -63,8 +63,8 @@ function UnsplashImagesSearch({
       <UnsplashImagesSearchResults
         openSearchResultsModal={openSearchResultsModal}
         setOpenSearchResultsModal={setOpenSearchResultsModal}
-        setImgURL={setImgURL}
-        setPhotoCredits={setPhotoCredits}
+        // setImgURL={setImgURL}
+        // setPhotoCredits={setPhotoCredits}
         setOpenCroppingModal={setOpenCroppingModal}
         images={images}
       />

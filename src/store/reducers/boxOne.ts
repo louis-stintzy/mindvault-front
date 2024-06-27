@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import { AxiosError } from 'axios';
-import { BoxData, BoxDataLight } from '../../@types/box';
+import { BoxData, BoxDataLight, PictureData } from '../../@types/box';
 
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
@@ -34,7 +34,11 @@ export const initialState: BoxOneState = {
   box: {
     name: '',
     description: '',
-    boxPicture: '',
+    picture: {
+      pictureUrl: '',
+      photographerName: '',
+      photographerProfileUrl: '',
+    },
     color: '',
     label: '',
     level: '',
@@ -49,7 +53,8 @@ export const initialState: BoxOneState = {
   currentBox: null,
 };
 
-type KeysOfBox = keyof BoxOneState['box'];
+// j'exclue picture de la liste des clés de box pour ne pas avoir de problème de typage (notamment avec changeBoxField)
+type KeysOfBox = Exclude<keyof BoxOneState['box'], 'picture'>;
 
 export const resetBoxOneState = createAction('boxOne/RESET_BOX_ONE_STATE');
 
@@ -79,6 +84,11 @@ export const changeBoxField = createAction<{
   field: KeysOfBox;
   value: string | boolean | number;
 }>('boxOne/CHANGE_BOX_FIELD');
+
+export const setPictureData = createAction<{
+  field: 'pictureUrl' | 'photographerName' | 'photographerProfileUrl';
+  value: string;
+}>('boxOne/SET_PICTURE_DATA');
 
 export const createBox = createAsyncThunk(
   'boxOne/CREATE_BOX',
@@ -170,7 +180,11 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.box = {
         name: '',
         description: '',
-        boxPicture: '',
+        picture: {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        },
         color: '',
         label: '',
         level: '',
@@ -227,6 +241,18 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         state.box[field] = value as string;
       }
     })
+    // ------------ SET PICTURE DATA ------------
+    .addCase(setPictureData, (state, action) => {
+      const { field, value } = action.payload;
+      if (!state.box.picture) {
+        state.box.picture = {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        };
+      }
+      state.box.picture[field] = value;
+    })
     // --------------- CREATE BOX ----------------
     .addCase(createBox.pending, (state) => {
       state.isLoading = true;
@@ -243,7 +269,11 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.box = {
         name: '',
         description: '',
-        boxPicture: '',
+        picture: {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        },
         color: '',
         label: '',
         level: '',
@@ -285,7 +315,11 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.box = {
         name: '',
         description: '',
-        boxPicture: '',
+        picture: {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        },
         color: '',
         label: '',
         level: '',
@@ -317,7 +351,7 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.error = null;
       state.success = '';
     })
-    .addCase(updateBoxLearnItValue.fulfilled, (state, action) => {
+    .addCase(updateBoxLearnItValue.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
       state.success = 'Learn it value updated';

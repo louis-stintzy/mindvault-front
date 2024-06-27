@@ -67,6 +67,11 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
     formData.append('defaultAnswerVoice', selectedAnswerVoice);
     formData.append('learnIt', box.learnIt.toString()); // ou String(box.learnIt) qui peut gérer les null et undefined
     formData.append('type', box.type.toString());
+    formData.append('photographerName', box.picture.photographerName);
+    formData.append(
+      'photographerProfileUrl',
+      box.picture.photographerProfileUrl
+    );
 
     if (imageFile) {
       formData.append('image', imageFile);
@@ -76,12 +81,15 @@ function BoxCreateEdit({ mode }: BoxCreateEditProps) {
       dispatch(createBox(formData));
     }
     if (mode === 'edit' && currentBox) {
-      if (!imageFile && box.boxPicture) {
+      if (!imageFile && box.picture && box.picture.pictureUrl) {
         // en mode edit, on retrouve l'url de l'image en bdd à partir de l'url signée qui est dans box.boxPicture
         // on envoie l'url de l'image en bdd afin de pouvoir la resigner pour la remettre en cache
         // sinon dans notre code backend on n'arriverai pas à obtenir la bonne clé de l'objet s3
         // cf generateSignedUrlAndSaveItToCache.js : const s3ObjectKey = s3Url.split('/').pop();
-        formData.append('existingImageUrl', box.boxPicture.split('?')[0]);
+        formData.append(
+          'existingImageUrl',
+          box.picture.pictureUrl.split('?')[0]
+        );
       }
       dispatch(updateBox({ boxId: currentBox.id, formData }));
     }

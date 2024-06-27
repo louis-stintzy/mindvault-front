@@ -12,15 +12,16 @@ import {
   resetUnsplashState,
 } from '../../store/reducers/unsplash';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
+import { setPictureData } from '../../store/reducers/boxOne';
 
 interface UnsplashImagesSearchResultsProps {
   openSearchResultsModal: boolean;
   setOpenSearchResultsModal: (open: boolean) => void;
-  setImgURL: (imgURL: string) => void;
-  setPhotoCredits: (photoCredits: {
-    photographer: string;
-    profileUrl: string;
-  }) => void;
+  // setImgURL: (imgURL: string) => void;
+  // setPhotoCredits: (photoCredits: {
+  //   photographer: string;
+  //   profileUrl: string;
+  // }) => void;
   setOpenCroppingModal: (open: boolean) => void;
   images: UnsplashImageLight[];
 }
@@ -43,8 +44,8 @@ const style = {
 function UnsplashImagesSearchResults({
   openSearchResultsModal,
   setOpenSearchResultsModal,
-  setImgURL,
-  setPhotoCredits,
+  // setImgURL,
+  // setPhotoCredits,
   setOpenCroppingModal,
   images,
 }: UnsplashImagesSearchResultsProps) {
@@ -69,18 +70,26 @@ function UnsplashImagesSearchResults({
     userLink: string
   ) => {
     await dispatch(getImageProxy({ url, downloadLocation }));
-    setPhotoCredits({ photographer: userName, profileUrl: userLink });
+    dispatch(setPictureData({ field: 'photographerName', value: userName }));
+    dispatch(
+      setPictureData({ field: 'photographerProfileUrl', value: userLink })
+    );
+    // setPhotoCredits({ photographer: userName, profileUrl: userLink });
   };
   // Quand une nouvelle imageUrlFromProxy est reçue, on la stocke dans imgURL et on ouvre le modal de cropping
   useEffect(() => {
     if (imageUrlFromProxy) {
-      setImgURL(imageUrlFromProxy);
+      dispatch(
+        setPictureData({ field: 'pictureUrl', value: imageUrlFromProxy })
+      );
+      // setImgURL(imageUrlFromProxy);
       setOpenSearchResultsModal(false);
       setOpenCroppingModal(true);
     }
   }, [
+    dispatch,
     imageUrlFromProxy,
-    setImgURL,
+    // setImgURL,
     setOpenCroppingModal,
     setOpenSearchResultsModal,
   ]);

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ImageModal from './ImageModal';
 import UnsplashImagesSearch from './UnsplashImagesSearch';
+import { useAppDispatch, useAppSelector } from '../../hook/redux';
+import { setPictureData } from '../../store/reducers/boxOne';
 
 interface ImageInputProps {
   setImageFile: (file: File | null) => void;
@@ -12,18 +14,30 @@ interface ImageInputProps {
 }
 
 function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
-  const [imgURL, setImgURL] = useState<string>(picture);
-  const [photoCredits, setPhotoCredits] = useState<{
-    photographer: string;
-    profileUrl: string;
-  } | null>(null);
+  const dispatch = useAppDispatch();
+  // const [imgURL, setImgURL] = useState<string>(picture);
+  // const [photoCredits, setPhotoCredits] = useState<{
+  //   photographer: string;
+  //   profileUrl: string;
+  // } | null>(null);
   const [openCroppingModal, setOpenCroppingModal] = useState<boolean>(false);
+  const { pictureUrl, photographerName, photographerProfileUrl } =
+    useAppSelector((state) => state.boxOne.box.picture);
+  const photoCredits = {
+    photographer: photographerName,
+    profileUrl: photographerProfileUrl,
+  };
 
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
-    setImgURL(URL.createObjectURL(file));
-    setPhotoCredits(null);
+    dispatch(
+      setPictureData({ field: 'pictureUrl', value: URL.createObjectURL(file) })
+    );
+    dispatch(setPictureData({ field: 'photographerName', value: '' }));
+    dispatch(setPictureData({ field: 'photographerProfileUrl', value: '' }));
+    // setImgURL(URL.createObjectURL(file));
+    // setPhotoCredits(null);
     setOpenCroppingModal(true);
   };
 
@@ -63,13 +77,13 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
       </Box>
       <UnsplashImagesSearch
         setOpenCroppingModal={setOpenCroppingModal}
-        setImgURL={setImgURL}
-        setPhotoCredits={setPhotoCredits}
+        // setImgURL={setImgURL}
+        // setPhotoCredits={setPhotoCredits}
       />
       {/* // todo : ajouter borderRadius à Box et/ou img */}
       <Box sx={{ mt: 2 }}>
         <img
-          src={imgURL}
+          src={pictureUrl}
           alt="uploaded"
           style={{
             width: '100%',
@@ -120,9 +134,9 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
       <ImageModal
         openCroppingModal={openCroppingModal}
         setOpenCroppingModal={setOpenCroppingModal}
-        imgURL={imgURL}
+        // imgURL={imgURL}
         aspectRatio={aspectRatio}
-        setImgURL={setImgURL}
+        // setImgURL={setImgURL}
         setCroppedImage={setImageFile}
       />
     </Box>

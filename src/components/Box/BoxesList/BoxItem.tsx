@@ -49,7 +49,11 @@ function BoxItem({ box }: BoxCardProps) {
       initializeBoxFields({
         name: box.name,
         description: box.description,
-        boxPicture: box.box_picture,
+        picture: {
+          pictureUrl: box.picture.pictureUrl,
+          photographerName: box.picture.photographerName,
+          photographerProfileUrl: box.picture.photographerProfileUrl,
+        },
         color: box.color,
         label: box.label,
         level: box.level,
@@ -98,7 +102,11 @@ function BoxItem({ box }: BoxCardProps) {
         <CardMedia
           component="img"
           sx={{ width: 150, height: 200, objectFit: 'cover' }}
-          image={box.box_picture ? box.box_picture : boxDefaultPicture}
+          image={
+            box.picture && box.picture.pictureUrl
+              ? box.picture.pictureUrl
+              : boxDefaultPicture
+          }
           alt={`Image for the box : ${box.name}`}
         />
         {/* -------------- Reste de la card -------------- */}

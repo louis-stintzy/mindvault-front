@@ -2,20 +2,24 @@ import { Box, Button, Slider } from '@mui/material';
 import { useState, useCallback } from 'react';
 import Cropper, { Area } from 'react-easy-crop';
 import getCroppedImg from '../../utils/cropImage';
+import { useAppSelector } from '../../hook/redux';
 
 interface ImageCropperProps {
-  imgURL: string;
+  // imgURL: string;
   aspectRatio: number;
   onCroppedImage: (croppedImage: Blob) => void;
   onCancel: () => void;
 }
 
 function ImageCropper({
-  imgURL,
+  // imgURL,
   aspectRatio,
   onCroppedImage,
   onCancel,
 }: ImageCropperProps) {
+  const pictureUrl = useAppSelector(
+    (state) => state.boxOne.box.picture.pictureUrl
+  );
   // croppedArea de la forme : { x: 0.1, y: 0.1, width: 0.5, height: 0.5 }
   // x et y sont les coordonnées du coin supérieur gauche du rectangle de sélection
   // width et height sont les dimensions du rectangle de sélection en pourcentage de l'image
@@ -48,7 +52,7 @@ function ImageCropper({
     try {
       if (croppedAreaPixels) {
         const croppedImage = (await getCroppedImg(
-          imgURL,
+          pictureUrl,
           croppedAreaPixels
         )) as Blob; // note: est ce que c'est ok de caster en Blob ?
         onCroppedImage(croppedImage);
@@ -56,7 +60,7 @@ function ImageCropper({
     } catch (error) {
       console.error('Error cropping image: ', error);
     }
-  }, [croppedAreaPixels, imgURL, onCroppedImage]);
+  }, [croppedAreaPixels, pictureUrl, onCroppedImage]);
 
   return (
     <Box
@@ -70,7 +74,7 @@ function ImageCropper({
     >
       <Box sx={{ height: 350, width: 350, position: 'relative' }}>
         <Cropper
-          image={imgURL}
+          image={pictureUrl}
           crop={crop}
           zoom={zoom}
           aspect={aspectRatio}

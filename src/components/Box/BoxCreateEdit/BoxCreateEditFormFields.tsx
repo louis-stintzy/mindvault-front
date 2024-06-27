@@ -113,7 +113,7 @@ function BoxCreateEditFormFields({
       <ImageInput
         setImageFile={setImageFile}
         aspectRatio={3 / 4}
-        picture={box.boxPicture || boxDefaultPicture}
+        picture={box.picture?.pictureUrl || boxDefaultPicture}
       />
 
       {/* // ------------------------------ OPTIONS BUTTONS ------------------------------------ */}
