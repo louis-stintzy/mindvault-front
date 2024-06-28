@@ -6,14 +6,14 @@ import ImageModal from './ImageModal';
 import UnsplashImagesSearch from './UnsplashImagesSearch';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import { setPictureData } from '../../store/reducers/boxOne';
+import boxDefaultPicture from '../../assets/boxDefaultPicture2.png';
 
 interface ImageInputProps {
   setImageFile: (file: File | null) => void;
   aspectRatio: number;
-  picture: string;
 }
 
-function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
+function ImageInput({ setImageFile, aspectRatio }: ImageInputProps) {
   const dispatch = useAppDispatch();
   // const [imgURL, setImgURL] = useState<string>(picture);
   // const [photoCredits, setPhotoCredits] = useState<{
@@ -83,7 +83,7 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
       {/* // todo : ajouter borderRadius à Box et/ou img */}
       <Box sx={{ mt: 2 }}>
         <img
-          src={pictureUrl}
+          src={pictureUrl || boxDefaultPicture}
           alt="uploaded"
           style={{
             width: '100%',
@@ -91,7 +91,7 @@ function ImageInput({ setImageFile, aspectRatio, picture }: ImageInputProps) {
             objectFit: 'contain',
           }}
         />
-        {photoCredits && (
+        {photoCredits.photographer && (
           <Box
             sx={{
               display: 'flex',
