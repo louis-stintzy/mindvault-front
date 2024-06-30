@@ -30,14 +30,27 @@ interface BoxCardProps {
   box: BoxData;
 }
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
 // (suite BoxItemsList) ...si dans BoxCard  on utilisait une interface BoxCardProps { box: BoxData; }
 // et que l'on passait cette interface à la function BoxCard({ box }: BoxCardProps) {
 
 function BoxItem({ box }: BoxCardProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  let photoCredits = {
+    photographer: '',
+    profileUrl: '',
+  };
+  if (
+    box.picture &&
+    box.picture.photographerName &&
+    box.picture.photographerProfileUrl
+  ) {
+    photoCredits = {
+      photographer: box.picture.photographerName,
+      profileUrl: box.picture.photographerProfileUrl,
+    };
+  }
 
   const handlePlay = () => {
     // dispatch(getRandomCards(box.id));
@@ -99,16 +112,57 @@ function BoxItem({ box }: BoxCardProps) {
         }}
       >
         {/* --------------- Illustration ---------------- */}
-        <CardMedia
-          component="img"
-          sx={{ width: 150, height: 200, objectFit: 'cover' }}
-          image={
-            box.picture && box.picture.pictureUrl
-              ? box.picture.pictureUrl
-              : boxDefaultPicture
-          }
-          alt={`Image for the box : ${box.name}`}
-        />
+        <Box sx={{ position: 'relative' }}>
+          <CardMedia
+            component="img"
+            sx={{ width: 150, height: 200, objectFit: 'cover' }}
+            image={
+              box.picture && box.picture.pictureUrl
+                ? box.picture.pictureUrl
+                : boxDefaultPicture
+            }
+            alt={`Image for the box : ${box.name}`}
+          />
+          {photoCredits.photographer && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: '0',
+                left: '0',
+                width: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                color: '#fff',
+                padding: '0px 4px 4px 4px',
+                lineHeight: '1.1',
+                textAlign: 'left',
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.5rem', lineHeight: '1' }}
+              >
+                Photo by{' '}
+                <a
+                  href={photoCredits.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#fff', textDecoration: 'underline' }}
+                >
+                  {photoCredits.photographer}
+                </a>{' '}
+                on{' '}
+                <a
+                  href="https://unsplash.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#fff', textDecoration: 'underline' }}
+                >
+                  Unsplash
+                </a>
+              </Typography>
+            </Box>
+          )}
+        </Box>
         {/* -------------- Reste de la card -------------- */}
         <Box
           sx={{
