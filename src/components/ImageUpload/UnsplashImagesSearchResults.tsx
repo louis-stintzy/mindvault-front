@@ -39,6 +39,7 @@ const style = {
   // border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  overflow: 'hidden',
 };
 
 function UnsplashImagesSearchResults({
@@ -115,7 +116,7 @@ function UnsplashImagesSearchResults({
           </Box>
         ) : (
           <ImageList
-            sx={{ width: '99%', height: '90%' }}
+            sx={{ width: '100%', height: '90%', overflow: 'hidden' }}
             cols={3}
             rowHeight={180}
           >
@@ -130,13 +131,18 @@ function UnsplashImagesSearchResults({
                     image.user.links.html
                   )
                 }
-                sx={{ cursor: 'pointer' }}
+                sx={{ cursor: 'pointer', height: '100%' }}
               >
                 <ImageListItem>
                   <img
                     src={image.urls.small_s3}
                     alt={image.alt_description}
                     loading="lazy"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
                   />
                 </ImageListItem>
               </Box>

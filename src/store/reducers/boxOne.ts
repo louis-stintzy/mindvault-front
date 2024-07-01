@@ -94,7 +94,7 @@ export const createBox = createAsyncThunk(
   'boxOne/CREATE_BOX',
   async (formData: FormData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/boxes', formData, {
+      const response = await axiosInstance.post('/box', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

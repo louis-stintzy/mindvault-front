@@ -1,6 +1,6 @@
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook/redux';
 import {
   changeUnsplashImagesSearchField,
@@ -9,17 +9,10 @@ import {
 import UnsplashImagesSearchResults from './UnsplashImagesSearchResults';
 
 interface UnsplashImagesSearchProps {
-  // setImgURL: (imgURL: string) => void;
-  // setPhotoCredits: (photoCredits: {
-  //   photographer: string;
-  //   profileUrl: string;
-  // }) => void;
   setOpenCroppingModal: (open: boolean) => void;
 }
 
 function UnsplashImagesSearch({
-  // setImgURL,
-  // setPhotoCredits,
   setOpenCroppingModal,
 }: UnsplashImagesSearchProps) {
   const dispatch = useAppDispatch();
@@ -33,12 +26,23 @@ function UnsplashImagesSearch({
     dispatch(changeUnsplashImagesSearchField(value));
   };
   const searchImages = () => {
+    if (!query) return;
     dispatch(searchUnsplashImages(query));
     setOpenSearchResultsModal(true);
   };
 
+  // Empêche la validation du formulaire et lance la recherche d'image lorsque l'utilisateur appuie sur "Entrée"
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      searchImages();
+    }
+  };
+
   // todo : côté backend proxy : tester les "order_by:"
-  // todo : côté frontend : ajouter un bouton pour chercher 12 autres images
+  // todo : côté backend proxy & frontend : ajouter une pagination
+  // todo : prendre photo d'une qualité meilleure
+  // todo : côté backend : utiliser sharp ?
 
   return (
     <Box>
@@ -49,11 +53,16 @@ function UnsplashImagesSearch({
         fullWidth
         value={query}
         onChange={(e) => handleChangeField(e.target.value)}
+        onKeyDown={handleKeyDown}
         margin="normal"
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton aria-label="search" onClick={searchImages}>
+              <IconButton
+                aria-label="search"
+                onClick={searchImages}
+                disabled={query.trim() === ''}
+              >
                 <SearchIcon />
               </IconButton>
             </InputAdornment>
@@ -63,8 +72,6 @@ function UnsplashImagesSearch({
       <UnsplashImagesSearchResults
         openSearchResultsModal={openSearchResultsModal}
         setOpenSearchResultsModal={setOpenSearchResultsModal}
-        // setImgURL={setImgURL}
-        // setPhotoCredits={setPhotoCredits}
         setOpenCroppingModal={setOpenCroppingModal}
         images={images}
       />

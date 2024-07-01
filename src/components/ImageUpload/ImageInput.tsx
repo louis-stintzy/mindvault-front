@@ -98,15 +98,19 @@ function ImageInput({ setImageFile, aspectRatio }: ImageInputProps) {
               flexDirection: 'column',
               alignItems: 'flex-start',
               position: 'relative',
-              bottom: '48px',
+              bottom: '33px',
               width: '201px',
               margin: 'auto',
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
               color: '#fff',
               padding: '4px 8px',
+              textAlign: 'left',
             }}
           >
-            <Typography variant="body2">
+            <Typography
+              variant="caption"
+              sx={{ fontSize: '0.7rem', lineHeight: '1.1' }}
+            >
               Photo by{' '}
               <a
                 href={photoCredits.profileUrl}
@@ -116,8 +120,8 @@ function ImageInput({ setImageFile, aspectRatio }: ImageInputProps) {
               >
                 {photoCredits.photographer}
               </a>{' '}
-            </Typography>
-            <Typography variant="body2">
+              {/* </Typography>
+            <Typography variant="body2"> */}
               on{' '}
               <a
                 href="https://unsplash.com"
