@@ -66,6 +66,7 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
   };
 
   const updateCard = (
+    boxId: number,
     cardId: number,
     compartment: number,
     answerIsCorrect: boolean
@@ -87,6 +88,7 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
     const nextDateToAsk = nextDateToAskBeforeFormatting.toISOString();
     dispatch(
       updateCardAttributesAfterAnswer({
+        boxId,
         cardId,
         nextCompartment,
         nextDateToAsk,
@@ -104,14 +106,19 @@ function CardTwoSides({ card, goToNextCard }: QuestionProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const answerIsCorrect = verifyAnswer(userAnswer, card.answer);
-    updateCard(card.id, card.compartment, answerIsCorrect);
+    updateCard(card.boxId, card.id, card.compartment, answerIsCorrect);
     setIsCorrect(answerIsCorrect);
     setIsFlipped(true);
   };
 
   const handlePassInForce = () => {
     const userSaysAnswerIsCorrect = true;
-    updateCard(card.id, initialCompartment, userSaysAnswerIsCorrect);
+    updateCard(
+      card.boxId,
+      card.id,
+      initialCompartment,
+      userSaysAnswerIsCorrect
+    );
     handleNextButton();
   };
 

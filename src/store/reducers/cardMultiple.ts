@@ -61,7 +61,7 @@ export const getBoxCards = createAsyncThunk(
   'cardMultiple/GET_BOX_CARDS',
   async (boxId: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/box/${boxId}/cards`);
+      const response = await axiosInstance.get(`/boxes/${boxId}/cards`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -77,7 +77,7 @@ export const getRandomCards = createAsyncThunk(
   'cardMultiple/GET_RANDOM_CARDS',
   async (boxId: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/play/box/${boxId}`);
+      const response = await axiosInstance.get(`/boxes/${boxId}/play`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {

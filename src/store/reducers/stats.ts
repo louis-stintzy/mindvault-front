@@ -49,7 +49,7 @@ export const getInstantStats = createAsyncThunk(
   'stats/GET_INSTANT_STATS',
   async (boxId: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/stats/instant/box/${boxId}`);
+      const response = await axiosInstance.get(`/boxes/${boxId}/stats/instant`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -66,7 +66,7 @@ export const getHistoricalStats = createAsyncThunk(
   async (boxId: number, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/stats/historical/box/${boxId}`
+        `/boxes/${boxId}/stats/historical`
       );
       return response.data;
     } catch (error) {

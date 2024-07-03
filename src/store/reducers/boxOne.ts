@@ -94,7 +94,7 @@ export const createBox = createAsyncThunk(
   'boxOne/CREATE_BOX',
   async (formData: FormData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/box', formData, {
+      const response = await axiosInstance.post('/boxes', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -117,7 +117,7 @@ export const updateBox = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.put(`/box/${boxId}`, formData, {
+      const response = await axiosInstance.put(`/boxes/${boxId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -140,7 +140,7 @@ export const updateBoxLearnItValue = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.patch(`/box/${boxId}/learnit`, {
+      const response = await axiosInstance.patch(`/boxes/${boxId}/learnit`, {
         learnIt,
       });
       return response.data;
@@ -158,7 +158,7 @@ export const deleteBox = createAsyncThunk(
   'boxOne/DELETE_BOX',
   async (boxId: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`/box/${boxId}`);
+      const response = await axiosInstance.delete(`/boxes/${boxId}`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {

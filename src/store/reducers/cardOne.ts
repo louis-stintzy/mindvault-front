@@ -59,7 +59,7 @@ export const createCard = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.post(
-        `/box/${boxId}/cards`,
+        `/boxes/${boxId}/cards`,
         cardToSubmit
       );
       return response.data;
@@ -81,7 +81,7 @@ export const deleteCard = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.delete(
-        `/box/${boxId}/card/${cardId}`
+        `/boxes/${boxId}/cards/${cardId}`
       );
       return response.data;
     } catch (error) {
@@ -98,17 +98,26 @@ export const updateCardAttributesAfterAnswer = createAsyncThunk(
   'cardOne/UPDATE_CARD_ATTRIBUTES_AFTER_ANSWER',
   async (
     {
+      boxId,
       cardId,
       nextCompartment,
       nextDateToAsk,
-    }: { cardId: number; nextCompartment: number; nextDateToAsk: string },
+    }: {
+      boxId: number;
+      cardId: number;
+      nextCompartment: number;
+      nextDateToAsk: string;
+    },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.patch(`/play/card/${cardId}`, {
-        nextCompartment,
-        nextDateToAsk,
-      });
+      const response = await axiosInstance.patch(
+        `/boxes/${boxId}/play/cards/${cardId}`,
+        {
+          nextCompartment,
+          nextDateToAsk,
+        }
+      );
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
