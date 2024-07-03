@@ -7,8 +7,8 @@ import LandingPage from './components/LandingPage/LandingPage';
 import Home from './components/Home/Home';
 
 import { useAppSelector } from './hook/redux';
-import BoxItemsList from './components/Box/BoxItemsList';
-import BoxCreateEdit from './components/Box/BoxCreateEdit';
+import BoxItemsList from './components/Box/BoxesList/BoxItemsList';
+import BoxCreateEdit from './components/Box/BoxCreateEdit/BoxCreateEdit';
 import CardItemsList from './components/Card/CardItemsList';
 import CardCreateEdit from './components/Card/CardCreateEdit';
 import Play from './components/Play/Play';

@@ -1,8 +1,6 @@
 import {
   Box,
-  Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
@@ -16,24 +14,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { BoxData } from '../../@types/box';
+import { BoxData } from '../../../@types/box';
 
-import boxDefaultPicture from '../../assets/boxDefaultPicture.png';
-import { useAppDispatch } from '../../hook/redux';
+import boxDefaultPicture from '../../../assets/boxDefaultPicture2.png';
+import { useAppDispatch } from '../../../hook/redux';
 import {
   initializeBoxFields,
   setCurrentBox,
   updateBoxLearnItValue,
-} from '../../store/reducers/boxOne';
-import { getBoxCards, getRandomCards } from '../../store/reducers/cardMultiple';
+} from '../../../store/reducers/boxOne';
 
 interface BoxCardProps {
   box: BoxData;
 }
-
-const apiUrl = import.meta.env.VITE_API_URL;
 
 // (suite BoxItemsList) ...si dans BoxCard  on utilisait une interface BoxCardProps { box: BoxData; }
 // et que l'on passait cette interface à la function BoxCard({ box }: BoxCardProps) {
@@ -41,6 +36,21 @@ const apiUrl = import.meta.env.VITE_API_URL;
 function BoxItem({ box }: BoxCardProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  let photoCredits = {
+    photographer: '',
+    profileUrl: '',
+  };
+  if (
+    box.picture &&
+    box.picture.photographerName &&
+    box.picture.photographerProfileUrl
+  ) {
+    photoCredits = {
+      photographer: box.picture.photographerName,
+      profileUrl: box.picture.photographerProfileUrl,
+    };
+  }
 
   const handlePlay = () => {
     // dispatch(getRandomCards(box.id));
@@ -52,7 +62,11 @@ function BoxItem({ box }: BoxCardProps) {
       initializeBoxFields({
         name: box.name,
         description: box.description,
-        boxPicture: box.box_picture,
+        picture: {
+          pictureUrl: box.picture.pictureUrl,
+          photographerName: box.picture.photographerName,
+          photographerProfileUrl: box.picture.photographerProfileUrl,
+        },
         color: box.color,
         label: box.label,
         level: box.level,
@@ -87,65 +101,99 @@ function BoxItem({ box }: BoxCardProps) {
         display: 'flex',
         marginBottom: 2,
         backgroundColor: box.color || 'default',
+        height: 200,
       }}
     >
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'row',
+          height: '100%',
         }}
       >
         {/* --------------- Illustration ---------------- */}
-        <CardMedia
-          component="img"
-          sx={{ width: 151 }}
-          image={
-            box.box_picture
-              ? `${apiUrl}/media/${box.box_picture}`
-              : boxDefaultPicture
-          }
-          alt={`Image for the box : ${box.name}`}
-        />
+        <Box sx={{ position: 'relative' }}>
+          <CardMedia
+            component="img"
+            sx={{ width: 150, height: 200, objectFit: 'cover' }}
+            image={
+              box.picture && box.picture.pictureUrl
+                ? box.picture.pictureUrl
+                : boxDefaultPicture
+            }
+            alt={`Image for the box : ${box.name}`}
+          />
+          {photoCredits.photographer && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: '0',
+                left: '0',
+                width: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                color: '#fff',
+                padding: '0px 4px 4px 4px',
+                lineHeight: '1.1',
+                textAlign: 'left',
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.5rem', lineHeight: '1' }}
+              >
+                Photo by{' '}
+                <a
+                  href={photoCredits.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#fff', textDecoration: 'underline' }}
+                >
+                  {photoCredits.photographer}
+                </a>{' '}
+                on{' '}
+                <a
+                  href="https://unsplash.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#fff', textDecoration: 'underline' }}
+                >
+                  Unsplash
+                </a>
+              </Typography>
+            </Box>
+          )}
+        </Box>
         {/* -------------- Reste de la card -------------- */}
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
+            height: '100%',
           }}
         >
           {/* Name, Label, Level, Description */}
-          <CardContent sx={{ flex: '1 0 auto' }}>
+          <CardContent
+            sx={{
+              flex: '1 0 auto',
+              padding: '8px',
+              '&:last-child': {
+                paddingBottom: '8px',
+              },
+            }}
+          >
             <Typography
               gutterBottom
-              variant="h5"
+              variant="h6"
               component="div"
               sx={{ textAlign: 'left', cursor: 'pointer' }}
               onClick={handleBoxNameClick}
             >
               {box.name}
-              {/* <Link
-                to={`/box/${box.id}/items`}
-                state={{ boxName: box.name }}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                {box.name}
-              </Link> */}
-              {/* <span
-                onClick={handleBoxNameClick}
-                style={{
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                }}
-              >
-                {box.name}
-              </span> */}
             </Typography>
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'left',
-                // pl: 1,
                 pb: 1,
               }}
             >
@@ -153,6 +201,7 @@ function BoxItem({ box }: BoxCardProps) {
                 variant="subtitle1"
                 color="text.secondary"
                 component="div"
+                // sx={{ fontSize: '0.8rem' }}
               >
                 <LabelImportantIcon />
                 {box.label}
@@ -163,32 +212,46 @@ function BoxItem({ box }: BoxCardProps) {
             <Typography
               variant="subtitle1"
               color="text.secondary"
-              sx={{ textAlign: 'left' }}
+              sx={{ textAlign: 'left', fontSize: '0.8rem' }}
             >
-              {box.description}
+              {box.description.length > 20
+                ? `${box.description.slice(0, 30)}...`
+                : box.description}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontSize: '0.8rem' }}
+            >
               Number of cards to review: {box.cards_to_review}
             </Typography>
           </CardContent>
           {/* Learn it, Stats, Edit, Play */}
           <CardActions
-            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              padding: '8px',
+            }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Checkbox checked={box.learn_it} onChange={handleLearnIt} />
-              <Typography variant="body2" display="block">
+              <Typography
+                variant="body2"
+                display="block"
+                sx={{ fontSize: '0.8rem' }}
+              >
                 Learn it
               </Typography>
             </Box>
             <Box>
-              <IconButton aria-label="stats" onClick={handleStats}>
+              <IconButton aria-label="stats" onClick={handleStats} size="small">
                 <BarChartIcon />
               </IconButton>
-              <IconButton aria-label="edit" onClick={handleEdit}>
+              <IconButton aria-label="edit" onClick={handleEdit} size="small">
                 <EditIcon />
               </IconButton>
-              <IconButton aria-label="play" onClick={handlePlay}>
+              <IconButton aria-label="play" onClick={handlePlay} size="small">
                 <PlayArrowIcon />
               </IconButton>
             </Box>

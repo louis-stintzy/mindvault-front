@@ -1,13 +1,20 @@
-import { Box, Button, Container, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Typography,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import BottomNavigationMUI from '../BottomNavigationMUI/BottomNavigationMUI';
+import BottomNavigationMUI from '../../BottomNavigationMUI/BottomNavigationMUI';
 import BoxItem from './BoxItem';
-import { useAppDispatch, useAppSelector } from '../../hook/redux';
-import { getUserBoxes } from '../../store/reducers/boxMultiple';
-import { resetBoxOneState } from '../../store/reducers/boxOne';
-import { resetStatsState } from '../../store/reducers/stats';
+import { useAppDispatch, useAppSelector } from '../../../hook/redux';
+import { getUserBoxes } from '../../../store/reducers/boxMultiple';
+import { resetBoxOneState } from '../../../store/reducers/boxOne';
+import { resetStatsState } from '../../../store/reducers/stats';
+import { resetUnsplashState } from '../../../store/reducers/unsplash';
 
 function BoxItemsList() {
   const dispatch = useAppDispatch();
@@ -15,6 +22,7 @@ function BoxItemsList() {
 
   const navigateFromBoxStats = location.state?.navigateFromBoxStats || false;
   const userBoxesList = useAppSelector((state) => state.boxMultiple.boxes);
+  const isLoading = useAppSelector((state) => state.boxMultiple.isLoading);
 
   useEffect(() => {
     // si l'utilisateur revient de BoxStats, on ne recharge pas la liste des boxes
@@ -25,10 +33,26 @@ function BoxItemsList() {
     // a voir si on utilise BoxOne sinon on peu le mettre au dessus avec getUserBoxes
     dispatch(resetBoxOneState());
     dispatch(resetStatsState());
+    dispatch(resetUnsplashState());
   }, [dispatch, navigateFromBoxStats]);
 
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ pb: 8 }}>
       <Box>
         <Typography variant="h4" component="h1">
           Boxes

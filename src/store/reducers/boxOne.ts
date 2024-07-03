@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import { AxiosError } from 'axios';
-import { BoxData, BoxDataLight } from '../../@types/box';
+import { BoxData, BoxDataLight, PictureData } from '../../@types/box';
 
 import { axiosInstance } from '../../utils/axios';
 import analyseError from './errorHandling';
@@ -34,7 +34,11 @@ export const initialState: BoxOneState = {
   box: {
     name: '',
     description: '',
-    boxPicture: '',
+    picture: {
+      pictureUrl: '',
+      photographerName: '',
+      photographerProfileUrl: '',
+    },
     color: '',
     label: '',
     level: '',
@@ -49,7 +53,8 @@ export const initialState: BoxOneState = {
   currentBox: null,
 };
 
-type KeysOfBox = keyof BoxOneState['box'];
+// j'exclue picture de la liste des clés de box pour ne pas avoir de problème de typage (notamment avec changeBoxField)
+type KeysOfBox = Exclude<keyof BoxOneState['box'], 'picture'>;
 
 export const resetBoxOneState = createAction('boxOne/RESET_BOX_ONE_STATE');
 
@@ -80,11 +85,43 @@ export const changeBoxField = createAction<{
   value: string | boolean | number;
 }>('boxOne/CHANGE_BOX_FIELD');
 
+export const setPictureData = createAction<{
+  field: 'pictureUrl' | 'photographerName' | 'photographerProfileUrl';
+  value: string;
+}>('boxOne/SET_PICTURE_DATA');
+
 export const createBox = createAsyncThunk(
   'boxOne/CREATE_BOX',
-  async (boxToSubmit: BoxDataLight, { rejectWithValue }) => {
+  async (formData: FormData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/boxes', boxToSubmit);
+      const response = await axiosInstance.post('/box', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorAnalyzed = analyseError(error);
+        return rejectWithValue(errorAnalyzed);
+      }
+      return rejectWithValue({ errCode: -1, errMessage: 'Unknown error' });
+    }
+  }
+);
+
+export const updateBox = createAsyncThunk(
+  'boxOne/UPDATE_BOX',
+  async (
+    { boxId, formData }: { boxId: number; formData: FormData },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put(`/box/${boxId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -143,7 +180,11 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.box = {
         name: '',
         description: '',
-        boxPicture: '',
+        picture: {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        },
         color: '',
         label: '',
         level: '',
@@ -200,6 +241,18 @@ const boxOneReducer = createReducer(initialState, (builder) => {
         state.box[field] = value as string;
       }
     })
+    // ------------ SET PICTURE DATA ------------
+    .addCase(setPictureData, (state, action) => {
+      const { field, value } = action.payload;
+      if (!state.box.picture) {
+        state.box.picture = {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        };
+      }
+      state.box.picture[field] = value;
+    })
     // --------------- CREATE BOX ----------------
     .addCase(createBox.pending, (state) => {
       state.isLoading = true;
@@ -216,7 +269,11 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.box = {
         name: '',
         description: '',
-        boxPicture: '',
+        picture: {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        },
         color: '',
         label: '',
         level: '',
@@ -242,13 +299,59 @@ const boxOneReducer = createReducer(initialState, (builder) => {
       state.isRegistered = false;
       state.boxCreated = null;
     })
+    // --------------- UPDATE BOX ----------------
+    .addCase(updateBox.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.success = '';
+      state.isRegistered = false;
+      state.boxCreated = null;
+    })
+    .addCase(updateBox.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.success = 'Successfully updated box';
+      state.isRegistered = true;
+      state.box = {
+        name: '',
+        description: '',
+        picture: {
+          pictureUrl: '',
+          photographerName: '',
+          photographerProfileUrl: '',
+        },
+        color: '',
+        label: '',
+        level: '',
+        defaultQuestionLanguage: 'fr-FR',
+        defaultQuestionVoice: '',
+        defaultAnswerLanguage: 'fr-FR',
+        defaultAnswerVoice: '',
+        learnIt: true,
+        type: 2,
+      };
+      state.boxCreated = action.payload; // à voir si on laisse created, et à voir à quoi cela sert
+    })
+    .addCase(updateBox.rejected, (state, action) => {
+      state.isLoading = false;
+      if (action.payload) {
+        state.error = action.payload as ErrorResponse[];
+        state.success = '';
+        state.isRegistered = false;
+      } else {
+        state.error = [{ errCode: -1, errMessage: 'Unknown error' }];
+      }
+      state.success = '';
+      state.isRegistered = false;
+      state.boxCreated = null;
+    })
     // ---------- UPDATE BOX LEARN IT VALUE ----------
     .addCase(updateBoxLearnItValue.pending, (state) => {
       state.isLoading = true;
       state.error = null;
       state.success = '';
     })
-    .addCase(updateBoxLearnItValue.fulfilled, (state, action) => {
+    .addCase(updateBoxLearnItValue.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
       state.success = 'Learn it value updated';

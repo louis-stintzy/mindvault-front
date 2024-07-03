@@ -1,5 +1,11 @@
 import { Language } from './lang';
 
+export interface PictureData {
+  pictureUrl: string;
+  photographerName: string;
+  photographerProfileUrl: string;
+}
+
 export interface BoxData {
   id: number;
   owner_id: number;
@@ -11,7 +17,7 @@ export interface BoxData {
   copy_box_created_at: string | null;
   name: string;
   description: string;
-  box_picture: string;
+  picture: PictureData;
   color: string;
   label: string;
   level: string;
@@ -32,7 +38,7 @@ export interface BoxData {
 export interface BoxDataLight {
   name: string;
   description: string;
-  boxPicture: string;
+  picture: PictureData;
   color: string;
   label: string;
   level: string;

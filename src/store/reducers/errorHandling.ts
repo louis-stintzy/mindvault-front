@@ -1,11 +1,10 @@
 import { AxiosError } from 'axios';
+import knownErrorCodes from '../../constants/errCodes';
 
 interface ErrorResponse {
   errCode: number;
   errMessage: string;
 }
-
-const knownErrorCodes = new Set([0, 1, 2, 11, 13, 14, 15, 16, 17, 18, 21, 22]);
 
 function analyseError(error: AxiosError) {
   if (error.response) {
