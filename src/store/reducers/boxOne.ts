@@ -68,7 +68,7 @@ export const getBoxById = createAsyncThunk(
   'boxOne/GET_BOX_BY_ID',
   async (boxId: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/box/${boxId}`);
+      const response = await axiosInstance.get(`/boxes/${boxId}`);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {

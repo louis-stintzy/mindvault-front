@@ -62,7 +62,7 @@ export const register = createAsyncThunk(
   async (credentials: SignupState['credentials'], { rejectWithValue }) => {
     try {
       // Tentative d'envoi des données d'inscription (credentials) à l'API
-      const response = await axiosInstance.post('/user/register', credentials);
+      const response = await axiosInstance.post('/auth/register', credentials);
       // Si l'appel API réussit, la réponse est retournée (utilisée dans le reducer)
       return response.data;
     } catch (error) {

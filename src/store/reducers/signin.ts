@@ -51,7 +51,7 @@ export const login = createAsyncThunk(
   'signin/LOGIN',
   async (credentials: SigninState['credentials'], { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/user/login', credentials);
+      const response = await axiosInstance.post('/auth/login', credentials);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -67,7 +67,7 @@ export const validateToken = createAsyncThunk(
   'signin/VALIDATE_TOKEN',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/user/validateToken');
+      const response = await axiosInstance.get('/auth/validateToken');
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
